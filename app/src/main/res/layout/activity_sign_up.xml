@@ -2,19 +2,19 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/login_layout"
+    android:id="@+id/SignUp_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/blue_wall"
-    tools:context=".Login">
+    tools:context=".SignUp">
 
     <TextView
-        android:id="@+id/signIn"
+        android:id="@+id/signUp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="50dp"
         android:gravity="center"
-        android:text="Sign in"
+        android:text="Sign up"
         android:textColor="@color/white"
         android:textSize="35dp"
         android:textStyle="bold" />
@@ -23,7 +23,7 @@
         android:id="@+id/username"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/signIn"
+        android:layout_below="@+id/signUp"
         android:layout_marginStart="10dp"
         android:layout_marginTop="80dp"
         android:layout_marginEnd="10dp"
@@ -33,8 +33,7 @@
         android:hint="Username"
         android:padding="20dp"
         android:textColor="@color/white"
-        android:textColorHint="@color/white"
-        android:autofillHints="username" />
+        android:textColorHint="@color/white" />
 
     <EditText
         android:id="@+id/password"
@@ -51,29 +50,45 @@
         android:padding="20dp"
         android:textColor="@color/white"
         android:textColorHint="@color/white"
-        android:inputType="textPassword"
-        android:autofillHints="password" />
+        android:inputType="textPassword" />
+
+    <EditText
+        android:id="@+id/repassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/password"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:drawableLeft="@drawable/ic_baseline_lock_24"
+        android:drawablePadding="10dp"
+        android:hint="RePassword"
+        android:padding="20dp"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
+        android:inputType="textPassword" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/login_btn"
         android:layout_width="128dp"
         android:layout_height="60dp"
-        android:layout_below="@+id/password"
+        android:layout_below="@+id/repassword"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="90dp"
+        android:layout_marginTop="60dp"
         android:layout_marginBottom="20dp"
-        android:backgroundTint="@color/design_default_color_secondary"
-        android:onClick="Login"
+        android:backgroundTint="@color/teal_200"
+        android:onClick="SignUp"
         android:textSize="18dp"
-        android:text="LOGIN" />
+        android:text="Sign up" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Don't have an account?\nclick here to go sign up"
+        android:text="Already have an account?\nclick here to go log in"
         android:layout_below="@+id/login_btn"
         android:gravity="center"
-        android:onClick="GoToSignUp"
+        android:onClick="GoToSignIn"
         android:textSize="17dp"
         />
 </RelativeLayout>
