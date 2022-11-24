@@ -4,26 +4,27 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/black"
     tools:context=".SplashScreen">
+
+    <pl.droidsonroids.gif.GifImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:adjustViewBounds="false"
+        android:src="@drawable/gun_icon_q"
+        />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/white"
-        android:text="Guns"
-        android:textSize="25dp"
+        android:text="Rabani guns"
+        android:textSize="30dp"
+        android:textStyle="bold"
+        android:textColor="#000"
+        android:layout_centerHorizontal="false"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_margin="20dp"
-        android:id="@+id/appName"
-        />
-
-    <com.airbnb.lottie.LottieAnimationView
-        android:layout_width="400dp"
-        android:layout_height="400dp"
-        android:layout_centerInParent="true"
-        app:lottie_autoPlay="true"
-        android:id="@+id/lottie"
-        app:lottie_rawRes="@raw/gun"
+        android:layout_marginBottom="20dp"
         />
 </RelativeLayout>

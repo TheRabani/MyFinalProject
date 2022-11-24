@@ -9,8 +9,11 @@ import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.view.View;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 public class Login extends AppCompatActivity {
 
+    private FirebaseAuth mAuth;
 
 
     @Override
@@ -20,8 +23,11 @@ public class Login extends AppCompatActivity {
     }
 
     public void Login(View view) {
-        Intent intent = new Intent(Login.this, MainActivity.class);
-        startActivity(intent);
+        mAuth = FirebaseAuth.getInstance();
+
+
+//        Intent intent = new Intent(Login.this, MainActivity.class);
+//        startActivity(intent);
 
     }
 

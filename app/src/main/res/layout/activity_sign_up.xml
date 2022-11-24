@@ -85,10 +85,10 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Already have an account?\nclick here to go log in"
         android:layout_below="@+id/login_btn"
         android:gravity="center"
+        android:minHeight="48dp"
         android:onClick="GoToSignIn"
-        android:textSize="17dp"
-        />
+        android:text="Already have an account?\nclick here to go log in"
+        android:textSize="17dp" />
 </RelativeLayout>
