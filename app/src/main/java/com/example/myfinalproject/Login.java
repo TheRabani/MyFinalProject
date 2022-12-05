@@ -28,7 +28,7 @@ public class Login extends AppCompatActivity {
 
     FirebaseAuth mAuth;
     EditText phone, otp, pass;
-    Button btngenOTP, btnverify, login_btn;
+    Button login_btn;
     String verificationID;
     ProgressBar bar;
 
@@ -39,36 +39,9 @@ public class Login extends AppCompatActivity {
 
         phone = findViewById(R.id.phone);
         otp = findViewById(R.id.otp);
-//        pass = findViewById(R.id.pass);
-//        btnverify = findViewById(R.id.btnverifyOTP);
-//        btngenOTP = findViewById(R.id.btngenerateOTP);
         login_btn = findViewById(R.id.login_btn);
         mAuth = FirebaseAuth.getInstance();
         bar = findViewById(R.id.bar);
-
-        btngenOTP.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (TextUtils.isEmpty(phone.getText().toString()))
-                    Toast.makeText(Login.this, "enter valid phone nm.", Toast.LENGTH_SHORT).show();
-                else{
-                    String number = phone.getText().toString();
-                    bar.setVisibility(View.VISIBLE);
-                    sendverificationcode(number);
-                }
-            }
-        });
-
-        btnverify.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v)
-            {
-                if (TextUtils.isEmpty(otp.getText().toString()))
-                    Toast.makeText(Login.this, "enter valid nm.", Toast.LENGTH_SHORT).show();
-                else
-                    verifycode(otp.getText().toString());
-            }
-        });
 
     }
 
@@ -111,8 +84,9 @@ public class Login extends AppCompatActivity {
             super.onCodeSent(s, token);
             verificationID = s;
             Toast.makeText(Login.this, "Code sent", Toast.LENGTH_SHORT).show();
-            btnverify.setEnabled(true);
             bar.setVisibility(View.INVISIBLE);
+            otp.setVisibility(View.VISIBLE);
+            login_btn.setText("Verify");
         }
     };
 
@@ -142,8 +116,8 @@ public class Login extends AppCompatActivity {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if(currentUser!=null)
         {
-            startActivity(new Intent(Login.this, MainActivity.class));
-
+//            startActivity(new Intent(Login.this, MainActivity.class));
+            mAuth.signOut();
         }
     }
 
@@ -157,6 +131,7 @@ public class Login extends AppCompatActivity {
                 bar.setVisibility(View.VISIBLE);
                 sendverificationcode(number);
             }
+            bar.setVisibility(View.VISIBLE);
         }
         else
             {
