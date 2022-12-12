@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:adjustViewBounds="false"
-        android:src="@drawable/gun_icon_q"
+        android:src="@drawable/the_best_target"
         />
 
     <TextView
@@ -22,7 +22,7 @@
         android:text="Rabani guns"
         android:textSize="30dp"
         android:textStyle="bold"
-        android:textColor="#000"
+        android:textColor="#FFFFFF"
         android:layout_centerHorizontal="false"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="20dp"

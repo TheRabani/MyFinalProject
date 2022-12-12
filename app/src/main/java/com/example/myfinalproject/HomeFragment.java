@@ -15,25 +15,38 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class HomeFragment extends Fragment {
     FirebaseAuth mAuth;
-    Button logout;
+    Button logout, addGun;
+    View view;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_home, container, false);
+        view = inflater.inflate(R.layout.fragment_home, container, false);
         mAuth = FirebaseAuth.getInstance();
-        logout = view.findViewById()
+        logout = (Button) view.findViewById(R.id.logout);
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+                if(currentUser!=null)
+                {
+                    mAuth.signOut();
+                    startActivity(new Intent(getActivity(), Login.class));
+                }
+                else
+                    startActivity(new Intent(getActivity(), Login.class));
+            }
+        });
 
-        return inflater.inflate(R.layout.fragment_home, container, false);
+        addGun = (Button) view.findViewById(R.id.addGun);
+
+        addGun.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getActivity(), addGun.class));
+            }
+        });
+
+        return view;
     }
 
-    public void onClickBtn(View view) {
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        if(currentUser!=null)
-        {
-            mAuth.signOut();
-            startActivity(new Intent(getActivity(), Login.class));
-        }
-        else
-            startActivity(new Intent(getActivity(), Login.class));
-    }
 }
