@@ -40,13 +40,10 @@ public class addGun extends AppCompatActivity {
                     EditText  etUnitsInStock= dialogView.findViewById(R.id.etInStock);
                     EditText  etStandardMagCapacity= dialogView.findViewById(R.id.etStandardMagCapacity);
                     EditText  etMagOptions= dialogView.findViewById(R.id.etMagOptions);
-                    EditText  = dialogView.findViewById(R.id.);
-                    EditText  = dialogView.findViewById(R.id.);
-                    EditText  = dialogView.findViewById(R.id.);
-                    EditText  = dialogView.findViewById(R.id.);
-                    EditText  = dialogView.findViewById(R.id.);
-                    EditText  = dialogView.findViewById(R.id.);
-                    EditText  = dialogView.findViewById(R.id.);
+                    EditText  etCaliber= dialogView.findViewById(R.id.etCaliber);
+                    EditText  etWeight= dialogView.findViewById(R.id.etWeight);
+                    EditText  etBarrelSize= dialogView.findViewById(R.id.etBarrelSize);
+                    EditText  etTriggerPull= dialogView.findViewById(R.id.etTriggerPull);
 
 
                     buttonAdd.setOnClickListener(new View.OnClickListener() {
@@ -59,28 +56,34 @@ public class addGun extends AppCompatActivity {
                             String stInStock = etUnitsInStock.getText().toString(); //remember conv to int
                             String stStandardMagCapacity = etStandardMagCapacity.getText().toString(); //remember conv to int
                             String magOptions = etMagOptions.getText().toString();
-                            String caliber;
-                            String stWeight; //remember conv to int
-                            String stBarrelLength; //remember conv to int
-                            String stTriggerPull; //remember conv to int
+                            String caliber = etCaliber.getText().toString();
+                            String stWeight = etWeight.getText().toString(); //remember conv to int
+                            String stBarrelLength = etBarrelSize.getText().toString(); //remember conv to int
+                            String stTriggerPull = etTriggerPull.getText().toString(); //remember conv to int
 
 
-                            if(name.isEmpty() || price == null)
+                            if(modelName.isEmpty() || stPrice.isEmpty() || manufacturer.isEmpty() || imgUrl.isEmpty() || stInStock.isEmpty() || stStandardMagCapacity.isEmpty() || magOptions.isEmpty() || caliber.isEmpty() || stWeight.isEmpty() || stBarrelLength.isEmpty() || stTriggerPull.isEmpty())
                             {
                                 Toast.makeText(addGun.this, "Please type both Name and Price", Toast.LENGTH_SHORT).show();
                             }
                             else{
-                                Gun toy = new Gun(name, price);
+                                int price = Integer.parseInt(stPrice);
+                                int inStock = Integer.parseInt(stInStock);
+                                int standardMagCapacity = Integer.parseInt(stStandardMagCapacity);
+                                int weight = Integer.parseInt(stWeight);
+                                int barrelLength = Integer.parseInt(stBarrelLength);
+                                int triggerPull = Integer.parseInt(stTriggerPull);
+                                Gun gun = new Gun(modelName, manufacturer, imgUrl, price, inStock, standardMagCapacity, magOptions, caliber, weight, barrelLength, triggerPull);
                                 firestore
-                                        .collection("toys")
+                                        .collection("guns")
                                         .document(System.currentTimeMillis() + "")
-                                        .set(toy)
+                                        .set(gun)
                                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
                                                 if(task.isSuccessful())
                                                 {
-                                                    Toast.makeText(addGun.this, "Toy added!", Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(addGun.this, "Gun added!", Toast.LENGTH_SHORT).show();
                                                 }
                                                 else {
                                                     Toast.makeText(addGun.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();

@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layoutDirection="ltr"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/blue_wall"
+    android:layoutDirection="ltr">
 
-<!--    toyName to gunModel-->
+    <!--    toyName to gunModel-->
     <EditText
         android:id="@+id/etGunModel"
         android:layout_width="0dp"
@@ -25,6 +26,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
+        android:layout_marginBottom="10dp"
         android:hint="Manufacturer"
         android:inputType="textPersonName"
         android:minHeight="48dp"
@@ -35,19 +37,23 @@
         android:id="@+id/etImageURL"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
         android:ems="10"
         android:hint="Image URL"
         android:inputType="textPersonName"
+        android:minHeight="48dp"
         app:layout_constraintStart_toStartOf="@+id/etManufacturer"
         app:layout_constraintTop_toBottomOf="@+id/etManufacturer" />
 
     <EditText
         android:id="@+id/etInStock"
         android:layout_width="wrap_content"
+        android:layout_marginBottom="10dp"
         android:layout_height="wrap_content"
         android:ems="10"
         android:hint="Units In Stock"
         android:inputType="numberSigned"
+        android:minHeight="48dp"
         app:layout_constraintStart_toStartOf="@+id/etImageURL"
         app:layout_constraintTop_toBottomOf="@+id/etImageURL" />
 
@@ -57,17 +63,21 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:hint="Standard Mag Capacity"
+        android:layout_marginBottom="10dp"
         android:inputType="numberSigned"
+        android:minHeight="48dp"
         app:layout_constraintStart_toStartOf="@+id/etInStock"
         app:layout_constraintTop_toBottomOf="@+id/etInStock" />
 
     <EditText
         android:id="@+id/etMagOptions"
+        android:layout_marginBottom="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
         android:hint="Mag Options"
         android:inputType="textPersonName"
+        android:minHeight="48dp"
         app:layout_constraintStart_toStartOf="@+id/etStandardMagCapacity"
         app:layout_constraintTop_toBottomOf="@+id/etStandardMagCapacity" />
 
@@ -75,28 +85,70 @@
         android:id="@+id/etPrice"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="212dp"
         android:ems="10"
         android:hint="Price"
+        android:layout_marginBottom="10dp"
         android:inputType="numberDecimal"
         android:minHeight="48dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="@+id/etGunModel"
-        app:layout_constraintTop_toBottomOf="@+id/buttonAdd" />
+        app:layout_constraintStart_toStartOf="@+id/etTriggerPull"
+        app:layout_constraintTop_toBottomOf="@+id/etTriggerPull" />
+
+    <EditText
+        android:id="@+id/etCaliber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Caliber"
+        android:inputType="textPersonName"
+        android:minHeight="48dp"
+        app:layout_constraintStart_toStartOf="@+id/etMagOptions"
+        app:layout_constraintTop_toBottomOf="@+id/etMagOptions" />
+
+    <EditText
+        android:id="@+id/etTriggerPull"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Triger Pull (in N)"
+        android:inputType="numberSigned"
+        android:layout_marginBottom="10dp"
+        android:minHeight="48dp"
+        app:layout_constraintStart_toStartOf="@+id/etBarrelSize"
+        app:layout_constraintTop_toBottomOf="@+id/etBarrelSize" />
+
+    <EditText
+        android:id="@+id/etBarrelSize"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Barrel Size (in mm)"
+        android:inputType="numberSigned"
+        android:minHeight="48dp"
+        app:layout_constraintStart_toStartOf="@+id/etWeight"
+        app:layout_constraintTop_toBottomOf="@+id/etWeight" />
+
+    <EditText
+        android:id="@+id/etWeight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Weight (in grams)"
+        android:inputType="numberSigned"
+        android:minHeight="48dp"
+        app:layout_constraintStart_toStartOf="@+id/etCaliber"
+        app:layout_constraintTop_toBottomOf="@+id/etCaliber" />
 
     <Button
         android:id="@+id/buttonAdd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
         android:onClick="yay"
         android:text="ADD"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.918"
         app:layout_constraintStart_toEndOf="@+id/etPrice"
-        app:layout_constraintTop_toBottomOf="@+id/etGunModel" />
+        app:layout_constraintTop_toTopOf="@+id/etPrice" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
