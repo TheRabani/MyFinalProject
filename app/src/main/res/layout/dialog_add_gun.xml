@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/blue_wall"
+    android:background="@drawable/show_gun_background"
     android:layoutDirection="ltr">
 
     <!--    toyName to gunModel-->
@@ -17,6 +17,10 @@
         android:hint="Gun Model"
         android:inputType="textPersonName"
         android:minHeight="48dp"
+        android:textColor="#000000"
+        android:textColorHighlight="#000000"
+        android:textColorHint="#000000"
+        android:textColorLink="#000000"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -42,6 +46,10 @@
         android:hint="Manufacturer"
         android:inputType="textPersonName"
         android:minHeight="48dp"
+        android:textColor="#000000"
+        android:textColorHighlight="#000000"
+        android:textColorHint="#000000"
+        android:textColorLink="#000000"
         app:layout_constraintStart_toStartOf="@+id/etGunModel"
         app:layout_constraintTop_toBottomOf="@+id/etGunModel" />
 
@@ -54,6 +62,10 @@
         android:hint="Image URL"
         android:inputType="textPersonName"
         android:minHeight="48dp"
+        android:textColor="#000000"
+        android:textColorHighlight="#000000"
+        android:textColorHint="#000000"
+        android:textColorLink="#000000"
         app:layout_constraintStart_toStartOf="@+id/etManufacturer"
         app:layout_constraintTop_toBottomOf="@+id/etManufacturer" />
 
@@ -66,6 +78,10 @@
         android:hint="Units In Stock"
         android:inputType="numberSigned"
         android:minHeight="48dp"
+        android:textColor="#000000"
+        android:textColorHighlight="#000000"
+        android:textColorHint="#000000"
+        android:textColorLink="#000000"
         app:layout_constraintStart_toStartOf="@+id/etImageURL"
         app:layout_constraintTop_toBottomOf="@+id/etImageURL" />
 
@@ -78,6 +94,10 @@
         android:hint="Mag Options"
         android:inputType="textPersonName"
         android:minHeight="48dp"
+        android:textColor="#000000"
+        android:textColorHighlight="#000000"
+        android:textColorHint="#000000"
+        android:textColorLink="#000000"
         app:layout_constraintStart_toStartOf="@+id/etInStock"
         app:layout_constraintTop_toBottomOf="@+id/etInStock" />
 
@@ -90,6 +110,10 @@
         android:hint="Price"
         android:inputType="numberDecimal"
         android:minHeight="48dp"
+        android:textColor="#000000"
+        android:textColorHighlight="#000000"
+        android:textColorHint="#000000"
+        android:textColorLink="#000000"
         app:layout_constraintStart_toStartOf="@+id/etWeight"
         app:layout_constraintTop_toBottomOf="@+id/etWeight" />
 
@@ -102,6 +126,10 @@
         android:hint="Caliber"
         android:inputType="textPersonName"
         android:minHeight="48dp"
+        android:textColor="#000000"
+        android:textColorHighlight="#000000"
+        android:textColorHint="#000000"
+        android:textColorLink="#000000"
         app:layout_constraintStart_toStartOf="@+id/etMagOptions"
         app:layout_constraintTop_toBottomOf="@+id/etMagOptions" />
 
@@ -138,6 +166,10 @@
         android:hint="Weight (in grams)"
         android:inputType="numberSigned"
         android:minHeight="48dp"
+        android:textColor="#000000"
+        android:textColorHighlight="#000000"
+        android:textColorHint="#000000"
+        android:textColorLink="#000000"
         app:layout_constraintStart_toStartOf="@+id/etCaliber"
         app:layout_constraintTop_toBottomOf="@+id/etCaliber" />
 

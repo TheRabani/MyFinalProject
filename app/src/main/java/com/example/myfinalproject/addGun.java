@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -39,6 +40,8 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
     public DocumentSnapshot doc2;
     public String st;
 
+    boolean isOn;
+
     private ListView gunListView;
     private gunAdapter adapter;
 
@@ -61,61 +64,178 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
 
         gunListView.setAdapter(adapter);
 
-        gunListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Gun g= adapter.getItem(i);
+        gunListView.setOnItemClickListener((adapterView, view, i, l) -> {
+            if (!isOn) {
+                Gun g = adapter.getItem(i);
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(addGun.this);
                 View dialogView = getLayoutInflater().inflate(R.layout.dialog_show_gun_details, null, false);
                 builder.setView(dialogView);
                 AlertDialog ad = builder.create();
 
-                ImageView imageView = dialogView.findViewById(R.id.gunImage);
+                ImageView imageView = dialogView.findViewById(R.id.imageGun);
                 TextView makeAndModel = dialogView.findViewById(R.id.makeAndModel);
                 TextView unitsInStock = dialogView.findViewById(R.id.unitsInStock);
                 TextView magOptions = dialogView.findViewById(R.id.magOptions);
                 TextView caliber = dialogView.findViewById(R.id.caliber);
                 TextView weight = dialogView.findViewById(R.id.weight);
                 TextView price = dialogView.findViewById(R.id.price);
+                Button updateBtn = dialogView.findViewById(R.id.update2);
+                updateBtn.setVisibility(View.VISIBLE);
 
-                makeAndModel.setText(""+g.getManufacturer()+" "+g.getModelName());
-                unitsInStock.setText(""+g.getInStock());
-                magOptions.setText(""+g.getOptionsMagCapacity());
-                caliber.setText(""+g.getCaliber());
-                weight.setText(""+g.getWeight());
-                price.setText(""+g.getPrice());
+                makeAndModel.setText("" + g.getManufacturer() + " " + g.getModelName());
+                unitsInStock.setText("" + g.getInStock());
+                magOptions.setText("" + g.getOptionsMagCapacity());
+                caliber.setText("" + g.getCaliber());
+                weight.setText("" + g.getWeight());
+                price.setText("" + g.getPrice());
                 Picasso.get()
-                        .load(""+g.getImgUrl())
+                        .load("" + g.getImgUrl())
                         .into(imageView);
                 ad.show();
+
+                updateBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        ad.dismiss();
+                        AlertDialog.Builder builder = new AlertDialog.Builder(addGun.this);
+                        View dialogView = getLayoutInflater().inflate(R.layout.dialog_add_gun, null, false);
+                        builder.setView(dialogView);
+                        AlertDialog ad2 = builder.create();
+                        Button buttonAdd = dialogView.findViewById(R.id.buttonAdd);
+                        EditText etPrice = dialogView.findViewById(R.id.etPrice);
+                        EditText etToyName = dialogView.findViewById(R.id.etGunModel);
+                        EditText etManufacturer = dialogView.findViewById(R.id.etManufacturer);
+                        EditText etImageURL = dialogView.findViewById(R.id.etImageURL);
+                        EditText etUnitsInStock = dialogView.findViewById(R.id.etInStock);
+//                    EditText etStandardMagCapacity = dialogView.findViewById(R.id.etStandardMagCapacity);
+                        EditText etMagOptions = dialogView.findViewById(R.id.etMagOptions);
+                        EditText etCaliber = dialogView.findViewById(R.id.etCaliber);
+                        EditText etWeight = dialogView.findViewById(R.id.etWeight);
+//                    EditText etBarrelSize = dialogView.findViewById(R.id.etBarrelSize);
+//                    EditText etTriggerPull = dialogView.findViewById(R.id.etTriggerPull);
+                        buttonAdd.setText("update");
+
+                        etPrice.setText(""+g.getPrice());
+                        etToyName.setText(""+g.getModelName());
+                        etManufacturer.setText(""+g.getManufacturer());
+                        etImageURL.setText(""+g.getImgUrl());
+                        etUnitsInStock.setText(""+g.getInStock());
+                        etMagOptions.setText(""+g.getOptionsMagCapacity());
+                        etCaliber.setText(""+g.getCaliber());
+                        etWeight.setText(""+g.getWeight());
+
+                        ad2.show();
+
+                        buttonAdd.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                ad2.dismiss();
+                                String modelName = etToyName.getText().toString();
+                                String stPrice = etPrice.getText().toString(); //remember conv to int
+                                String manufacturer = etManufacturer.getText().toString();
+                                String imgUrl = etImageURL.getText().toString();
+                                String stInStock = etUnitsInStock.getText().toString(); //remember conv to int
+//                            String stStandardMagCapacity = etStandardMagCapacity.getText().toString(); //remember conv to int
+                                String magOptions = etMagOptions.getText().toString();
+                                String caliber = etCaliber.getText().toString();
+                                String stWeight = etWeight.getText().toString(); //remember conv to int
+//                            String stBarrelLength = etBarrelSize.getText().toString(); //remember conv to int
+//                            String stTriggerPull = etTriggerPull.getText().toString(); //remember conv to int
+
+
+                                if (modelName.isEmpty() || stPrice.isEmpty() || manufacturer.isEmpty() || imgUrl.isEmpty() || stInStock.isEmpty() || magOptions.isEmpty() || caliber.isEmpty() || stWeight.isEmpty()) {
+                                    Toast.makeText(addGun.this, "Please fill all the fields", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    int price = Integer.parseInt(stPrice);
+                                    int inStock = Integer.parseInt(stInStock);
+//                                int standardMagCapacity = Integer.parseInt(stStandardMagCapacity);
+                                    int weight = Integer.parseInt(stWeight);
+//                                int barrelLength = Integer.parseInt(stBarrelLength);
+//                                int triggerPull = Integer.parseInt(stTriggerPull);
+                                    Gun gun = new Gun(modelName, manufacturer, imgUrl, price, inStock, magOptions, caliber, weight);
+                                    firestore
+                                            .collection("guns")
+                                            .document("" + manufacturer + " " + modelName)
+                                            .set(gun)
+                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
+                                                    if (task.isSuccessful()) {
+                                                        Toast.makeText(addGun.this, "Gun updated!", Toast.LENGTH_SHORT).show();
+                                                    } else {
+                                                        Toast.makeText(addGun.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                                    }
+                                                }
+                                            });
+                                }
+                            }
+                        });
+
+
+//                        builder.setView(dialogView);
+//                        builder.create().show();
+
+                    }
+                });
             }
         });
 
+//        gunListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+//                Gun g= adapter.getItem(i);
+//
+//                AlertDialog.Builder builder = new AlertDialog.Builder(addGun.this);
+//                View dialogView = getLayoutInflater().inflate(R.layout.dialog_show_gun_details, null, false);
+//                builder.setView(dialogView);
+//                AlertDialog ad = builder.create();
+//
+//                ImageView imageView = dialogView.findViewById(R.id.imageGun);
+//                TextView makeAndModel = dialogView.findViewById(R.id.makeAndModel);
+//                TextView unitsInStock = dialogView.findViewById(R.id.unitsInStock);
+//                TextView magOptions = dialogView.findViewById(R.id.magOptions);
+//                TextView caliber = dialogView.findViewById(R.id.caliber);
+//                TextView weight = dialogView.findViewById(R.id.weight);
+//                TextView price = dialogView.findViewById(R.id.price);
+//
+//                makeAndModel.setText(""+g.getManufacturer()+" "+g.getModelName());
+//                unitsInStock.setText(""+g.getInStock());
+//                magOptions.setText(""+g.getOptionsMagCapacity());
+//                caliber.setText(""+g.getCaliber());
+//                weight.setText(""+g.getWeight());
+//                price.setText(""+g.getPrice());
+//                Picasso.get()
+//                        .load(""+g.getImgUrl())
+//                        .into(imageView);
+//                ad.show();
+//            }
+//        });
+
         gunListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
-            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l)
-            {
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+                isOn = true;
 
-                Gun g= adapter.getItem(i);
+                Gun g = adapter.getItem(i);
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(addGun.this);
                 View dialogView = getLayoutInflater().inflate(R.layout.dialog_delete_gun, null, false);
                 builder.setView(dialogView);
                 AlertDialog ad = builder.create();
                 ad.show();
+                ad.setCancelable(false);
                 Button buttonYes = dialogView.findViewById(R.id.buttonYes);
                 Button buttonNo = dialogView.findViewById(R.id.buttonNo);
 
                 buttonYes.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(View view)
-                    {
-                        
+                    public void onClick(View view) {
+
 //                        DatabaseReference current = FirebaseDatabase.getInstance().getReference("guns").child(""+g.getManufacturer()+" "+g.getModelName());
 
                         firestore.collection("guns")
-                                .document(""+g.getManufacturer()+" "+g.getModelName())
+                                .document("" + g.getManufacturer() + " " + g.getModelName())
                                 .delete();
 
                         /*firestore.collection("guns")
@@ -161,13 +281,16 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
 
 //                        firestore.collection("guns")
 //                                .document("1670921447982").delete();
+                        isOn = false;
                         ad.dismiss();
+
                     }
                 });
 
                 buttonNo.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        isOn = false;
                         ad.dismiss();
                     }
                 });
@@ -175,6 +298,7 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
 //                startActivity(new Intent(addGun.this, MainActivity.class));
                 return false;
             }
+
         });
 
         firestore
@@ -248,7 +372,7 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
 
 
                             if (modelName.isEmpty() || stPrice.isEmpty() || manufacturer.isEmpty() || imgUrl.isEmpty() || stInStock.isEmpty() || magOptions.isEmpty() || caliber.isEmpty() || stWeight.isEmpty()) {
-                                Toast.makeText(addGun.this, "Please Fill All Fields", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(addGun.this, "Please fill all the fields", Toast.LENGTH_SHORT).show();
                             } else {
                                 int price = Integer.parseInt(stPrice);
                                 int inStock = Integer.parseInt(stInStock);
@@ -259,7 +383,7 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
                                 Gun gun = new Gun(modelName, manufacturer, imgUrl, price, inStock, magOptions, caliber, weight);
                                 firestore
                                         .collection("guns")
-                                        .document(""+manufacturer+" "+modelName)
+                                        .document("" + manufacturer + " " + modelName)
                                         .set(gun)
                                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override
@@ -286,7 +410,7 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
     public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
         List<DocumentSnapshot> docList = value.getDocuments();
         gunArrryList.clear();
-        if(docList.toArray().length !=0)
+        if (docList.toArray().length != 0)
             for (DocumentSnapshot doc : docList) {
                 Gun gun = new Gun(
                         doc.getString("modelName"),
@@ -294,12 +418,12 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
                         doc.getString("imgUrl"),
                         Integer.parseInt(doc.get("price").toString()),
                         Integer.parseInt(doc.get("inStock").toString()),
-    //                    Integer.parseInt(doc.get("standardMagCapacity").toString()),
+                        //                    Integer.parseInt(doc.get("standardMagCapacity").toString()),
                         doc.getString("optionsMagCapacity"),
                         doc.getString("caliber"),
                         Integer.parseInt(doc.get("weight").toString())
-    //                    Integer.parseInt(doc.get("barrelLength").toString()),
-    //                    Integer.parseInt(doc.get("triggerPull").toString())
+                        //                    Integer.parseInt(doc.get("barrelLength").toString()),
+                        //                    Integer.parseInt(doc.get("triggerPull").toString())
                 );
                 gunArrryList.add(gun);
             }

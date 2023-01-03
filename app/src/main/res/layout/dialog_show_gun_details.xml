@@ -10,141 +10,141 @@
 
     <TextView
         android:id="@+id/unitsInStock"
-        android:layout_width="180dp"
-        android:layout_height="35dp"
+        android:layout_width="150dp"
+        android:layout_height="40dp"
         android:layout_marginTop="16dp"
         android:text="TextView"
         android:textColor="#000000"
-        android:textSize="16sp"
+        android:textSize="20sp"
         app:layout_constraintStart_toStartOf="@+id/makeAndModel"
         app:layout_constraintTop_toBottomOf="@+id/makeAndModel" />
 
     <TextView
         android:id="@+id/makeAndModel"
-        android:layout_width="180dp"
-        android:layout_height="35dp"
+        android:layout_width="150dp"
+        android:layout_height="40dp"
         android:layout_marginStart="40dp"
         android:text="TextView"
         android:textColor="#000000"
-        android:textSize="16sp"
+        android:textSize="20sp"
         app:layout_constraintStart_toEndOf="@+id/textView2"
         app:layout_constraintTop_toTopOf="@+id/textView2" />
 
     <TextView
         android:id="@+id/price"
-        android:layout_width="180dp"
-        android:layout_height="35dp"
+        android:layout_width="150dp"
+        android:layout_height="40dp"
         android:layout_marginTop="16dp"
         android:text="TextView"
         android:textColor="#000000"
-        android:textSize="16sp"
+        android:textSize="20sp"
         app:layout_constraintStart_toStartOf="@+id/makeAndModel"
         app:layout_constraintTop_toBottomOf="@+id/weight" />
 
     <TextView
         android:id="@+id/caliber"
-        android:layout_width="180dp"
-        android:layout_height="35dp"
+        android:layout_width="150dp"
+        android:layout_height="40dp"
         android:layout_marginTop="16dp"
         android:text="TextView"
         android:textColor="#000000"
-        android:textSize="16sp"
+        android:textSize="20sp"
         app:layout_constraintStart_toStartOf="@+id/makeAndModel"
         app:layout_constraintTop_toBottomOf="@+id/magOptions" />
 
     <TextView
         android:id="@+id/weight"
-        android:layout_width="180dp"
-        android:layout_height="35dp"
+        android:layout_width="150dp"
+        android:layout_height="40dp"
         android:layout_marginTop="16dp"
         android:text="TextView"
         android:textColor="#000000"
-        android:textSize="16sp"
+        android:textSize="20sp"
         app:layout_constraintStart_toStartOf="@+id/makeAndModel"
         app:layout_constraintTop_toBottomOf="@+id/caliber" />
 
     <TextView
         android:id="@+id/magOptions"
-        android:layout_width="180dp"
-        android:layout_height="35dp"
+        android:layout_width="150dp"
+        android:layout_height="40dp"
         android:layout_marginTop="16dp"
         android:text="TextView"
         android:textColor="#000000"
-        android:textSize="16sp"
+        android:textSize="20sp"
         app:layout_constraintStart_toStartOf="@+id/makeAndModel"
         app:layout_constraintTop_toBottomOf="@+id/unitsInStock" />
 
     <TextView
         android:id="@+id/textView2"
-        android:layout_width="110dp"
-        android:layout_height="35dp"
+        android:layout_width="150dp"
+        android:layout_height="40dp"
         android:layout_marginStart="48dp"
-        android:layout_marginTop="36dp"
+        android:layout_marginTop="24dp"
         android:text="Make &amp; Model:"
         android:textColor="#000000"
-        android:textSize="16sp"
+        android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageGun" />
 
     <TextView
         android:id="@+id/textView3"
-        android:layout_width="110dp"
-        android:layout_height="35dp"
+        android:layout_width="150dp"
+        android:layout_height="40dp"
         android:layout_marginTop="16dp"
         android:text="Units In Stock:"
         android:textColor="#000000"
-        android:textSize="16sp"
+        android:textSize="20sp"
         app:layout_constraintStart_toStartOf="@+id/textView2"
         app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
     <TextView
         android:id="@+id/textView4"
-        android:layout_width="110dp"
-        android:layout_height="35dp"
+        android:layout_width="150dp"
+        android:layout_height="40dp"
         android:layout_marginTop="16dp"
         android:text="Mag Options:"
         android:textColor="#000000"
-        android:textSize="16sp"
+        android:textSize="20sp"
         app:layout_constraintStart_toStartOf="@+id/textView2"
         app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
     <TextView
         android:id="@+id/textView5"
-        android:layout_width="110dp"
-        android:layout_height="35dp"
+        android:layout_width="150dp"
+        android:layout_height="40dp"
         android:layout_marginTop="16dp"
         android:text="Caliber"
         android:textColor="#000000"
-        android:textSize="16sp"
+        android:textSize="20sp"
         app:layout_constraintStart_toStartOf="@+id/textView2"
         app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
     <TextView
         android:id="@+id/textView6"
-        android:layout_width="110dp"
-        android:layout_height="35dp"
+        android:layout_width="150dp"
+        android:layout_height="40dp"
         android:layout_marginTop="16dp"
         android:text="Weight [g]:"
         android:textColor="#000000"
-        android:textSize="16sp"
+        android:textSize="20sp"
         app:layout_constraintStart_toStartOf="@+id/textView2"
         app:layout_constraintTop_toBottomOf="@+id/textView5" />
 
     <TextView
         android:id="@+id/textView7"
-        android:layout_width="110dp"
-        android:layout_height="35dp"
+        android:layout_width="150dp"
+        android:layout_height="40dp"
         android:layout_marginTop="16dp"
         android:text="Price:"
         android:textColor="#000000"
-        android:textSize="16sp"
+        android:textSize="20sp"
         app:layout_constraintStart_toStartOf="@+id/textView2"
         app:layout_constraintTop_toBottomOf="@+id/textView6" />
 
     <TextView
         android:id="@+id/textView14"
         android:layout_width="110dp"
-        android:layout_height="35dp"
+        android:layout_height="28dp"
         android:textColor="#000000"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="@+id/textView7"
@@ -156,10 +156,21 @@
         android:id="@+id/imageGun"
         android:layout_width="328dp"
         android:layout_height="153dp"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="24dp"
         android:layout_marginEnd="32dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/textView2"
         app:layout_constraintTop_toTopOf="parent"
         tools:srcCompat="@tools:sample/avatars" />
+
+    <Button
+        android:visibility="gone"
+        android:id="@+id/update2"
+        android:layout_width="193dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="20dp"
+        android:text="update info"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView7" />
 </androidx.constraintlayout.widget.ConstraintLayout>

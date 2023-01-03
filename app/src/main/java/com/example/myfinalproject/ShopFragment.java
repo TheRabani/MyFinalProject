@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,6 +25,7 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,26 +64,30 @@ public class ShopFragment extends Fragment implements EventListener<QuerySnapsho
         gunListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Gun g= adapter.getItem(i);
+                Gun g = adapter.getItem(i);
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 View dialogView = getLayoutInflater().inflate(R.layout.dialog_show_gun_details, null, false);
                 builder.setView(dialogView);
                 AlertDialog ad = builder.create();
 
-                TextView makeAndModel = ad.findViewById(R.id.makeAndModel);
-                TextView unitsInStock = ad.findViewById(R.id.unitsInStock);
-                TextView magOptions = ad.findViewById(R.id.magOptions);
-                TextView caliber = ad.findViewById(R.id.caliber);
-                TextView weight = ad.findViewById(R.id.weight);
-                TextView price = ad.findViewById(R.id.price);
+                ImageView imageView = dialogView.findViewById(R.id.imageGun);
+                TextView makeAndModel = dialogView.findViewById(R.id.makeAndModel);
+                TextView unitsInStock = dialogView.findViewById(R.id.unitsInStock);
+                TextView magOptions = dialogView.findViewById(R.id.magOptions);
+                TextView caliber = dialogView.findViewById(R.id.caliber);
+                TextView weight = dialogView.findViewById(R.id.weight);
+                TextView price = dialogView.findViewById(R.id.price);
 
-//                makeAndModel.setText(""+g.getManufacturer()+" "+g.getModelName());
-//                unitsInStock.setText(""+g.getInStock());
-//                magOptions.setText(""+g.getOptionsMagCapacity());
-//                caliber.setText(""+g.getCaliber());
-//                weight.setText(""+g.getWeight());
-//                price.setText(""+g.getPrice());
+                makeAndModel.setText("" + g.getManufacturer() + " " + g.getModelName());
+                unitsInStock.setText("" + g.getInStock());
+                magOptions.setText("" + g.getOptionsMagCapacity());
+                caliber.setText("" + g.getCaliber());
+                weight.setText("" + g.getWeight());
+                price.setText("" + g.getPrice());
+                Picasso.get()
+                        .load("" + g.getImgUrl())
+                        .into(imageView);
                 ad.show();
             }
         });
