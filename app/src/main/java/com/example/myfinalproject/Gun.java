@@ -1,30 +1,30 @@
 package com.example.myfinalproject;
 
 public class Gun {
-    public String modelName; // for ex 19
-    public String manufacturer; // for ex Glock
-    public String imgUrl; // a url to a photo
-    public int price; // full price
-    public int inStock; // number of them in stock
-    public int standardMagCapacity; // standard mag capacity
-    public String optionsMagCapacity; // options of mag capacity
-    public String caliber; // diameter X length
-    public int weight; // in gr
-    public int barrelLength; //in mm
-    public int triggerPull; // how much N it takes to pull
+    private String modelName; // for ex 19
+    private String manufacturer; // for ex Glock
+    private String imgUrl; // a url to a photo
+    private int price; // full price
+    private int inStock; // number of them in stock
+//    private int standardMagCapacity; // standard mag capacity
+    private String optionsMagCapacity; // options of mag capacity
+    private String caliber; // diameter X length
+    private int weight; // in gr
+//    public int barrelLength; //in mm
+//    public int triggerPull; // how much N it takes to pull
 
-    public Gun(String modelName, String manufacturer, String imgUrl, int price, int inStock, int standardMagCapacity, String optionsMagCapacity, String caliber, int weight, int barrelLength, int triggerPull) {
+    public Gun(String modelName, String manufacturer, String imgUrl, int price, int inStock, String optionsMagCapacity, String caliber, int weight) {
         this.modelName = modelName;
         this.manufacturer = manufacturer;
         this.imgUrl = imgUrl;
         this.price = price;
         this.inStock = inStock;
-        this.standardMagCapacity = standardMagCapacity;
+//        this.standardMagCapacity = standardMagCapacity;
         this.optionsMagCapacity = optionsMagCapacity;
         this.caliber = caliber;
         this.weight = weight;
-        this.barrelLength = barrelLength;
-        this.triggerPull = triggerPull;
+//        this.barrelLength = barrelLength;
+//        this.triggerPull = triggerPull;
     }
 
     public Gun()
@@ -48,13 +48,13 @@ public class Gun {
         this.manufacturer = manufacturer;
     }
 
-    public int getStandardMagCapacity() {
-        return standardMagCapacity;
-    }
+//    public int getStandardMagCapacity() {
+//        return standardMagCapacity;
+//    }
 
-    public void setStandardMagCapacity(int standardMagCapacity) {
-        this.standardMagCapacity = standardMagCapacity;
-    }
+//    public void setStandardMagCapacity(int standardMagCapacity) {
+//        this.standardMagCapacity = standardMagCapacity;
+//    }
 
     public String getOptionsMagCapacity() {
         return optionsMagCapacity;
@@ -88,13 +88,13 @@ public class Gun {
         this.imgUrl = imgUrl;
     }
 
-    public int getBarrelLength() {
-        return barrelLength;
-    }
+//    public int getBarrelLength() {
+//        return barrelLength;
+//    }
 
-    public void setBarrelLength(int barrelLength) {
-        this.barrelLength = barrelLength;
-    }
+//    public void setBarrelLength(int barrelLength) {
+//        this.barrelLength = barrelLength;
+//    }
 
     public int getInStock() {
         return inStock;
@@ -104,13 +104,13 @@ public class Gun {
         this.inStock = inStock;
     }
 
-    public int getTriggerPull() {
-        return triggerPull;
-    }
+//    public int getTriggerPull() {
+//        return triggerPull;
+//    }
 
-    public void setTriggerPull(int triggerPull) {
-        this.triggerPull = triggerPull;
-    }
+//    public void setTriggerPull(int triggerPull) {
+//        this.triggerPull = triggerPull;
+//    }
 
     public String getName() { return modelName; }
 

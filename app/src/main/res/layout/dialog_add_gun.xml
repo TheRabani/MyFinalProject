@@ -21,17 +21,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
-        android:id="@+id/etStandardMagCapacity"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:ems="10"
-        android:hint="Standard Mag Capacity"
-        android:inputType="numberSigned"
-        android:minHeight="48dp"
-        app:layout_constraintStart_toStartOf="@+id/etInStock"
-        app:layout_constraintTop_toBottomOf="@+id/etInStock" />
+<!--    <EditText-->
+<!--        android:id="@+id/etStandardMagCapacity"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_margin="10dp"-->
+<!--        android:ems="10"-->
+<!--        android:hint="Standard Mag Capacity"-->
+<!--        android:inputType="numberSigned"-->
+<!--        android:minHeight="48dp"-->
+<!--        app:layout_constraintStart_toStartOf="@+id/etInStock"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/etInStock" />-->
 
     <EditText
         android:id="@+id/etManufacturer"
@@ -78,8 +78,8 @@
         android:hint="Mag Options"
         android:inputType="textPersonName"
         android:minHeight="48dp"
-        app:layout_constraintStart_toStartOf="@+id/etStandardMagCapacity"
-        app:layout_constraintTop_toBottomOf="@+id/etStandardMagCapacity" />
+        app:layout_constraintStart_toStartOf="@+id/etInStock"
+        app:layout_constraintTop_toBottomOf="@+id/etInStock" />
 
     <EditText
         android:id="@+id/etPrice"
@@ -90,8 +90,8 @@
         android:hint="Price"
         android:inputType="numberDecimal"
         android:minHeight="48dp"
-        app:layout_constraintStart_toStartOf="@+id/etTriggerPull"
-        app:layout_constraintTop_toBottomOf="@+id/etTriggerPull" />
+        app:layout_constraintStart_toStartOf="@+id/etWeight"
+        app:layout_constraintTop_toBottomOf="@+id/etWeight" />
 
     <EditText
         android:id="@+id/etCaliber"
@@ -105,29 +105,29 @@
         app:layout_constraintStart_toStartOf="@+id/etMagOptions"
         app:layout_constraintTop_toBottomOf="@+id/etMagOptions" />
 
-    <EditText
-        android:id="@+id/etTriggerPull"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:ems="10"
-        android:hint="Triger Pull (in N)"
-        android:inputType="numberSigned"
-        android:minHeight="48dp"
-        app:layout_constraintStart_toStartOf="@+id/etBarrelSize"
-        app:layout_constraintTop_toBottomOf="@+id/etBarrelSize" />
+<!--    <EditText-->
+<!--        android:id="@+id/etTriggerPull"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_margin="10dp"-->
+<!--        android:ems="10"-->
+<!--        android:hint="Triger Pull (in N)"-->
+<!--        android:inputType="numberSigned"-->
+<!--        android:minHeight="48dp"-->
+<!--        app:layout_constraintStart_toStartOf="@+id/etBarrelSize"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/etBarrelSize" />-->
 
-    <EditText
-        android:id="@+id/etBarrelSize"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:ems="10"
-        android:hint="Barrel Size (in mm)"
-        android:inputType="numberSigned"
-        android:minHeight="48dp"
-        app:layout_constraintStart_toStartOf="@+id/etWeight"
-        app:layout_constraintTop_toBottomOf="@+id/etWeight" />
+<!--    <EditText-->
+<!--        android:id="@+id/etBarrelSize"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_margin="10dp"-->
+<!--        android:ems="10"-->
+<!--        android:hint="Barrel Size (in mm)"-->
+<!--        android:inputType="numberSigned"-->
+<!--        android:minHeight="48dp"-->
+<!--        app:layout_constraintStart_toStartOf="@+id/etWeight"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/etWeight" />-->
 
     <EditText
         android:id="@+id/etWeight"
