@@ -1,5 +1,6 @@
 package com.example.myfinalproject;
 
+import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -8,7 +9,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -124,6 +128,24 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
                         etMagOptions.setText(""+g.getOptionsMagCapacity());
                         etCaliber.setText(""+g.getCaliber());
                         etWeight.setText(""+g.getWeight());
+
+                        etManufacturer.setInputType(InputType.TYPE_NULL);
+                        etManufacturer.setTextColor(Color.GRAY);
+                        etManufacturer.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                
+                            }
+                        });
+
+                        etToyName.setInputType(InputType.TYPE_NULL);
+                        etToyName.setTextColor(Color.GRAY);
+                        etToyName.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+
+                            }
+                        });
 
                         ad2.show();
 
