@@ -39,6 +39,8 @@ public class ShopFragment extends Fragment implements EventListener<QuerySnapsho
     public DocumentSnapshot doc2;
     public String st;
 
+    public int count;
+
     private ListView gunListView;
     private gunAdapter adapter;
 

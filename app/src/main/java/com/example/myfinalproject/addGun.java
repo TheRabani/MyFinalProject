@@ -25,6 +25,8 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -436,6 +438,8 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
                 if (view == btnAdd) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(addGun.this);
                     View dialogView = getLayoutInflater().inflate(R.layout.dialog_add_gun, null, false);
+                    builder.setView(dialogView);
+                    AlertDialog ad4 = builder.create();
                     Button buttonAdd = dialogView.findViewById(R.id.buttonAdd);
                     EditText etPrice = dialogView.findViewById(R.id.etPrice);
                     EditText etToyName = dialogView.findViewById(R.id.etGunModel);
@@ -490,12 +494,29 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
                                                 }
                                             }
                                         });
+
+                                int a=0;
+                                FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+                                String id = currentUser.getUid();
+                                Request request = new Request(id);
+                                firestore.
+                                        collection("requests")
+                                        .document("" + manufacturer + " " + modelName)
+                                        .set(request)
+                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if(!task.isSuccessful())
+                                                    Toast.makeText(addGun.this, ""+task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
                             }
+                            ad4.dismiss();
                         }
                     });
 
-                    builder.setView(dialogView);
-                    builder.create().show();
+
+                    ad4.show();
                 }
             }
         });
