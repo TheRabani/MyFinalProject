@@ -49,6 +49,8 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
     private ListView gunListView;
     private gunAdapter adapter;
 
+    public int num;
+
     private ArrayList<Gun> gunArrryList;
 
     @Override
@@ -106,10 +108,43 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
                         AlertDialog.Builder builder = new AlertDialog.Builder(addGun.this);
                         View dialogView = getLayoutInflater().inflate(R.layout.dialolg_add_units, null, false);
                         builder.setView(dialogView);
-                        AlertDialog ad = builder.create();
+                        AlertDialog ad3 = builder.create();
                         EditText number = dialogView.findViewById(R.id.number);
                         FloatingActionButton addOne = dialogView.findViewById(R.id.floatingActionButtonAddOne);
                         FloatingActionButton subOne = dialogView.findViewById(R.id.floatingActionButtonSubOne);
+                        Button apply = dialogView.findViewById(R.id.accept);
+                        Button cancel = dialogView.findViewById(R.id.cancel);
+
+                        cancel.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                ad3.dismiss();
+                            }
+                        });
+
+                        apply.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                num = Integer.parseInt(number.getText().toString());
+                                firestore
+                                        .collection("guns")
+                                        .document("" + g.getManufacturer() + " " + g.getName())
+                                        .set(new Gun(g.getName(), g.getManufacturer(), g.getImgUrl(), g.getPrice(), num, g.getOptionsMagCapacity(), g.getCaliber(), g.getWeight()))
+                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if (task.isSuccessful()) {
+                                                    ad3.dismiss();
+                                                    ad.dismiss();
+                                                    Toast.makeText(addGun.this, "Updated!", Toast.LENGTH_SHORT).show();
+                                                } else {
+                                                    Toast.makeText(addGun.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                                }
+                                            }
+                                        });
+                            }
+                        });
+
                         number.setText(""+g.getInStock());
                         addOne.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -126,8 +161,8 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
                             }
                         });
 
-                        ad.show();
-                        ad.setCancelable(false);
+                        ad3.show();
+                        ad3.setCancelable(false);
 
                     }
                 });

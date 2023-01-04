@@ -188,5 +188,18 @@
         app:layout_constraintTop_toTopOf="@+id/unitsInStock"
         tools:ignore="TouchTargetSizeCheck" />
 
+    <Button
+        android:id="@+id/request"
+        android:layout_width="110dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="18dp"
+        android:layout_marginBottom="16dp"
+        android:backgroundTint="@color/material_dynamic_primary70"
+        android:text="request"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/unitsInStock"
+        app:layout_constraintStart_toStartOf="@+id/unitsInStock"
+        app:layout_constraintTop_toTopOf="@+id/unitsInStock" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

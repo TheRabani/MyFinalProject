@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -78,9 +79,24 @@ public class ShopFragment extends Fragment implements EventListener<QuerySnapsho
                 TextView caliber = dialogView.findViewById(R.id.caliber);
                 TextView weight = dialogView.findViewById(R.id.weight);
                 TextView price = dialogView.findViewById(R.id.price);
+                Button request = dialogView.findViewById(R.id.request);
 
                 makeAndModel.setText("" + g.getManufacturer() + " " + g.getModelName());
-                unitsInStock.setText("" + g.getInStock());
+                int num = g.getInStock();
+                if(num!=0)
+                    unitsInStock.setText("" + g.getInStock());
+                else {
+                    unitsInStock.setText("0");
+                    request.setVisibility(view.VISIBLE);
+                }
+
+                request.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                    }
+                });
+
                 magOptions.setText("" + g.getOptionsMagCapacity());
                 caliber.setText("" + g.getCaliber());
                 weight.setText("" + g.getWeight());
