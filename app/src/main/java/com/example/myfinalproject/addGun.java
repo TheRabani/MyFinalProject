@@ -85,6 +85,8 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
                 TextView weight = dialogView.findViewById(R.id.weight);
                 TextView price = dialogView.findViewById(R.id.price);
                 Button updateBtn = dialogView.findViewById(R.id.update2);
+                Button buttonEditUnits = dialogView.findViewById(R.id.editUnitsInStock);
+                buttonEditUnits.setVisibility(view.VISIBLE);
                 updateBtn.setVisibility(View.VISIBLE);
 
                 makeAndModel.setText("" + g.getManufacturer() + " " + g.getModelName());
@@ -98,6 +100,38 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
                         .into(imageView);
                 ad.show();
 
+                buttonEditUnits.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(addGun.this);
+                        View dialogView = getLayoutInflater().inflate(R.layout.dialolg_add_units, null, false);
+                        builder.setView(dialogView);
+                        AlertDialog ad = builder.create();
+                        EditText number = dialogView.findViewById(R.id.number);
+                        FloatingActionButton addOne = dialogView.findViewById(R.id.floatingActionButtonAddOne);
+                        FloatingActionButton subOne = dialogView.findViewById(R.id.floatingActionButtonSubOne);
+                        number.setText(""+g.getInStock());
+                        addOne.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                number.setText(""+(Integer.parseInt(number.getText().toString())+1));
+                            }
+                        });
+                        subOne.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                int num = Integer.parseInt(number.getText().toString());
+                                if(num!=0)
+                                    number.setText(""+(num-1));
+                            }
+                        });
+
+                        ad.show();
+                        ad.setCancelable(false);
+
+                    }
+                });
+
                 updateBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -107,6 +141,8 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
                         builder.setView(dialogView);
                         AlertDialog ad2 = builder.create();
                         Button buttonAdd = dialogView.findViewById(R.id.buttonAdd);
+
+
                         EditText etPrice = dialogView.findViewById(R.id.etPrice);
                         EditText etToyName = dialogView.findViewById(R.id.etGunModel);
                         EditText etManufacturer = dialogView.findViewById(R.id.etManufacturer);
@@ -128,6 +164,8 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
                         etMagOptions.setText(""+g.getOptionsMagCapacity());
                         etCaliber.setText(""+g.getCaliber());
                         etWeight.setText(""+g.getWeight());
+
+
 
                         etManufacturer.setInputType(InputType.TYPE_NULL);
                         etManufacturer.setTextColor(Color.GRAY);
