@@ -41,6 +41,7 @@ dependencies {
     implementation 'com.airbnb.android:lottie:3.7.0'
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.19'
     implementation 'com.google.firebase:firebase-auth:21.1.0'
+    implementation 'com.google.android.gms:play-services-maps:18.1.0'
     implementation 'com.google.firebase:firebase-firestore:24.4.1'
     implementation 'com.google.firebase:firebase-database:20.1.0'
     testImplementation 'junit:junit:4.+'
