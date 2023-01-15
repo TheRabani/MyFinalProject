@@ -58,6 +58,10 @@ public class HomeFragment extends Fragment {
                     Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.waze"));
                     startActivity(intent);
                 }
+//                Intent intent=new Intent(Intent.ACTION_VIEW);
+//                intent.setData(Uri.parse("geo:"+31.752167930459038+","+35.21662087865303));
+//                Intent chooser=Intent.createChooser(intent, "Lunch Maps");
+//                startActivity(chooser);
             }
         });
 

@@ -47,10 +47,10 @@
         android:layout_height="170dp"
         android:layout_below="@+id/signIn"
         android:layout_marginStart="60dp"
-
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="60dp"
         android:layout_marginBottom="20dp"
-        android:src="@drawable/try_logo"></ImageView>
+        android:src="@drawable/try_logo"/>
 
     <EditText
         android:id="@+id/otp"
@@ -93,6 +93,7 @@
         android:minHeight="48dp"
         android:onClick="GoToSignUp"
         android:text="Don't have an account?\nclick here to go sign up"
+        android:visibility="invisible"
         android:textSize="17dp" />
 
     <ProgressBar

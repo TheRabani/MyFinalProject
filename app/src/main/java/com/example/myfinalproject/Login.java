@@ -144,6 +144,6 @@ public class Login extends AppCompatActivity {
     }
 
     public void GoToSignUp(View view) {
-        startActivity(new Intent(Login.this, SignUp.class));
+
     }
 }
