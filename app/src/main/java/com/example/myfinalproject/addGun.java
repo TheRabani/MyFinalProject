@@ -147,19 +147,19 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
                             }
                         });
 
-                        number.setText(""+g.getInStock());
+                        number.setText("" + g.getInStock());
                         addOne.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                number.setText(""+(Integer.parseInt(number.getText().toString())+1));
+                                number.setText("" + (Integer.parseInt(number.getText().toString()) + 1));
                             }
                         });
                         subOne.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
                                 int num = Integer.parseInt(number.getText().toString());
-                                if(num!=0)
-                                    number.setText(""+(num-1));
+                                if (num != 0)
+                                    number.setText("" + (num - 1));
                             }
                         });
 
@@ -193,15 +193,14 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
 //                    EditText etTriggerPull = dialogView.findViewById(R.id.etTriggerPull);
                         buttonAdd.setText("update");
 
-                        etPrice.setText(""+g.getPrice());
-                        etToyName.setText(""+g.getModelName());
-                        etManufacturer.setText(""+g.getManufacturer());
-                        etImageURL.setText(""+g.getImgUrl());
-                        etUnitsInStock.setText(""+g.getInStock());
-                        etMagOptions.setText(""+g.getOptionsMagCapacity());
-                        etCaliber.setText(""+g.getCaliber());
-                        etWeight.setText(""+g.getWeight());
-
+                        etPrice.setText("" + g.getPrice());
+                        etToyName.setText("" + g.getModelName());
+                        etManufacturer.setText("" + g.getManufacturer());
+                        etImageURL.setText("" + g.getImgUrl());
+                        etUnitsInStock.setText("" + g.getInStock());
+                        etMagOptions.setText("" + g.getOptionsMagCapacity());
+                        etCaliber.setText("" + g.getCaliber());
+                        etWeight.setText("" + g.getWeight());
 
 
                         etManufacturer.setInputType(InputType.TYPE_NULL);
@@ -209,7 +208,7 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
                         etManufacturer.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                
+
                             }
                         });
 
@@ -495,21 +494,21 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
                                             }
                                         });
 
-                                int a=0;
-                                FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-                                String id = currentUser.getUid();
-                                Request request = new Request(id);
-                                firestore.
-                                        collection("requests")
-                                        .document("" + manufacturer + " " + modelName)
-                                        .set(request)
-                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<Void> task) {
-                                                if(!task.isSuccessful())
-                                                    Toast.makeText(addGun.this, ""+task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                                            }
-                                        });
+                                int a = 0;
+//                                FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+//                                String id = currentUser.getUid();
+//                                Request request = new Request(id);
+//                                firestore.
+//                                        collection("requests")
+//                                        .document("" + manufacturer + " " + modelName)
+//                                        .set(request)
+//                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+//                                            @Override
+//                                            public void onComplete(@NonNull Task<Void> task) {
+//                                                if(!task.isSuccessful())
+//                                                    Toast.makeText(addGun.this, ""+task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+//                                            }
+//                                        });
                             }
                             ad4.dismiss();
                         }

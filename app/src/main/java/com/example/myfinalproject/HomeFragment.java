@@ -4,6 +4,8 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
@@ -18,7 +20,7 @@ import com.google.firebase.auth.FirebaseUser;
 public class HomeFragment extends Fragment {
     FirebaseAuth mAuth;
     Button logout, addGun;
-    Button buttonGoTo;
+    Button buttonGoTo, buttonNavigation;
     View view;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -28,6 +30,19 @@ public class HomeFragment extends Fragment {
 
         view = inflater.inflate(R.layout.fragment_home, container, false);
         getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, fragment).commit();
+
+        buttonNavigation = view.findViewById(R.id.buttonNavigation);
+        buttonNavigation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                View dialogView = getLayoutInflater().inflate(R.layout.dialog_navigation, null, false);
+                builder.setView(dialogView);
+                AlertDialog ad = builder.create();
+                ad.show();
+            }
+        });
+
         mAuth = FirebaseAuth.getInstance();
         logout = (Button) view.findViewById(R.id.logout);
         logout.setOnClickListener(new View.OnClickListener() {

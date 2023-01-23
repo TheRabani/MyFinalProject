@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layoutDirection="ltr"
     tools:context=".HomeFragment">
 
     <Button
@@ -21,12 +22,26 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:text="A little bit abouyt us and pictures"
+        android:text="מטווח קרב"
         android:textSize="25dp"
         app:layout_constraintBottom_toTopOf="@+id/addGun"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.508"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/logout" />
+        app:layout_constraintTop_toBottomOf="@+id/logout"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="221dp"
+        android:layout_height="196dp"
+
+        android:layout_marginTop="16dp"
+        android:src="@drawable/try_logo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/addGun" />
 
     <Button
         android:id="@+id/logout"
@@ -47,7 +62,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/logout"
-        android:layout_marginTop="70dp"
+        android:layout_marginTop="44dp"
         android:text="Add A Gun"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -57,13 +72,24 @@
         android:id="@+id/textView8"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="350dp"
+        android:layout_marginTop="16dp"
         android:text="So where are we located?"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addGun" />
+        app:layout_constraintTop_toBottomOf="@+id/textView9" />
+
+    <Button
+        android:id="@+id/buttonNavigation"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Button"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView9" />
 
     <FrameLayout
         android:id="@+id/frame_layout"
@@ -81,6 +107,17 @@
         app:layout_constraintVertical_bias="0.5">
 
     </FrameLayout>
+
+    <TextView
+        android:id="@+id/textView9"
+        android:layout_width="319dp"
+        android:layout_height="183dp"
+        android:layout_marginTop="16dp"
+        android:text="Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures "
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.567"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
