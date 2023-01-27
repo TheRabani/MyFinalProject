@@ -1,6 +1,8 @@
 package com.example.myfinalproject;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.view.LayoutInflater;
@@ -9,14 +11,22 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,7 +52,27 @@ public class gunAdapter extends ArrayAdapter<Gun> {
         TextView tvGunName = view.findViewById(R.id.gunName);
         ImageView tvImage = view.findViewById(R.id.gunImage);
 
-        tvGunName.setText(""+gun.getManufacturer()+" "+gun.getModelName());
+        String st = "" + gun.getManufacturer() + " " + gun.getModelName();
+
+        tvGunName.setText(st);
+        StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("image/" + st);
+        try {
+            File localFile = File.createTempFile("" + st, "jpeg");
+
+            storageReference.getFile(localFile)
+                    .addOnCompleteListener(new OnCompleteListener<FileDownloadTask.TaskSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<FileDownloadTask.TaskSnapshot> task) {
+                            if (task.isSuccessful()) {
+                                Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+                                tvImage.setImageBitmap(bitmap);
+                            } else {
+                            }
+                        }
+                    });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 //        tvImage.setImageResource();
 //
 //        Picasso.get()

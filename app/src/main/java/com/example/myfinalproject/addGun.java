@@ -10,8 +10,11 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.ColorStateList;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.InputType;
@@ -39,11 +42,15 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,10 +63,9 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
 
     boolean isOn;
 
-    public ImageView image;
-    public Uri imageUri;
+    ImageView image;
+    Uri imageUri;
     StorageReference storageReference;
-
     public ProgressBar progressBar;
 
     private ListView gunListView;
@@ -93,11 +99,12 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
             if (!isOn) {
                 Gun g = adapter.getItem(i);
 
+                progressBar.setVisibility(View.VISIBLE);
+
                 AlertDialog.Builder builder = new AlertDialog.Builder(addGun.this);
                 View dialogView = getLayoutInflater().inflate(R.layout.dialog_show_gun_details, null, false);
                 builder.setView(dialogView);
                 AlertDialog ad = builder.create();
-
                 ImageView imageView = dialogView.findViewById(R.id.imageGun);
                 TextView makeAndModel = dialogView.findViewById(R.id.makeAndModel);
                 TextView unitsInStock = dialogView.findViewById(R.id.unitsInStock);
@@ -107,20 +114,102 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
                 TextView price = dialogView.findViewById(R.id.price);
                 Button updateBtn = dialogView.findViewById(R.id.update2);
                 Button buttonEditUnits = dialogView.findViewById(R.id.editUnitsInStock);
-                buttonEditUnits.setVisibility(view.VISIBLE);
+                Button editImage = dialogView.findViewById(R.id.editImage);
+                editImage.setVisibility(View.VISIBLE);
+                buttonEditUnits.setVisibility(View.VISIBLE);
                 updateBtn.setVisibility(View.VISIBLE);
 
-
                 makeAndModel.setText("" + g.getManufacturer() + " " + g.getModelName());
-                unitsInStock.setText("" + g.getInStock());
-                magOptions.setText("" + g.getOptionsMagCapacity());
-                caliber.setText("" + g.getCaliber());
-                weight.setText("" + g.getWeight());
-                price.setText("" + g.getPrice());
+                storageReference = FirebaseStorage.getInstance().getReference().child("image/" + makeAndModel.getText().toString());
+
+                editImage.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(addGun.this);
+                        View dialogView = getLayoutInflater().inflate(R.layout.dialog_delete_gun, null, false);
+                        builder.setView(dialogView);
+                        AlertDialog ad = builder.create();
+                        TextView textView = dialogView.findViewById(R.id.textView);
+                        textView.setText("Are You Sure You Want To Edit This Picture?");
+                        ad.show();
+                        ad.setCancelable(false);
+                        Button buttonYes = dialogView.findViewById(R.id.buttonYes);
+                        Button buttonNo = dialogView.findViewById(R.id.buttonNo);
+
+                        buttonNo.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                isOn = false;
+                                ad.dismiss();
+                            }
+                        });
+
+                        buttonYes.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                storageReference.delete()
+                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if(task.isSuccessful())
+                                                {
+                                                    Toast.makeText(addGun.this, "Deleted Successfully!", Toast.LENGTH_SHORT).show();
+                                                    isOn = false;
+                                                    ad.dismiss();
+                                                }
+                                                else
+                                                {
+                                                    Toast.makeText(addGun.this, "Error", Toast.LENGTH_SHORT).show();
+                                                    isOn = false;
+                                                    ad.dismiss();
+                                                }
+                                            }
+                                        });
+                            }
+                        });
+                    }
+                });
+
+
+                try {
+                    File localFile = File.createTempFile("" + makeAndModel.getText().toString(), "jpeg");
+
+                    storageReference.getFile(localFile)
+                            .addOnCompleteListener(new OnCompleteListener<FileDownloadTask.TaskSnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<FileDownloadTask.TaskSnapshot> task) {
+                                    if (task.isSuccessful()) {
+                                        Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+                                        imageView.setImageBitmap(bitmap);
+
+                                        unitsInStock.setText("" + g.getInStock());
+                                        magOptions.setText("" + g.getOptionsMagCapacity());
+                                        caliber.setText("" + g.getCaliber());
+                                        weight.setText("" + g.getWeight());
+                                        price.setText("" + g.getPrice());
+
+                                        ad.show();
+                                        progressBar.setVisibility(View.INVISIBLE);
+                                    } else {
+                                        Toast.makeText(addGun.this, "Error", Toast.LENGTH_SHORT).show();
+                                        imageView.setImageResource(R.drawable.x);
+                                        progressBar.setVisibility(View.INVISIBLE);
+                                        ad.show();
+                                    }
+                                }
+                            });
+                } catch (IOException e) {
+                    Toast.makeText(addGun.this, "Error2", Toast.LENGTH_SHORT).show();
+                    progressBar.setVisibility(View.INVISIBLE);
+                    e.printStackTrace();
+                }
+
+
 //                Picasso.get()
 //                        .load("" + g.getImgUrl())
 //                        .into(imageView);
-                ad.show();
+
+//                ad.show();
 
                 buttonEditUnits.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -201,7 +290,8 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
                         EditText etPrice = dialogView.findViewById(R.id.etPrice);
                         EditText etToyName = dialogView.findViewById(R.id.etGunModel);
                         EditText etManufacturer = dialogView.findViewById(R.id.etManufacturer);
-                        EditText etImageURL = dialogView.findViewById(R.id.etImageURL);
+                        Button etImageURL = dialogView.findViewById(R.id.etImageURL);
+                        etImageURL.setVisibility(View.GONE);
                         EditText etUnitsInStock = dialogView.findViewById(R.id.etInStock);
 //                    EditText etStandardMagCapacity = dialogView.findViewById(R.id.etStandardMagCapacity);
                         EditText etMagOptions = dialogView.findViewById(R.id.etMagOptions);
@@ -352,49 +442,6 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
                                 .document("" + g.getManufacturer() + " " + g.getModelName())
                                 .delete();
 
-                        /*firestore.collection("guns")
-                                .get()
-                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>()
-                                {
-                                    @Override
-                                    public void onComplete(@NonNull Task<QuerySnapshot> task)
-                                    {
-                                        if (task.isSuccessful())
-                                        {
-                                            List<DocumentSnapshot> docList = task.getResult().getDocuments();
-                                            for (DocumentSnapshot doc : docList)
-                                            {
-//                                                for(Gun gun : gunArrryList)
-//                                                {
-//                                                    if(doc.getString("modelName").equals(gun.getModelName()) && doc.getString("manufacturer").equals(gun.getManufacturer()))
-//                                                        doc2=doc;
-//                                                    Toast.makeText(addGun.this, "" + (gun.getModelName() == doc.getString("modelName")), Toast.LENGTH_SHORT).show();
-//                                                }
-                                                st = doc.getId();
-                                                adapter.notifyDataSetChanged();
-
-
-//                                                if(doc.getString("modelName").equals("f") && doc.getString("manufacturer").equals(gunListView.findViewById(R.id.etManufacturer).toString()))
-//                                                    doc2=doc;
-//                                                Toast.makeText(addGun.this, "" + doc.getString("modelName")+", "+doc.getString("manufacturer"), Toast.LENGTH_SHORT).show();
-//                                                st = doc.getId();
-//                                                adapter.notifyDataSetChanged();
-                                            }
-                                        } else
-                                            Toast.makeText(addGun.this, "" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                                    }
-                                });
-                        View view1= getLayoutInflater().inflate(R.layout.gun_row, null, false);
-                        TextView textView = view1.findViewById(R.id.gunName); */
-//                        Toast.makeText(addGun.this, ""  , Toast.LENGTH_SHORT).show();
-
-//                        Toast.makeText(addGun.this, ""+ (doc2 == null), Toast.LENGTH_SHORT).show();
-//                        Toast.makeText(addGun.this, ""+doc2.getString("modelName"), Toast.LENGTH_SHORT).show();
-//                        firestore.collection("guns")
-//                                        .document(st).delete();
-
-//                        firestore.collection("guns")
-//                                .document("1670921447982").delete();
                         isOn = false;
                         ad.dismiss();
 
@@ -474,7 +521,7 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
 
 //                    etImageURL.setPaintFlags(etImageURL.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
 
-                    image = findViewById(R.id.firebaseImage);
+                    image = dialogView.findViewById(R.id.firebaseImage);
 
                     etImageURL.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -497,7 +544,6 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
                             String manufacturer = etManufacturer.getText().toString();
 
 
-
 //                            String imgUrl = etImageURL.getText().toString(); ------------------------------------------
 
                             String stInStock = etUnitsInStock.getText().toString(); //remember conv to int
@@ -509,7 +555,7 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
 //                            String stTriggerPull = etTriggerPull.getText().toString(); //remember conv to int
 
 
-                            if (modelName.isEmpty() || stPrice.isEmpty() || manufacturer.isEmpty() || /*imgUrl.isEmpty() ||*/ stInStock.isEmpty() || magOptions.isEmpty() || caliber.isEmpty() || stWeight.isEmpty()) {
+                            if (modelName.isEmpty() || stPrice.isEmpty() || manufacturer.isEmpty() || /*imgUrl.isEmpty() ||*/ stInStock.isEmpty() || magOptions.isEmpty() || caliber.isEmpty() || stWeight.isEmpty() || imageUri == null) {
                                 Toast.makeText(addGun.this, "Please fill all the fields", Toast.LENGTH_SHORT).show();
                             } else {
                                 progressBar.setVisibility(View.VISIBLE);
@@ -557,7 +603,6 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
                                                 }
                                             }
                                         });
-
 
 
                                 int a = 0;
@@ -615,8 +660,7 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == 100 && data != null && data.getData() != null)
-        {
+        if (requestCode == 100 && data != null && data.getData() != null) {
             imageUri = data.getData();
             image.setImageURI(imageUri);
 

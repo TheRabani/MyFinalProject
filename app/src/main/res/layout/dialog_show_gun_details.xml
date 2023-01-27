@@ -164,12 +164,12 @@
         tools:srcCompat="@tools:sample/avatars" />
 
     <Button
-        android:visibility="gone"
         android:id="@+id/update2"
         android:layout_width="193dp"
         android:layout_height="48dp"
         android:layout_marginTop="20dp"
         android:text="update info"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView7" />
@@ -186,6 +186,21 @@
         app:layout_constraintBottom_toBottomOf="@+id/unitsInStock"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/unitsInStock"
+        tools:ignore="TouchTargetSizeCheck" />
+
+    <Button
+        android:id="@+id/editImage"
+        android:layout_width="101dp"
+        android:layout_height="55dp"
+        android:backgroundTint="@color/material_dynamic_primary70"
+        android:text="edit"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/imageGun"
+        app:layout_constraintEnd_toEndOf="@+id/imageGun"
+        app:layout_constraintHorizontal_bias="0.488"
+        app:layout_constraintStart_toStartOf="@+id/imageGun"
+        app:layout_constraintTop_toTopOf="@+id/imageGun"
+        app:layout_constraintVertical_bias="0.495"
         tools:ignore="TouchTargetSizeCheck" />
 
     <Button
