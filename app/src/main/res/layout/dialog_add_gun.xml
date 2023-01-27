@@ -25,17 +25,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-<!--    <EditText-->
-<!--        android:id="@+id/etStandardMagCapacity"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_margin="10dp"-->
-<!--        android:ems="10"-->
-<!--        android:hint="Standard Mag Capacity"-->
-<!--        android:inputType="numberSigned"-->
-<!--        android:minHeight="48dp"-->
-<!--        app:layout_constraintStart_toStartOf="@+id/etInStock"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/etInStock" />-->
+    <!--    <EditText-->
+    <!--        android:id="@+id/etStandardMagCapacity"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_margin="10dp"-->
+    <!--        android:ems="10"-->
+    <!--        android:hint="Standard Mag Capacity"-->
+    <!--        android:inputType="numberSigned"-->
+    <!--        android:minHeight="48dp"-->
+    <!--        app:layout_constraintStart_toStartOf="@+id/etInStock"-->
+    <!--        app:layout_constraintTop_toBottomOf="@+id/etInStock" />-->
 
     <EditText
         android:id="@+id/etManufacturer"
@@ -53,27 +53,34 @@
         app:layout_constraintStart_toStartOf="@+id/etGunModel"
         app:layout_constraintTop_toBottomOf="@+id/etGunModel" />
 
-    <EditText
+    <Button
         android:id="@+id/etImageURL"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:ems="10"
-        android:hint="Image URL"
-        android:inputType="textPersonName"
-        android:minHeight="48dp"
+
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:backgroundTint="#A8DBF8"
+        android:fontFamily="sans-serif-thin"
+        android:hint="Add Image (press)"
+        android:inputType="none"
+        android:textAlignment="viewStart"
         android:textColor="#000000"
-        android:textColorHighlight="#000000"
         android:textColorHint="#000000"
         android:textColorLink="#000000"
-        app:layout_constraintStart_toStartOf="@+id/etManufacturer"
-        app:layout_constraintTop_toBottomOf="@+id/etManufacturer" />
+        android:textSize="17dp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/firebaseImage"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/etPrice" />
 
     <EditText
         android:id="@+id/etInStock"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
+        android:layout_marginTop="69dp"
         android:ems="10"
         android:hint="Units In Stock"
         android:inputType="numberSigned"
@@ -83,7 +90,7 @@
         android:textColorHint="#000000"
         android:textColorLink="#000000"
         app:layout_constraintStart_toStartOf="@+id/etImageURL"
-        app:layout_constraintTop_toBottomOf="@+id/etImageURL" />
+        app:layout_constraintTop_toBottomOf="@+id/etManufacturer" />
 
     <EditText
         android:id="@+id/etMagOptions"
@@ -133,29 +140,29 @@
         app:layout_constraintStart_toStartOf="@+id/etMagOptions"
         app:layout_constraintTop_toBottomOf="@+id/etMagOptions" />
 
-<!--    <EditText-->
-<!--        android:id="@+id/etTriggerPull"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_margin="10dp"-->
-<!--        android:ems="10"-->
-<!--        android:hint="Triger Pull (in N)"-->
-<!--        android:inputType="numberSigned"-->
-<!--        android:minHeight="48dp"-->
-<!--        app:layout_constraintStart_toStartOf="@+id/etBarrelSize"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/etBarrelSize" />-->
+    <!--    <EditText-->
+    <!--        android:id="@+id/etTriggerPull"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_margin="10dp"-->
+    <!--        android:ems="10"-->
+    <!--        android:hint="Triger Pull (in N)"-->
+    <!--        android:inputType="numberSigned"-->
+    <!--        android:minHeight="48dp"-->
+    <!--        app:layout_constraintStart_toStartOf="@+id/etBarrelSize"-->
+    <!--        app:layout_constraintTop_toBottomOf="@+id/etBarrelSize" />-->
 
-<!--    <EditText-->
-<!--        android:id="@+id/etBarrelSize"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_margin="10dp"-->
-<!--        android:ems="10"-->
-<!--        android:hint="Barrel Size (in mm)"-->
-<!--        android:inputType="numberSigned"-->
-<!--        android:minHeight="48dp"-->
-<!--        app:layout_constraintStart_toStartOf="@+id/etWeight"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/etWeight" />-->
+    <!--    <EditText-->
+    <!--        android:id="@+id/etBarrelSize"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_margin="10dp"-->
+    <!--        android:ems="10"-->
+    <!--        android:hint="Barrel Size (in mm)"-->
+    <!--        android:inputType="numberSigned"-->
+    <!--        android:minHeight="48dp"-->
+    <!--        app:layout_constraintStart_toStartOf="@+id/etWeight"-->
+    <!--        app:layout_constraintTop_toBottomOf="@+id/etWeight" />-->
 
     <EditText
         android:id="@+id/etWeight"
@@ -177,11 +184,37 @@
         android:id="@+id/buttonAdd"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="30dp"
         android:onClick="yay"
         android:text="ADD"
         app:layout_constraintStart_toStartOf="@+id/etPrice"
-        app:layout_constraintTop_toBottomOf="@+id/etPrice" />
+        app:layout_constraintTop_toBottomOf="@+id/etImageURL" />
+
+    <ImageView
+        android:id="@+id/firebaseImage"
+        android:layout_width="63dp"
+        android:layout_height="47dp"
+        android:layout_marginEnd="5dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/etImageURL"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/etImageURL"
+        app:layout_constraintVertical_bias="0.0"
+        tools:srcCompat="@tools:sample/avatars" />
+
+    <!--    <Button-->
+    <!--        android:id="@+id/uploadBtn"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:background= ""-->
+    <!--        android:textAlignment="viewStart"-->
+    <!--        android:textColor="@color/black"-->
+    <!--        android:textAllCaps="false"-->
+    <!--        android:layout_margin="10dp"-->
+    <!--        android:ems="10"-->
+    <!--        android:text="Button"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toBottomOf="@+id/etManufacturer" />-->
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

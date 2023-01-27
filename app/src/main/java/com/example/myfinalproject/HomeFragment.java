@@ -22,14 +22,16 @@ public class HomeFragment extends Fragment {
     Button logout, addGun;
     Button buttonGoTo, buttonNavigation;
     View view;
+    Fragment fragment;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        Fragment fragment = new MapFragment();
-
+        fragment = new MapFragment();
+//
         view = inflater.inflate(R.layout.fragment_home, container, false);
-        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, fragment).commit();
+//        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, fragment).commit();
 
         buttonNavigation = view.findViewById(R.id.buttonNavigation);
         buttonNavigation.setOnClickListener(new View.OnClickListener() {
@@ -40,6 +42,37 @@ public class HomeFragment extends Fragment {
                 builder.setView(dialogView);
                 AlertDialog ad = builder.create();
                 ad.show();
+
+//                view = inflater.inflate(R.layout.fragment_home, container, false);
+//                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, fragment).commit();
+
+                dialogView.findViewById(R.id.btnWaze).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        try {
+                            // Launch Waze to look for Hawaii:
+                            String url = "https://waze.com/ul?q=מטווח קרב&navigate=yes";
+                            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                            startActivity(intent);
+                        } catch (ActivityNotFoundException ex) {
+                            // If Waze is not installed, open it in Google Play:
+                            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.waze"));
+                            startActivity(intent);
+                        }
+                    }
+                });
+
+                dialogView.findViewById(R.id.btnGoogle).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        Intent intent = new Intent(Intent.ACTION_VIEW);
+                        intent.setData(Uri.parse("geo:" + 31.752167930459038 + "," + 35.21662087865303));
+                        Intent chooser = Intent.createChooser(intent, "Lunch Maps");
+                        startActivity(chooser);
+
+                    }
+                });
             }
         });
 
@@ -49,36 +82,14 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-                if(currentUser!=null)
-                {
+                if (currentUser != null) {
                     mAuth.signOut();
                     startActivity(new Intent(getActivity(), Login.class));
-                }
-                else
+                } else
                     startActivity(new Intent(getActivity(), Login.class));
             }
         });
 
-        buttonGoTo = view.findViewById(R.id.buttonGoTo);
-        buttonGoTo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                try {
-                    // Launch Waze to look for Hawaii:
-                    String url = "https://waze.com/ul?q=מטווח קרב&navigate=yes";
-                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                    startActivity(intent);
-                } catch (ActivityNotFoundException ex) {
-                    // If Waze is not installed, open it in Google Play:
-                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.waze"));
-                    startActivity(intent);
-                }
-//                Intent intent=new Intent(Intent.ACTION_VIEW);
-//                intent.setData(Uri.parse("geo:"+31.752167930459038+","+35.21662087865303));
-//                Intent chooser=Intent.createChooser(intent, "Lunch Maps");
-//                startActivity(chooser);
-            }
-        });
 
         addGun = (Button) view.findViewById(R.id.addGun);
 

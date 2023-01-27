@@ -45,9 +45,9 @@ public class gunAdapter extends ArrayAdapter<Gun> {
         tvGunName.setText(""+gun.getManufacturer()+" "+gun.getModelName());
 //        tvImage.setImageResource();
 //
-        Picasso.get()
-                        .load(""+gun.getImgUrl())
-                                .into(tvImage);
+//        Picasso.get()
+//                        .load(""+gun.getImgUrl())
+//                                .into(tvImage);
 //        Glide.with(view.getRootView()).load(""+gun.getImgUrl());
 //        Glide.with(context).load(gun.getImgUrl());
 //        Glide.with(view.getContext()).load(""+gun.getImgUrl());

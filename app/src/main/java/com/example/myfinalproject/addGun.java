@@ -11,6 +11,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.View;
@@ -19,10 +21,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
@@ -34,6 +39,9 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -48,6 +56,12 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
 
     boolean isOn;
 
+    public ImageView image;
+    public Uri imageUri;
+    StorageReference storageReference;
+
+    public ProgressBar progressBar;
+
     private ListView gunListView;
     private gunAdapter adapter;
 
@@ -55,6 +69,7 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
 
     private ArrayList<Gun> gunArrryList;
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,6 +79,8 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
         btnAdd = findViewById(R.id.btnAdd);
 
         Gun lastSelected;
+
+        progressBar = findViewById(R.id.progressBar);
 
         gunArrryList = new ArrayList<Gun>();
         gunListView = findViewById(R.id.listViewGun);
@@ -93,15 +110,16 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
                 buttonEditUnits.setVisibility(view.VISIBLE);
                 updateBtn.setVisibility(View.VISIBLE);
 
+
                 makeAndModel.setText("" + g.getManufacturer() + " " + g.getModelName());
                 unitsInStock.setText("" + g.getInStock());
                 magOptions.setText("" + g.getOptionsMagCapacity());
                 caliber.setText("" + g.getCaliber());
                 weight.setText("" + g.getWeight());
                 price.setText("" + g.getPrice());
-                Picasso.get()
-                        .load("" + g.getImgUrl())
-                        .into(imageView);
+//                Picasso.get()
+//                        .load("" + g.getImgUrl())
+//                        .into(imageView);
                 ad.show();
 
                 buttonEditUnits.setOnClickListener(new View.OnClickListener() {
@@ -131,7 +149,7 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
                                 firestore
                                         .collection("guns")
                                         .document("" + g.getManufacturer() + " " + g.getName())
-                                        .set(new Gun(g.getName(), g.getManufacturer(), g.getImgUrl(), g.getPrice(), num, g.getOptionsMagCapacity(), g.getCaliber(), g.getWeight()))
+                                        .set(new Gun(g.getName(), g.getManufacturer(), /*g.getImgUrl(),*/ g.getPrice(), num, g.getOptionsMagCapacity(), g.getCaliber(), g.getWeight()))
                                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
@@ -196,7 +214,7 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
                         etPrice.setText("" + g.getPrice());
                         etToyName.setText("" + g.getModelName());
                         etManufacturer.setText("" + g.getManufacturer());
-                        etImageURL.setText("" + g.getImgUrl());
+//                        etImageURL.setText("" + g.getImgUrl());
                         etUnitsInStock.setText("" + g.getInStock());
                         etMagOptions.setText("" + g.getOptionsMagCapacity());
                         etCaliber.setText("" + g.getCaliber());
@@ -249,7 +267,7 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
                                     int weight = Integer.parseInt(stWeight);
 //                                int barrelLength = Integer.parseInt(stBarrelLength);
 //                                int triggerPull = Integer.parseInt(stTriggerPull);
-                                    Gun gun = new Gun(modelName, manufacturer, imgUrl, price, inStock, magOptions, caliber, weight);
+                                    Gun gun = new Gun(modelName, manufacturer, /*imgUrl,*/ price, inStock, magOptions, caliber, weight);
                                     firestore
                                             .collection("guns")
                                             .document("" + manufacturer + " " + modelName)
@@ -412,7 +430,7 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
                                 Gun gun = new Gun(
                                         doc.getString("modelName"),
                                         doc.getString("manufacturer"),
-                                        doc.getString("imgUrl"),
+//                                            doc.getString("imgUrl"),
                                         Integer.parseInt(doc.get("price").toString()),
                                         Integer.parseInt(doc.get("inStock").toString()),
 //                                        Integer.parseInt(doc.get("standardMagCapacity").toString()),
@@ -443,7 +461,9 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
                     EditText etPrice = dialogView.findViewById(R.id.etPrice);
                     EditText etToyName = dialogView.findViewById(R.id.etGunModel);
                     EditText etManufacturer = dialogView.findViewById(R.id.etManufacturer);
-                    EditText etImageURL = dialogView.findViewById(R.id.etImageURL);
+
+                    Button etImageURL = dialogView.findViewById(R.id.etImageURL);
+
                     EditText etUnitsInStock = dialogView.findViewById(R.id.etInStock);
 //                    EditText etStandardMagCapacity = dialogView.findViewById(R.id.etStandardMagCapacity);
                     EditText etMagOptions = dialogView.findViewById(R.id.etMagOptions);
@@ -452,14 +472,34 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
 //                    EditText etBarrelSize = dialogView.findViewById(R.id.etBarrelSize);
 //                    EditText etTriggerPull = dialogView.findViewById(R.id.etTriggerPull);
 
+//                    etImageURL.setPaintFlags(etImageURL.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+
+                    image = findViewById(R.id.firebaseImage);
+
+                    etImageURL.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent intent = new Intent();
+                            intent.setType("image/");
+                            intent.setAction(Intent.ACTION_GET_CONTENT);
+                            startActivityForResult(intent, 100);
+//                            image.setImageURI(imageUri);
+                        }
+                    });
+
 
                     buttonAdd.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
+
                             String modelName = etToyName.getText().toString();
                             String stPrice = etPrice.getText().toString(); //remember conv to int
                             String manufacturer = etManufacturer.getText().toString();
-                            String imgUrl = etImageURL.getText().toString();
+
+
+
+//                            String imgUrl = etImageURL.getText().toString(); ------------------------------------------
+
                             String stInStock = etUnitsInStock.getText().toString(); //remember conv to int
 //                            String stStandardMagCapacity = etStandardMagCapacity.getText().toString(); //remember conv to int
                             String magOptions = etMagOptions.getText().toString();
@@ -469,16 +509,18 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
 //                            String stTriggerPull = etTriggerPull.getText().toString(); //remember conv to int
 
 
-                            if (modelName.isEmpty() || stPrice.isEmpty() || manufacturer.isEmpty() || imgUrl.isEmpty() || stInStock.isEmpty() || magOptions.isEmpty() || caliber.isEmpty() || stWeight.isEmpty()) {
+                            if (modelName.isEmpty() || stPrice.isEmpty() || manufacturer.isEmpty() || /*imgUrl.isEmpty() ||*/ stInStock.isEmpty() || magOptions.isEmpty() || caliber.isEmpty() || stWeight.isEmpty()) {
                                 Toast.makeText(addGun.this, "Please fill all the fields", Toast.LENGTH_SHORT).show();
                             } else {
+                                progressBar.setVisibility(View.VISIBLE);
+
                                 int price = Integer.parseInt(stPrice);
                                 int inStock = Integer.parseInt(stInStock);
 //                                int standardMagCapacity = Integer.parseInt(stStandardMagCapacity);
                                 int weight = Integer.parseInt(stWeight);
 //                                int barrelLength = Integer.parseInt(stBarrelLength);
 //                                int triggerPull = Integer.parseInt(stTriggerPull);
-                                Gun gun = new Gun(modelName, manufacturer, imgUrl, price, inStock, magOptions, caliber, weight);
+                                Gun gun = new Gun(modelName, manufacturer, /*imgUrl,*/ price, inStock, magOptions, caliber, weight);
                                 firestore
                                         .collection("guns")
                                         .document("" + manufacturer + " " + modelName)
@@ -488,11 +530,35 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
                                             public void onComplete(@NonNull Task<Void> task) {
                                                 if (task.isSuccessful()) {
                                                     Toast.makeText(addGun.this, "Gun added!", Toast.LENGTH_SHORT).show();
+
+                                                    storageReference = FirebaseStorage.getInstance().getReference("image/" + manufacturer + " " + modelName);
+                                                    storageReference.putFile(imageUri)
+                                                            .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                                                @Override
+                                                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                                                    image.setImageURI(null);
+                                                                    Toast.makeText(addGun.this, "Image added", Toast.LENGTH_SHORT).show();
+                                                                    if (progressBar.getVisibility() == View.VISIBLE) {
+                                                                        progressBar.setVisibility(View.GONE);
+                                                                    }
+                                                                }
+                                                            }).addOnFailureListener(new OnFailureListener() {
+                                                                @Override
+                                                                public void onFailure(@NonNull Exception e) {
+                                                                    if (progressBar.getVisibility() == View.VISIBLE) {
+                                                                        progressBar.setVisibility(View.GONE);
+                                                                        Toast.makeText(addGun.this, "Failed image upload", Toast.LENGTH_SHORT).show();
+                                                                    }
+
+                                                                }
+                                                            });
                                                 } else {
                                                     Toast.makeText(addGun.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                                                 }
                                             }
                                         });
+
+
 
                                 int a = 0;
 //                                FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -509,8 +575,9 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
 //                                                    Toast.makeText(addGun.this, ""+task.getException().getMessage(), Toast.LENGTH_SHORT).show();
 //                                            }
 //                                        });
+                                ad4.dismiss();
                             }
-                            ad4.dismiss();
+//                            ad4.dismiss();
                         }
                     });
 
@@ -530,7 +597,7 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
                 Gun gun = new Gun(
                         doc.getString("modelName"),
                         doc.getString("manufacturer"),
-                        doc.getString("imgUrl"),
+//                             doc.getString("imgUrl"),
                         Integer.parseInt(doc.get("price").toString()),
                         Integer.parseInt(doc.get("inStock").toString()),
                         //                    Integer.parseInt(doc.get("standardMagCapacity").toString()),
@@ -543,5 +610,16 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
                 gunArrryList.add(gun);
             }
         adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 100 && data != null && data.getData() != null)
+        {
+            imageUri = data.getData();
+            image.setImageURI(imageUri);
+
+        }
     }
 }

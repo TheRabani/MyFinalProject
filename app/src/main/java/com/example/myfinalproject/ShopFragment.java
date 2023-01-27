@@ -103,9 +103,9 @@ public class ShopFragment extends Fragment implements EventListener<QuerySnapsho
                 caliber.setText("" + g.getCaliber());
                 weight.setText("" + g.getWeight());
                 price.setText("" + g.getPrice());
-                Picasso.get()
-                        .load("" + g.getImgUrl())
-                        .into(imageView);
+//                Picasso.get()
+//                        .load("" + g.getImgUrl())
+//                        .into(imageView);
                 ad.show();
             }
         });
@@ -126,7 +126,7 @@ public class ShopFragment extends Fragment implements EventListener<QuerySnapsho
                                 Gun gun = new Gun(
                                         doc.getString("modelName"),
                                         doc.getString("manufacturer"),
-                                        doc.getString("imgUrl"),
+//                                              doc.getString("imgUrl"),
                                         Integer.parseInt(doc.get("price").toString()),
                                         Integer.parseInt(doc.get("inStock").toString()),
 //                                        Integer.parseInt(doc.get("standardMagCapacity").toString()),
@@ -157,7 +157,7 @@ public class ShopFragment extends Fragment implements EventListener<QuerySnapsho
                 Gun gun = new Gun(
                         doc.getString("modelName"),
                         doc.getString("manufacturer"),
-                        doc.getString("imgUrl"),
+//                              doc.getString("imgUrl"),
                         Integer.parseInt(doc.get("price").toString()),
                         Integer.parseInt(doc.get("inStock").toString()),
     //                    Integer.parseInt(doc.get("standardMagCapacity").toString()),

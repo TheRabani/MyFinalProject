@@ -3,7 +3,7 @@ package com.example.myfinalproject;
 public class Gun {
     private String modelName; // for ex 19
     private String manufacturer; // for ex Glock
-    private String imgUrl; // a url to a photo
+//    private String imgUrl; // a url to a photo
     private int price; // full price
     private int inStock; // number of them in stock
 //    private int standardMagCapacity; // standard mag capacity
@@ -13,10 +13,10 @@ public class Gun {
 //    public int barrelLength; //in mm
 //    public int triggerPull; // how much N it takes to pull
 
-    public Gun(String modelName, String manufacturer, String imgUrl, int price, int inStock, String optionsMagCapacity, String caliber, int weight) {
+    public Gun(String modelName, String manufacturer, /*String imgUrl,*/ int price, int inStock, String optionsMagCapacity, String caliber, int weight) {
         this.modelName = modelName;
         this.manufacturer = manufacturer;
-        this.imgUrl = imgUrl;
+//        this.imgUrl = imgUrl;
         this.price = price;
         this.inStock = inStock;
 //        this.standardMagCapacity = standardMagCapacity;
@@ -80,13 +80,13 @@ public class Gun {
         this.weight = weight;
     }
 
-    public String getImgUrl() {
-        return imgUrl;
-    }
-
-    public void setImgUrl(String imgUrl) {
-        this.imgUrl = imgUrl;
-    }
+//    public String getImgUrl() {
+//        return imgUrl;
+//    }
+//
+//    public void setImgUrl(String imgUrl) {
+//        this.imgUrl = imgUrl;
+//    }
 
 //    public int getBarrelLength() {
 //        return barrelLength;

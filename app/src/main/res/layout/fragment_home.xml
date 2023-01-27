@@ -4,18 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/show_gun_background"
     android:layoutDirection="ltr"
     tools:context=".HomeFragment">
-
-    <Button
-
-        android:id="@+id/buttonGoTo"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="To your navigation app"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/textwelcome"
@@ -23,7 +14,8 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:text="מטווח קרב"
-        android:textSize="25dp"
+        android:textColor="#000000"
+        android:textSize="34sp"
         app:layout_constraintBottom_toTopOf="@+id/addGun"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.508"
@@ -72,11 +64,11 @@
         android:id="@+id/textView8"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="So where are we located?"
-        android:textSize="24sp"
+        android:layout_marginTop="50dp"
+        android:text="איך אפשר להגיע אלינו?"
+        android:textColor="#000000"
+        android:textSize="26sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView9" />
 
@@ -84,29 +76,17 @@
         android:id="@+id/buttonNavigation"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Button"
+        android:backgroundTint="#00BCD4"
+        android:drawableLeft="@drawable/ic_baseline_location_on_24"
+        android:drawableRight="@drawable/ic_baseline_location_on_24"
+        android:text="לחץ כאן להוראות הגעה/מיקום"
+        android:textSize="24sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView9" />
-
-    <FrameLayout
-        android:id="@+id/frame_layout"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginBottom="16dp"
-        app:layout_constraintBottom_toTopOf="@+id/buttonGoTo"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView8"
-        app:layout_constraintVertical_bias="0.5">
-
-    </FrameLayout>
 
     <TextView
         android:id="@+id/textView9"
@@ -114,6 +94,7 @@
         android:layout_height="183dp"
         android:layout_marginTop="16dp"
         android:text="Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures "
+        android:textColor="#000000"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.567"
         app:layout_constraintStart_toStartOf="parent"
