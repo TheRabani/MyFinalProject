@@ -119,6 +119,13 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
                 buttonEditUnits.setVisibility(View.VISIBLE);
                 updateBtn.setVisibility(View.VISIBLE);
 
+                unitsInStock.setText("" + g.getInStock());
+                magOptions.setText("" + g.getOptionsMagCapacity());
+                caliber.setText("" + g.getCaliber());
+                weight.setText("" + g.getWeight());
+                price.setText("" + g.getPrice());
+
+
                 makeAndModel.setText("" + g.getManufacturer() + " " + g.getModelName());
                 storageReference = FirebaseStorage.getInstance().getReference().child("image/" + makeAndModel.getText().toString());
 
@@ -151,18 +158,9 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
                                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
-                                                if(task.isSuccessful())
-                                                {
-                                                    Toast.makeText(addGun.this, "Deleted Successfully!", Toast.LENGTH_SHORT).show();
-                                                    isOn = false;
-                                                    ad.dismiss();
-                                                }
-                                                else
-                                                {
-                                                    Toast.makeText(addGun.this, "Error", Toast.LENGTH_SHORT).show();
-                                                    isOn = false;
-                                                    ad.dismiss();
-                                                }
+                                                isOn = false;
+                                                addPic(g.getManufacturer() + " " + g.getModelName());
+                                                ad.dismiss();
                                             }
                                         });
                             }
@@ -172,6 +170,7 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
 
 
                 try {
+
                     File localFile = File.createTempFile("" + makeAndModel.getText().toString(), "jpeg");
 
                     storageReference.getFile(localFile)
@@ -181,12 +180,6 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
                                     if (task.isSuccessful()) {
                                         Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
                                         imageView.setImageBitmap(bitmap);
-
-                                        unitsInStock.setText("" + g.getInStock());
-                                        magOptions.setText("" + g.getOptionsMagCapacity());
-                                        caliber.setText("" + g.getCaliber());
-                                        weight.setText("" + g.getWeight());
-                                        price.setText("" + g.getPrice());
 
                                         ad.show();
                                         progressBar.setVisibility(View.INVISIBLE);
@@ -445,6 +438,7 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
                         isOn = false;
                         ad.dismiss();
 
+
                     }
                 });
 
@@ -577,27 +571,29 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
                                                 if (task.isSuccessful()) {
                                                     Toast.makeText(addGun.this, "Gun added!", Toast.LENGTH_SHORT).show();
 
-                                                    storageReference = FirebaseStorage.getInstance().getReference("image/" + manufacturer + " " + modelName);
-                                                    storageReference.putFile(imageUri)
-                                                            .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                                                                @Override
-                                                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                                                    image.setImageURI(null);
-                                                                    Toast.makeText(addGun.this, "Image added", Toast.LENGTH_SHORT).show();
-                                                                    if (progressBar.getVisibility() == View.VISIBLE) {
-                                                                        progressBar.setVisibility(View.GONE);
-                                                                    }
-                                                                }
-                                                            }).addOnFailureListener(new OnFailureListener() {
-                                                                @Override
-                                                                public void onFailure(@NonNull Exception e) {
-                                                                    if (progressBar.getVisibility() == View.VISIBLE) {
-                                                                        progressBar.setVisibility(View.GONE);
-                                                                        Toast.makeText(addGun.this, "Failed image upload", Toast.LENGTH_SHORT).show();
-                                                                    }
+                                                    addPic(manufacturer + " " + modelName);
 
-                                                                }
-                                                            });
+//                                                    storageReference = FirebaseStorage.getInstance().getReference("image/" + manufacturer + " " + modelName);
+//                                                    storageReference.putFile(imageUri)
+//                                                            .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+//                                                                @Override
+//                                                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+//                                                                    image.setImageURI(null);
+//                                                                    Toast.makeText(addGun.this, "Image added", Toast.LENGTH_SHORT).show();
+//                                                                    if (progressBar.getVisibility() == View.VISIBLE) {
+//                                                                        progressBar.setVisibility(View.GONE);
+//                                                                    }
+//                                                                }
+//                                                            }).addOnFailureListener(new OnFailureListener() {
+//                                                                @Override
+//                                                                public void onFailure(@NonNull Exception e) {
+//                                                                    if (progressBar.getVisibility() == View.VISIBLE) {
+//                                                                        progressBar.setVisibility(View.GONE);
+//                                                                        Toast.makeText(addGun.this, "Failed image upload", Toast.LENGTH_SHORT).show();
+//                                                                    }
+//                                                                          
+//                                                                }
+//                                                            });
                                                 } else {
                                                     Toast.makeText(addGun.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                                                 }
@@ -631,6 +627,30 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
                 }
             }
         });
+    }
+
+    private void addPic(String s) {
+        storageReference = FirebaseStorage.getInstance().getReference("image/" + s);
+        storageReference.putFile(imageUri)
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        image.setImageURI(null);
+                        Toast.makeText(addGun.this, "Image added", Toast.LENGTH_SHORT).show();
+                        if (progressBar.getVisibility() == View.VISIBLE) {
+                            progressBar.setVisibility(View.GONE);
+                        }
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        if (progressBar.getVisibility() == View.VISIBLE) {
+                            progressBar.setVisibility(View.GONE);
+                            Toast.makeText(addGun.this, "Failed image upload", Toast.LENGTH_SHORT).show();
+                        }
+
+                    }
+                });
     }
 
     @Override
