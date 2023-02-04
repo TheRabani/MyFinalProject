@@ -89,7 +89,7 @@ public class ShopFragment extends Fragment implements EventListener<QuerySnapsho
                     unitsInStock.setText("" + g.getInStock());
                 else {
                     unitsInStock.setText("0");
-                    request.setVisibility(view.VISIBLE);
+                    request.setVisibility(View.VISIBLE);
                 }
 
                 request.setOnClickListener(new View.OnClickListener() {

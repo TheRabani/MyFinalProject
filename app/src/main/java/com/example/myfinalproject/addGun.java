@@ -1,5 +1,10 @@
 package com.example.myfinalproject;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContract;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -62,6 +67,8 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
     public String st;
 
     boolean isOn;
+
+    String tempManufacturer, tempModelName;
 
     ImageView image;
     Uri imageUri;
@@ -142,6 +149,7 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
                         ad.setCancelable(false);
                         Button buttonYes = dialogView.findViewById(R.id.buttonYes);
                         Button buttonNo = dialogView.findViewById(R.id.buttonNo);
+                        Button buttonConfirm = dialogView.findViewById(R.id.confirmBtn);
 
                         buttonNo.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -159,8 +167,59 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
                                                 isOn = false;
-                                                addPic(g.getManufacturer() + " " + g.getModelName());
-                                                ad.dismiss();
+
+                                                buttonConfirm.setVisibility(View.VISIBLE);
+
+                                                Intent intent = new Intent();
+                                                intent.setType("image/");
+                                                intent.setAction(Intent.ACTION_GET_CONTENT);
+
+                                                tempManufacturer = g.getManufacturer();
+                                                tempModelName = g.getModelName();
+
+                                                ActivityResultLauncher<Intent> launcher = registerForActivityResult(
+                                                        new ActivityResultContracts.StartActivityForResult(),
+                                                        new ActivityResultCallback<ActivityResult>() {
+                                                            @Override
+                                                            public void onActivityResult(ActivityResult result) {
+                                                                Intent data = result.getData();
+                                                                
+                                                            }
+                                                        }
+                                                );
+
+                                                startActivityForResult(intent, 100);
+
+                                                buttonConfirm.setOnClickListener(new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View view) {
+
+                                                        storageReference = FirebaseStorage.getInstance().getReference("image/" + tempManufacturer + " " + tempModelName);
+                                                        storageReference.putFile(imageUri)
+                                                                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                                                    @Override
+                                                                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                                                        image.setImageURI(null);
+                                                                        Toast.makeText(addGun.this, "Image added", Toast.LENGTH_SHORT).show();
+                                                                        if (progressBar.getVisibility() == View.VISIBLE) {
+                                                                            progressBar.setVisibility(View.GONE);
+                                                                        }
+                                                                    }
+                                                                }).addOnFailureListener(new OnFailureListener() {
+                                                                    @Override
+                                                                    public void onFailure(@NonNull Exception e) {
+                                                                        if (progressBar.getVisibility() == View.VISIBLE) {
+                                                                            progressBar.setVisibility(View.GONE);
+                                                                            Toast.makeText(addGun.this, "Failed image upload", Toast.LENGTH_SHORT).show();
+                                                                        }
+
+                                                                    }
+                                                                });
+                                                    }
+                                                });
+
+
+//                                                ad.dismiss();
                                             }
                                         });
                             }
@@ -435,8 +494,12 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
                                 .document("" + g.getManufacturer() + " " + g.getModelName())
                                 .delete();
 
+                        Toast.makeText(addGun.this, "Deleted successfully", Toast.LENGTH_SHORT).show();
                         isOn = false;
                         ad.dismiss();
+
+//                        finish();
+//                        startActivity(getIntent());
 
 
                     }
@@ -548,7 +611,6 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
 //                            String stBarrelLength = etBarrelSize.getText().toString(); //remember conv to int
 //                            String stTriggerPull = etTriggerPull.getText().toString(); //remember conv to int
 
-
                             if (modelName.isEmpty() || stPrice.isEmpty() || manufacturer.isEmpty() || /*imgUrl.isEmpty() ||*/ stInStock.isEmpty() || magOptions.isEmpty() || caliber.isEmpty() || stWeight.isEmpty() || imageUri == null) {
                                 Toast.makeText(addGun.this, "Please fill all the fields", Toast.LENGTH_SHORT).show();
                             } else {
@@ -571,29 +633,30 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
                                                 if (task.isSuccessful()) {
                                                     Toast.makeText(addGun.this, "Gun added!", Toast.LENGTH_SHORT).show();
 
-                                                    addPic(manufacturer + " " + modelName);
+                                                    storageReference = FirebaseStorage.getInstance().getReference("image/" + manufacturer + " " + modelName);
+                                                    storageReference.putFile(imageUri)
+                                                            .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                                                @Override
+                                                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                                                    image.setImageURI(null);
+                                                                    Toast.makeText(addGun.this, "Image added", Toast.LENGTH_SHORT).show();
 
-//                                                    storageReference = FirebaseStorage.getInstance().getReference("image/" + manufacturer + " " + modelName);
-//                                                    storageReference.putFile(imageUri)
-//                                                            .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-//                                                                @Override
-//                                                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-//                                                                    image.setImageURI(null);
-//                                                                    Toast.makeText(addGun.this, "Image added", Toast.LENGTH_SHORT).show();
-//                                                                    if (progressBar.getVisibility() == View.VISIBLE) {
-//                                                                        progressBar.setVisibility(View.GONE);
-//                                                                    }
-//                                                                }
-//                                                            }).addOnFailureListener(new OnFailureListener() {
-//                                                                @Override
-//                                                                public void onFailure(@NonNull Exception e) {
-//                                                                    if (progressBar.getVisibility() == View.VISIBLE) {
-//                                                                        progressBar.setVisibility(View.GONE);
-//                                                                        Toast.makeText(addGun.this, "Failed image upload", Toast.LENGTH_SHORT).show();
-//                                                                    }
-//                                                                          
-//                                                                }
-//                                                            });
+                                                                    recreate();
+
+                                                                    if (progressBar.getVisibility() == View.VISIBLE) {
+                                                                        progressBar.setVisibility(View.GONE);
+                                                                    }
+                                                                }
+                                                            }).addOnFailureListener(new OnFailureListener() {
+                                                                @Override
+                                                                public void onFailure(@NonNull Exception e) {
+                                                                    if (progressBar.getVisibility() == View.VISIBLE) {
+                                                                        progressBar.setVisibility(View.GONE);
+                                                                        Toast.makeText(addGun.this, "Failed image upload", Toast.LENGTH_SHORT).show();
+                                                                    }
+
+                                                                }
+                                                            });
                                                 } else {
                                                     Toast.makeText(addGun.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                                                 }
@@ -682,7 +745,14 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 100 && data != null && data.getData() != null) {
             imageUri = data.getData();
-            image.setImageURI(imageUri);
+
+
+            try {
+                image.setImageURI(imageUri);
+            } catch (Exception e) {
+                Toast.makeText(this, "faillll", Toast.LENGTH_SHORT).show();
+            }
+
 
         }
     }

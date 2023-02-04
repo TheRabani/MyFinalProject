@@ -81,12 +81,13 @@ public class HomeFragment extends Fragment {
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-                if (currentUser != null) {
+//                FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+//                if (currentUser != null) {
                     mAuth.signOut();
                     startActivity(new Intent(getActivity(), Login.class));
-                } else
-                    startActivity(new Intent(getActivity(), Login.class));
+//                }
+//                else
+//                    startActivity(new Intent(getActivity(), Login.class));
             }
         });
 

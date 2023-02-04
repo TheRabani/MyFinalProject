@@ -35,4 +35,14 @@
         android:layout_below="@+id/textView"
         android:text="yes" />
 
+    <Button
+        android:id="@+id/confirmBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/buttonYes"
+        android:layout_alignStart="@+id/buttonNo"
+        android:layout_alignTop="@+id/buttonNo"
+        android:visibility="gone"
+        android:text="confirm" />
+
 </RelativeLayout>

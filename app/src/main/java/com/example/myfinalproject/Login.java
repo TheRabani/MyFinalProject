@@ -102,10 +102,13 @@ public class Login extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task)
                     {
+                        bar.setVisibility(View.INVISIBLE);
                         if (task.isSuccessful()) {
                             Toast.makeText(Login.this, "Login successful", Toast.LENGTH_SHORT).show();
                             startActivity(new Intent(Login.this, MainActivity.class));
                         }
+                        else
+                            Toast.makeText(Login.this, "Wrong code!", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -124,7 +127,7 @@ public class Login extends AppCompatActivity {
     public void GoLogin(View view) {
 
         if(login_btn.getText().toString().toLowerCase().equals("gen otp")) {
-            if (TextUtils.isEmpty(phone.getText().toString()))
+            if (TextUtils.isEmpty(phone.getText().toString()) || phone.getText().toString().length()!=10)
                 Toast.makeText(Login.this, "enter valid phone nm.", Toast.LENGTH_SHORT).show();
             else {
                 String number = phone.getText().toString();
@@ -137,13 +140,12 @@ public class Login extends AppCompatActivity {
             {
                 if (TextUtils.isEmpty(otp.getText().toString()))
                     Toast.makeText(Login.this, "enter valid nm.", Toast.LENGTH_SHORT).show();
-                else
+                else {
+                    bar.setVisibility(View.VISIBLE);
                     verifycode(otp.getText().toString());
+                }
             }
 
     }
 
-    public void GoToSignUp(View view) {
-
-    }
 }
