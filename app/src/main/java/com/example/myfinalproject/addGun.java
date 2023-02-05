@@ -121,8 +121,8 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
                 TextView price = dialogView.findViewById(R.id.price);
                 Button updateBtn = dialogView.findViewById(R.id.update2);
                 Button buttonEditUnits = dialogView.findViewById(R.id.editUnitsInStock);
-                Button editImage = dialogView.findViewById(R.id.editImage);
-                editImage.setVisibility(View.VISIBLE);
+//                Button editImage = dialogView.findViewById(R.id.editImage);
+//                editImage.setVisibility(View.VISIBLE);
                 buttonEditUnits.setVisibility(View.VISIBLE);
                 updateBtn.setVisibility(View.VISIBLE);
 
@@ -136,96 +136,97 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
                 makeAndModel.setText("" + g.getManufacturer() + " " + g.getModelName());
                 storageReference = FirebaseStorage.getInstance().getReference().child("image/" + makeAndModel.getText().toString());
 
-                editImage.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(addGun.this);
-                        View dialogView = getLayoutInflater().inflate(R.layout.dialog_delete_gun, null, false);
-                        builder.setView(dialogView);
-                        AlertDialog ad = builder.create();
-                        TextView textView = dialogView.findViewById(R.id.textView);
-                        textView.setText("Are You Sure You Want To Edit This Picture?");
-                        ad.show();
-                        ad.setCancelable(false);
-                        Button buttonYes = dialogView.findViewById(R.id.buttonYes);
-                        Button buttonNo = dialogView.findViewById(R.id.buttonNo);
-                        Button buttonConfirm = dialogView.findViewById(R.id.confirmBtn);
-
-                        buttonNo.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                isOn = false;
-                                ad.dismiss();
-                            }
-                        });
-
-                        buttonYes.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                storageReference.delete()
-                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<Void> task) {
-                                                isOn = false;
-
-                                                buttonConfirm.setVisibility(View.VISIBLE);
-
-                                                Intent intent = new Intent();
-                                                intent.setType("image/");
-                                                intent.setAction(Intent.ACTION_GET_CONTENT);
-
-                                                tempManufacturer = g.getManufacturer();
-                                                tempModelName = g.getModelName();
-
-                                                ActivityResultLauncher<Intent> launcher = registerForActivityResult(
-                                                        new ActivityResultContracts.StartActivityForResult(),
-                                                        new ActivityResultCallback<ActivityResult>() {
-                                                            @Override
-                                                            public void onActivityResult(ActivityResult result) {
-                                                                Intent data = result.getData();
-                                                                
-                                                            }
-                                                        }
-                                                );
-
-                                                startActivityForResult(intent, 100);
-
-                                                buttonConfirm.setOnClickListener(new View.OnClickListener() {
-                                                    @Override
-                                                    public void onClick(View view) {
-
-                                                        storageReference = FirebaseStorage.getInstance().getReference("image/" + tempManufacturer + " " + tempModelName);
-                                                        storageReference.putFile(imageUri)
-                                                                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                                                                    @Override
-                                                                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                                                        image.setImageURI(null);
-                                                                        Toast.makeText(addGun.this, "Image added", Toast.LENGTH_SHORT).show();
-                                                                        if (progressBar.getVisibility() == View.VISIBLE) {
-                                                                            progressBar.setVisibility(View.GONE);
-                                                                        }
-                                                                    }
-                                                                }).addOnFailureListener(new OnFailureListener() {
-                                                                    @Override
-                                                                    public void onFailure(@NonNull Exception e) {
-                                                                        if (progressBar.getVisibility() == View.VISIBLE) {
-                                                                            progressBar.setVisibility(View.GONE);
-                                                                            Toast.makeText(addGun.this, "Failed image upload", Toast.LENGTH_SHORT).show();
-                                                                        }
-
-                                                                    }
-                                                                });
-                                                    }
-                                                });
-
-
-//                                                ad.dismiss();
-                                            }
-                                        });
-                            }
-                        });
-                    }
-                });
+                //
+//                editImage.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View view) {
+//                        AlertDialog.Builder builder = new AlertDialog.Builder(addGun.this);
+//                        View dialogView = getLayoutInflater().inflate(R.layout.dialog_delete_gun, null, false);
+//                        builder.setView(dialogView);
+//                        AlertDialog ad = builder.create();
+//                        TextView textView = dialogView.findViewById(R.id.textView);
+//                        textView.setText("Are You Sure You Want To Edit This Picture?");
+//                        ad.show();
+//                        ad.setCancelable(false);
+//                        Button buttonYes = dialogView.findViewById(R.id.buttonYes);
+//                        Button buttonNo = dialogView.findViewById(R.id.buttonNo);
+//                        Button buttonConfirm = dialogView.findViewById(R.id.confirmBtn);
+//
+//                        buttonNo.setOnClickListener(new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View view) {
+//                                isOn = false;
+//                                ad.dismiss();
+//                            }
+//                        });
+//
+//                        buttonYes.setOnClickListener(new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View view) {
+//                                storageReference.delete()
+//                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+//                                            @Override
+//                                            public void onComplete(@NonNull Task<Void> task) {
+//                                                isOn = false;
+//
+//                                                buttonConfirm.setVisibility(View.VISIBLE);
+//
+//                                                Intent intent = new Intent();
+//                                                intent.setType("image/");
+//                                                intent.setAction(Intent.ACTION_GET_CONTENT);
+//
+//                                                tempManufacturer = g.getManufacturer();
+//                                                tempModelName = g.getModelName();
+//
+//                                                ActivityResultLauncher<Intent> launcher = registerForActivityResult(
+//                                                        new ActivityResultContracts.StartActivityForResult(),
+//                                                        new ActivityResultCallback<ActivityResult>() {
+//                                                            @Override
+//                                                            public void onActivityResult(ActivityResult result) {
+//                                                                Intent data = result.getData();
+//
+//                                                            }
+//                                                        }
+//                                                );
+//
+//                                                startActivityForResult(intent, 100);
+//
+//                                                buttonConfirm.setOnClickListener(new View.OnClickListener() {
+//                                                    @Override
+//                                                    public void onClick(View view) {
+//
+//                                                        storageReference = FirebaseStorage.getInstance().getReference("image/" + tempManufacturer + " " + tempModelName);
+//                                                        storageReference.putFile(imageUri)
+//                                                                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+//                                                                    @Override
+//                                                                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+//                                                                        image.setImageURI(null);
+//                                                                        Toast.makeText(addGun.this, "Image added", Toast.LENGTH_SHORT).show();
+//                                                                        if (progressBar.getVisibility() == View.VISIBLE) {
+//                                                                            progressBar.setVisibility(View.GONE);
+//                                                                        }
+//                                                                    }
+//                                                                }).addOnFailureListener(new OnFailureListener() {
+//                                                                    @Override
+//                                                                    public void onFailure(@NonNull Exception e) {
+//                                                                        if (progressBar.getVisibility() == View.VISIBLE) {
+//                                                                            progressBar.setVisibility(View.GONE);
+//                                                                            Toast.makeText(addGun.this, "Failed image upload", Toast.LENGTH_SHORT).show();
+//                                                                        }
+//
+//                                                                    }
+//                                                                });
+//                                                    }
+//                                                });
+//
+//
+////                                                ad.dismiss();
+//                                            }
+//                                        });
+//                            }
+//                        });
+//                    }
+//                });
 
 
                 try {

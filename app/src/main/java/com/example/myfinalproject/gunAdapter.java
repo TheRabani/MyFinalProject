@@ -73,6 +73,8 @@ public class gunAdapter extends ArrayAdapter<Gun> {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+
 //        tvImage.setImageResource();
 //
 //        Picasso.get()
