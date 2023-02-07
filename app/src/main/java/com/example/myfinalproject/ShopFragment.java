@@ -25,6 +25,13 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+//import com.google.firebase.firestore.DocumentSnapshot;
+//import com.google.firebase.firestore.EventListener;
+//import com.google.firebase.firestore.FirebaseFirestore;
+//import com.google.firebase.firestore.FirebaseFirestoreException;
+//import com.google.firebase.firestore.QuerySnapshot;
+//import com.google.firebase.storage.FileDownloadTask;
+//import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -33,6 +40,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageMetadata;
+//import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
@@ -43,7 +51,7 @@ import java.util.List;
 
 import javax.annotation.meta.When;
 
-public class ShopFragment extends Fragment implements EventListener<QuerySnapshot> {
+public class ShopFragment extends Fragment implements EventListener<QuerySnapshot>{
 
     private FirebaseFirestore firestore;
     private FloatingActionButton btnAdd;
@@ -52,7 +60,7 @@ public class ShopFragment extends Fragment implements EventListener<QuerySnapsho
     public String st;
 
     public int count = 0;
-    Bitmap bitmap[];
+    Bitmap[] bitmap;
     int howMany=0;
 
     private ListView gunListView;
@@ -156,74 +164,74 @@ public class ShopFragment extends Fragment implements EventListener<QuerySnapsho
                 .collection("guns")
                 .addSnapshotListener(this);
 
-//        firestore.collection("guns")
-//                .get()
-//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                        if (task.isSuccessful()) {
-//                            List<DocumentSnapshot> docList = task.getResult().getDocuments();
-//                            gunArrryList.clear();
-//                            howMany = docList.size();
-////                            count = 0;
-//                            bitmap = new Bitmap[howMany];
-//                            for (int i=0; i<bitmap.length; i++)
-//                            {
-//                                bitmap[i] = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.x);
-//                            }
-//                            for (DocumentSnapshot doc : docList) {
-//
-//                                Gun gun = new Gun(
-//                                        doc.getString("modelName"),
-//                                        doc.getString("manufacturer"),
-////                                              doc.getString("imgUrl"),
-//                                        Integer.parseInt(doc.get("price").toString()),
-//                                        Integer.parseInt(doc.get("inStock").toString()),
-////                                        Integer.parseInt(doc.get("standardMagCapacity").toString()),
-//                                        doc.getString("optionsMagCapacity"),
-//                                        doc.getString("caliber"),
-//                                        Integer.parseInt(doc.get("weight").toString())
-////                                        Integer.parseInt(doc.get("barrelLength").toString()),
-////                                        Integer.parseInt(doc.get("triggerPull").toString())
-//                                );
-//                                gunArrryList.add(gun);
-//
-//                                StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("image/"+ doc.getString("manufacturer") + " "+ doc.getString("modelName"));
-//                                try {
-//                                    File localFile = File.createTempFile(doc.getString("manufacturer") + " "+ doc.getString("modelName"), "jpeg");
-//
-//                                    storageReference.getFile(localFile)
-//                                            .addOnCompleteListener(new OnCompleteListener<FileDownloadTask.TaskSnapshot>() {
-//                                                @Override
-//                                                public void onComplete(@NonNull Task<FileDownloadTask.TaskSnapshot> task) {
-//                                                    if (task.isSuccessful()) {
-//                                                        Bitmap tempBitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
-////                                                        tvImage.setImageBitmap(bitmap);
-//                                                        try {
-//                                                            bitmap[count] = tempBitmap;
-//                                                        }
-//                                                        catch (ArrayIndexOutOfBoundsException e)
-//                                                        {
-//                                                            e.printStackTrace();
-//                                                        }
-//
-//                                                    } else {
-//                                                    }
-//                                                    count++;
-//                                                }
-//                                            });
-//
-//                                } catch (IOException e) {
-//                                    e.printStackTrace();
-//                                }
-//
-//
-//                            }
-//                            adapter.notifyDataSetChanged();
-//                        } else
-//                            Toast.makeText(getActivity(), "" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-//                    }
-//                });
+        firestore.collection("guns")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            List<DocumentSnapshot> docList = task.getResult().getDocuments();
+                            gunArrryList.clear();
+                            howMany = docList.size();
+//                            count = 0;
+                            bitmap = new Bitmap[howMany];
+                            for (int i=0; i<bitmap.length; i++)
+                            {
+                                bitmap[i] = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.x);
+                            }
+                            for (DocumentSnapshot doc : docList) {
+
+                                Gun gun = new Gun(
+                                        doc.getString("modelName"),
+                                        doc.getString("manufacturer"),
+//                                              doc.getString("imgUrl"),
+                                        Integer.parseInt(doc.get("price").toString()),
+                                        Integer.parseInt(doc.get("inStock").toString()),
+//                                        Integer.parseInt(doc.get("standardMagCapacity").toString()),
+                                        doc.getString("optionsMagCapacity"),
+                                        doc.getString("caliber"),
+                                        Integer.parseInt(doc.get("weight").toString())
+//                                        Integer.parseInt(doc.get("barrelLength").toString()),
+//                                        Integer.parseInt(doc.get("triggerPull").toString())
+                                );
+                                gunArrryList.add(gun);
+
+                                StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("image/"+ doc.getString("manufacturer") + " "+ doc.getString("modelName"));
+                                try {
+                                    File localFile = File.createTempFile(doc.getString("manufacturer") + " "+ doc.getString("modelName"), "jpeg");
+
+                                    storageReference.getFile(localFile)
+                                            .addOnCompleteListener(new OnCompleteListener<FileDownloadTask.TaskSnapshot>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<FileDownloadTask.TaskSnapshot> task) {
+                                                    if (task.isSuccessful()) {
+                                                        Bitmap tempBitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+//                                                        tvImage.setImageBitmap(bitmap);
+                                                        try {
+                                                            bitmap[count] = tempBitmap;
+                                                        }
+                                                        catch (ArrayIndexOutOfBoundsException e)
+                                                        {
+                                                            e.printStackTrace();
+                                                        }
+
+                                                    } else {
+                                                    }
+                                                    count++;
+                                                }
+                                            });
+
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+
+
+                            }
+                            adapter.notifyDataSetChanged();
+                        } else
+                            Toast.makeText(getActivity(), "" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
 
 
         return view;

@@ -3,10 +3,10 @@ package com.example.myfinalproject;
 public class Gun {
     private String modelName; // for ex 19
     private String manufacturer; // for ex Glock
-//    private String imgUrl; // a url to a photo
+    //    private String imgUrl; // a url to a photo
     private int price; // full price
     private int inStock; // number of them in stock
-//    private int standardMagCapacity; // standard mag capacity
+    //    private int standardMagCapacity; // standard mag capacity
     private String optionsMagCapacity; // options of mag capacity
     private String caliber; // diameter X length
     private int weight; // in gr
