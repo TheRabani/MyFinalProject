@@ -48,8 +48,12 @@ public class ShopFragment extends Fragment implements EventListener<QuerySnapsho
     private FirebaseFirestore firestore;
     private FloatingActionButton btnAdd;
 
+    int countBit = 0;
+
     public DocumentSnapshot doc2;
     public String st;
+
+    public GunBitMap[] gunBitMap;
 
     public int count = 0;
     Bitmap bitmap[];
@@ -225,12 +229,15 @@ public class ShopFragment extends Fragment implements EventListener<QuerySnapsho
         if (docList.toArray().length != 0) {
             count = -1;
             howMany = docList.size();
-            bitmap = new Bitmap[howMany];
-            for (int i=0; i<bitmap.length; i++)
+//            bitmap = new Bitmap[howMany];
+            gunBitMap= new GunBitMap[howMany];
+            countBit = 0;
+            for (int i=0; i<gunBitMap.length; i++)
             {
-                bitmap[i] = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.x);
+//                bitmap[i] = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.x);
             }
             for (DocumentSnapshot doc : docList) {
+
                 count++;
                 Gun gun = new Gun(
                         doc.getString("modelName"),
@@ -258,7 +265,9 @@ public class ShopFragment extends Fragment implements EventListener<QuerySnapsho
                                     if (task.isSuccessful()) {
                                         Bitmap tempBitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
 //                                                        tvImage.setImageBitmap(bitmap);
-                                        bitmap[count] = tempBitmap;
+//                                        bitmap[count] = tempBitmap;
+                                        gunBitMap[countBit] = new GunBitMap(doc.getString("manufacturer") + " " + doc.getString("modelName"), );
+                                        countBit++;
                                     } else {
                                     }
                                 }
