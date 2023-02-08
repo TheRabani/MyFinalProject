@@ -8,7 +8,9 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.app.NotificationCompatSideChannelService;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.viewmodel.CreationExtras;
 
 import android.os.Handler;
@@ -32,6 +34,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
@@ -50,23 +53,27 @@ public class ShopFragment extends Fragment implements EventListener<QuerySnapsho
 
     int countBit = 0;
 
+    AlertDialog tempAd;
+
     public DocumentSnapshot doc2;
     public String st;
 
-    public GunBitMap[] gunBitMap;
+    //    public static GunBitMap[] gunBitMap;
+    public static Node<GunBitMap> nodeGunBitMap;
 
     public int count = 0;
     Bitmap bitmap[];
-    int howMany=0;
+    int howMany = 0;
 
     private ListView gunListView;
     private gunAdapter adapter;
 
     ImageView tvImage;
 
-    private ArrayList<Gun> gunArrryList;
+    private ArrayList<Gun> gunArrayList;
 
     View view;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -78,32 +85,30 @@ public class ShopFragment extends Fragment implements EventListener<QuerySnapsho
 
         Gun lastSelected;
 
-        gunArrryList = new ArrayList<Gun>();
+        gunArrayList = new ArrayList<Gun>();
         gunListView = view.findViewById(R.id.listViewGun);
-        adapter = new gunAdapter(getActivity(), R.layout.gun_row, gunArrryList);
+        adapter = new gunAdapter(getActivity(), R.layout.gun_row, gunArrayList);
         gunListView.setAdapter(adapter);
-
 
 
 //        -------------------------------------------------------------------------------------------------------------------
         AlertDialog.Builder tempBuilder = new AlertDialog.Builder(getActivity());
         View tempDialogView = getLayoutInflater().inflate(R.layout.dialog_loading, null, false);
         tempBuilder.setView(tempDialogView);
-        AlertDialog tempAd = tempBuilder.create();
+        tempAd = tempBuilder.create();
 //        tempAd.setCancelable(false);
         tempAd.show();
 
 
-
         Runnable mRunnable;
-        Handler mHandler=new Handler();
-        mRunnable=new Runnable() {
+        Handler mHandler = new Handler();
+        mRunnable = new Runnable() {
             @Override
             public void run() {
                 tempAd.cancel();
             }
         };
-        mHandler.postDelayed(mRunnable,15*1000);//Execute after 10 Seconds
+        mHandler.postDelayed(mRunnable, 15 * 1000);//Execute after 10 Seconds
 
 
         gunListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -117,6 +122,7 @@ public class ShopFragment extends Fragment implements EventListener<QuerySnapsho
                 AlertDialog ad = builder.create();
 
                 ImageView imageView = dialogView.findViewById(R.id.imageGun);
+
                 TextView makeAndModel = dialogView.findViewById(R.id.makeAndModel);
                 TextView unitsInStock = dialogView.findViewById(R.id.unitsInStock);
                 TextView magOptions = dialogView.findViewById(R.id.magOptions);
@@ -126,8 +132,15 @@ public class ShopFragment extends Fragment implements EventListener<QuerySnapsho
                 Button request = dialogView.findViewById(R.id.request);
 
                 makeAndModel.setText("" + g.getManufacturer() + " " + g.getModelName());
+
+                Bitmap bit = getBitmapFromName("" + g.getManufacturer() + " " + g.getModelName(), nodeGunBitMap);
+                if (bit != null)
+                    imageView.setImageBitmap(bit);
+                else
+                    imageView.setImageBitmap(BitmapFactory.decodeResource(getContext().getResources(), R.drawable.x));
+
                 int num = g.getInStock();
-                if(num!=0)
+                if (num != 0)
                     unitsInStock.setText("" + g.getInStock());
                 else {
                     unitsInStock.setText("0");
@@ -153,10 +166,54 @@ public class ShopFragment extends Fragment implements EventListener<QuerySnapsho
         });
 
 
+        if (nodeGunBitMap == null) {
+            firestore
+                    .collection("guns")
+                    .addSnapshotListener(this);
+//            Runnable mRunnable2;
+//            Handler mHandler2 = new Handler();
+//            mRunnable2 = new Runnable() {
+//                @Override
+//                public void run() {
+//                    getFragmentManager().beginTransaction().detach(ShopFragment.this).attach(ShopFragment.this).commit();
+////                    getActivity().recreate();
+//                    gunListView.setAdapter(adapter);
+//                }
+//            };
+//            mHandler2.postDelayed(mRunnable2, 5 * 1000);//Execute after 10 Seconds
 
-        firestore
-                .collection("guns")
-                .addSnapshotListener(this);
+        } else {
+            count = 0;
+            firestore.collection("guns")
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                List<DocumentSnapshot> docList = task.getResult().getDocuments();
+                                gunArrayList.clear();
+
+                                for (DocumentSnapshot doc : docList) {
+                                    count++;
+                                    Gun gun = new Gun(
+                                            doc.getString("modelName"),
+                                            doc.getString("manufacturer"),
+//                                              doc.getString("imgUrl"),
+                                            Integer.parseInt(doc.get("price").toString()),
+                                            Integer.parseInt(doc.get("inStock").toString()),
+//                                        Integer.parseInt(doc.get("standardMagCapacity").toString()),
+                                            doc.getString("optionsMagCapacity"),
+                                            doc.getString("caliber"),
+                                            Integer.parseInt(doc.get("weight").toString())
+//                                        Integer.parseInt(doc.get("barrelLength").toString()),
+//                                        Integer.parseInt(doc.get("triggerPull").toString())
+                                    );
+                                    gunArrayList.add(gun);
+                                }
+                            }
+                        }
+                    });
+        }
 
 //        firestore.collection("guns")
 //                .get()
@@ -165,7 +222,7 @@ public class ShopFragment extends Fragment implements EventListener<QuerySnapsho
 //                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
 //                        if (task.isSuccessful()) {
 //                            List<DocumentSnapshot> docList = task.getResult().getDocuments();
-//                            gunArrryList.clear();
+//                            gunArrayList.clear();
 //                            howMany = docList.size();
 //                            count = -1;
 //                            bitmap = new Bitmap[howMany];
@@ -188,7 +245,7 @@ public class ShopFragment extends Fragment implements EventListener<QuerySnapsho
 ////                                        Integer.parseInt(doc.get("barrelLength").toString()),
 ////                                        Integer.parseInt(doc.get("triggerPull").toString())
 //                                );
-//                                gunArrryList.add(gun);
+//                                gunArrayList.add(gun);
 //
 //                                StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("image/"+ doc.getString("manufacturer") + " "+ doc.getString("modelName"));
 //                                try {
@@ -225,20 +282,21 @@ public class ShopFragment extends Fragment implements EventListener<QuerySnapsho
     @Override
     public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
         List<DocumentSnapshot> docList = value.getDocuments();
-        gunArrryList.clear();
-        if (docList.toArray().length != 0) {
-            count = -1;
-            howMany = docList.size();
+        gunArrayList.clear();
+        count = 0;
+        if (docList.size() != 0) {
+//            count = -1;
+//            howMany = docList.size();
 //            bitmap = new Bitmap[howMany];
-            gunBitMap= new GunBitMap[howMany];
-            countBit = 0;
-            for (int i=0; i<gunBitMap.length; i++)
-            {
+//            gunBitMap= new GunBitMap[howMany];
+//            countBit = 0;
+//            for (int i=0; i<gunBitMap.length; i++)
+//            {
 //                bitmap[i] = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.x);
-            }
+//            }
             for (DocumentSnapshot doc : docList) {
-
                 count++;
+//                count++;
                 Gun gun = new Gun(
                         doc.getString("modelName"),
                         doc.getString("manufacturer"),
@@ -252,7 +310,12 @@ public class ShopFragment extends Fragment implements EventListener<QuerySnapsho
 //                                        Integer.parseInt(doc.get("barrelLength").toString()),
 //                                        Integer.parseInt(doc.get("triggerPull").toString())
                 );
-                gunArrryList.add(gun);
+                gunArrayList.add(gun);
+//                recreate();
+//                FragmentTransaction tr = getFragmentManager().beginTransaction();
+//                tr.replace(R.id.fragmentShopXML, ShopFragment.this);
+//                tr.commit();
+//                getFragmentManager().beginTransaction().detach(ShopFragment.this).attach(ShopFragment.this).commit();
 
                 StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("image/" + doc.getString("manufacturer") + " " + doc.getString("modelName"));
                 try {
@@ -266,9 +329,30 @@ public class ShopFragment extends Fragment implements EventListener<QuerySnapsho
                                         Bitmap tempBitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
 //                                                        tvImage.setImageBitmap(bitmap);
 //                                        bitmap[count] = tempBitmap;
-                                        gunBitMap[countBit] = new GunBitMap(doc.getString("manufacturer") + " " + doc.getString("modelName"), );
-                                        countBit++;
+//                                        gunBitMap[countBit] = new GunBitMap(doc.getString("manufacturer") + " " + doc.getString("modelName"), tempBitmap);
+                                        if (nodeGunBitMap == null)
+                                            nodeGunBitMap = new Node<GunBitMap>(new GunBitMap(doc.getString("manufacturer") + " " + doc.getString("modelName"), tempBitmap));
+                                        else {
+                                            Node<GunBitMap> temp = getLastNode(nodeGunBitMap);
+                                            temp.setNext(new Node<GunBitMap>(new GunBitMap(doc.getString("manufacturer") + " " + doc.getString("modelName"), tempBitmap)));
+                                        }
+//                                        countBit++;
                                     } else {
+//                                        gunBitMap[countBit] = new GunBitMap(doc.getString("manufacturer") + " " + doc.getString("modelName"), BitmapFactory.decodeResource(getContext().getResources(), R.drawable.x));
+//                                        countBit++;
+                                    }
+                                    if (count == docList.size()) {
+                                        gunListView.setAdapter(adapter);
+
+                                        Runnable mRunnable2;
+                                        Handler mHandler2 = new Handler();
+                                        mRunnable2 = new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                tempAd.dismiss();
+                                            }
+                                        };
+                                        mHandler2.postDelayed(mRunnable2, 2 * 1000);//Execute after 10 Seconds
                                     }
                                 }
                             });
@@ -277,7 +361,9 @@ public class ShopFragment extends Fragment implements EventListener<QuerySnapsho
                     e.printStackTrace();
                 }
 
+
             }
+//            tempAd.dismiss();
             adapter.notifyDataSetChanged();
         }
     }
@@ -287,4 +373,37 @@ public class ShopFragment extends Fragment implements EventListener<QuerySnapsho
     public CreationExtras getDefaultViewModelCreationExtras() {
         return super.getDefaultViewModelCreationExtras();
     }
+
+    //    public static Bitmap getBitmapFromName(String name, GunBitMap[] bitmap) {
+//        for (int i = 0; i < bitmap.length; i++) {
+//            if (bitmap[i].getName().equals(name))
+//                return bitmap[i].getBitmap();
+//        }
+//        return null;
+//    }
+    public static Bitmap getBitmapFromName(String name, Node<GunBitMap> node) {
+        Node<GunBitMap> g = node;
+        while (g != null && g.getValue() != null && !g.getValue().getName().equals(name))
+            g = g.getNext();
+
+        if (g == null || g.getValue() == null) {
+            System.out.println("null");
+            return null;
+        }
+        System.out.println("" + g.getValue().getName());
+        return g.getValue().getBitmap();
+    }
+
+    public static Node<GunBitMap> getLastNode(Node<GunBitMap> node) {
+        Node<GunBitMap> n = node;
+        while (n.getNext() != null)
+            n = n.getNext();
+        return n;
+    }
+
+//    public static Bitmap getNodeBitmap(String name)
+//    {
+//        return getBitmapFromName(name, nodeGunBitMap);
+//    }
+
 }

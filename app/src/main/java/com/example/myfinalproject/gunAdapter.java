@@ -55,24 +55,33 @@ public class gunAdapter extends ArrayAdapter<Gun> {
         String st = "" + gun.getManufacturer() + " " + gun.getModelName();
 
         tvGunName.setText(st);
-        StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("image/" + st);
-        try {
-            File localFile = File.createTempFile("" + st, "jpeg");
 
-            storageReference.getFile(localFile)
-                    .addOnCompleteListener(new OnCompleteListener<FileDownloadTask.TaskSnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<FileDownloadTask.TaskSnapshot> task) {
-                            if (task.isSuccessful()) {
-                                Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
-                                tvImage.setImageBitmap(bitmap);
-                            } else {
-                            }
-                        }
-                    });
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        Node<GunBitMap> node = ShopFragment.nodeGunBitMap;
+        Bitmap bitmap = ShopFragment.getBitmapFromName(st, node);
+        if(bitmap != null)
+            tvImage.setImageBitmap(bitmap);
+        else
+            tvImage.setImageBitmap(BitmapFactory.decodeResource(getContext().getResources(), R.drawable.x));
+
+//        StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("image/" + st);
+//        try {
+//            File localFile = File.createTempFile("" + st, "jpeg");
+//
+//            storageReference.getFile(localFile)
+//                    .addOnCompleteListener(new OnCompleteListener<FileDownloadTask.TaskSnapshot>() {
+//                        @Override
+//                        public void onComplete(@NonNull Task<FileDownloadTask.TaskSnapshot> task) {
+//                            if (task.isSuccessful()) {
+//                                Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+//                                tvImage.setImageBitmap(bitmap);
+//                            } else {
+//                            }
+//                        }
+//                    });
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+
 //        tvImage.setImageResource();
 //
 //        Picasso.get()

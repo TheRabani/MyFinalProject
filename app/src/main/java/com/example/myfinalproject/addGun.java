@@ -494,6 +494,9 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
                                 .document("" + g.getManufacturer() + " " + g.getModelName())
                                 .delete();
 
+                        startActivity(new Intent(addGun.this, MainActivity.class));
+                        startActivity(new Intent(getIntent()));
+
                         Toast.makeText(addGun.this, "Deleted successfully", Toast.LENGTH_SHORT).show();
                         isOn = false;
                         ad.dismiss();
