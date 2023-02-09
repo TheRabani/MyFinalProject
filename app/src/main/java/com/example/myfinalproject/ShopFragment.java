@@ -97,7 +97,7 @@ public class ShopFragment extends Fragment implements EventListener<QuerySnapsho
         tempBuilder.setView(tempDialogView);
         tempAd = tempBuilder.create();
 //        tempAd.setCancelable(false);
-        tempAd.show();
+//        tempAd.show();
 
 
         Runnable mRunnable;
@@ -167,21 +167,10 @@ public class ShopFragment extends Fragment implements EventListener<QuerySnapsho
 
 
         if (nodeGunBitMap == null) {
+            tempAd.show();
             firestore
                     .collection("guns")
                     .addSnapshotListener(this);
-//            Runnable mRunnable2;
-//            Handler mHandler2 = new Handler();
-//            mRunnable2 = new Runnable() {
-//                @Override
-//                public void run() {
-//                    getFragmentManager().beginTransaction().detach(ShopFragment.this).attach(ShopFragment.this).commit();
-////                    getActivity().recreate();
-//                    gunListView.setAdapter(adapter);
-//                }
-//            };
-//            mHandler2.postDelayed(mRunnable2, 5 * 1000);//Execute after 10 Seconds
-
         } else {
             count = 0;
             firestore.collection("guns")
@@ -210,6 +199,7 @@ public class ShopFragment extends Fragment implements EventListener<QuerySnapsho
                                     );
                                     gunArrayList.add(gun);
                                 }
+                                adapter.notifyDataSetChanged();
                             }
                         }
                     });
@@ -342,7 +332,7 @@ public class ShopFragment extends Fragment implements EventListener<QuerySnapsho
 //                                        countBit++;
                                     }
                                     if (count == docList.size()) {
-                                        gunListView.setAdapter(adapter);
+                                        adapter.notifyDataSetChanged();
 
                                         Runnable mRunnable2;
                                         Handler mHandler2 = new Handler();

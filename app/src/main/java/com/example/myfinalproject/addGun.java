@@ -106,7 +106,7 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
             if (!isOn) {
                 Gun g = adapter.getItem(i);
 
-                progressBar.setVisibility(View.VISIBLE);
+//                progressBar.setVisibility(View.VISIBLE);
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(addGun.this);
                 View dialogView = getLayoutInflater().inflate(R.layout.dialog_show_gun_details, null, false);
@@ -121,8 +121,8 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
                 TextView price = dialogView.findViewById(R.id.price);
                 Button updateBtn = dialogView.findViewById(R.id.update2);
                 Button buttonEditUnits = dialogView.findViewById(R.id.editUnitsInStock);
-                Button editImage = dialogView.findViewById(R.id.editImage);
-                editImage.setVisibility(View.VISIBLE);
+//                Button editImage = dialogView.findViewById(R.id.editImage);
+//                editImage.setVisibility(View.VISIBLE);
                 buttonEditUnits.setVisibility(View.VISIBLE);
                 updateBtn.setVisibility(View.VISIBLE);
 
@@ -228,33 +228,36 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
 //                });
 
 
-                try {
+                imageView.setImageBitmap(ShopFragment.getBitmapFromName("" + g.getManufacturer() + " " + g.getModelName(), ShopFragment.nodeGunBitMap));
+                ad.show();
 
-                    File localFile = File.createTempFile("" + makeAndModel.getText().toString(), "jpeg");
-
-                    storageReference.getFile(localFile)
-                            .addOnCompleteListener(new OnCompleteListener<FileDownloadTask.TaskSnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<FileDownloadTask.TaskSnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
-                                        imageView.setImageBitmap(bitmap);
-
-                                        ad.show();
-                                        progressBar.setVisibility(View.INVISIBLE);
-                                    } else {
-                                        Toast.makeText(addGun.this, "Error", Toast.LENGTH_SHORT).show();
-                                        imageView.setImageResource(R.drawable.x);
-                                        progressBar.setVisibility(View.INVISIBLE);
-                                        ad.show();
-                                    }
-                                }
-                            });
-                } catch (IOException e) {
-                    Toast.makeText(addGun.this, "Error2", Toast.LENGTH_SHORT).show();
-                    progressBar.setVisibility(View.INVISIBLE);
-                    e.printStackTrace();
-                }
+//                try {
+//
+//                    File localFile = File.createTempFile("" + makeAndModel.getText().toString(), "jpeg");
+//
+//                    storageReference.getFile(localFile)
+//                            .addOnCompleteListener(new OnCompleteListener<FileDownloadTask.TaskSnapshot>() {
+//                                @Override
+//                                public void onComplete(@NonNull Task<FileDownloadTask.TaskSnapshot> task) {
+//                                    if (task.isSuccessful()) {
+//                                        Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+//                                        imageView.setImageBitmap(bitmap);
+//
+//                                        ad.show();
+//                                        progressBar.setVisibility(View.INVISIBLE);
+//                                    } else {
+//                                        Toast.makeText(addGun.this, "Error", Toast.LENGTH_SHORT).show();
+//                                        imageView.setImageResource(R.drawable.x);
+//                                        progressBar.setVisibility(View.INVISIBLE);
+//                                        ad.show();
+//                                    }
+//                                }
+//                            });
+//                } catch (IOException e) {
+//                    Toast.makeText(addGun.this, "Error2", Toast.LENGTH_SHORT).show();
+//                    progressBar.setVisibility(View.INVISIBLE);
+//                    e.printStackTrace();
+//                }
 
 
 //                Picasso.get()
@@ -400,7 +403,7 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
 //                            String stTriggerPull = etTriggerPull.getText().toString(); //remember conv to int
 
 
-                                if (modelName.isEmpty() || stPrice.isEmpty() || manufacturer.isEmpty() || imgUrl.isEmpty() || stInStock.isEmpty() || magOptions.isEmpty() || caliber.isEmpty() || stWeight.isEmpty()) {
+                                if (modelName.isEmpty() || stPrice.isEmpty() || manufacturer.isEmpty() || stInStock.isEmpty() || magOptions.isEmpty() || caliber.isEmpty() || stWeight.isEmpty()) {
                                     Toast.makeText(addGun.this, "Please fill all the fields", Toast.LENGTH_SHORT).show();
                                 } else {
                                     int price = Integer.parseInt(stPrice);
