@@ -33,6 +33,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -80,7 +82,7 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
 
     public int num;
 
-    private ArrayList<Gun> gunArrryList;
+    private ArrayList<Gun> gunArrayList;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -95,9 +97,9 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
 
         progressBar = findViewById(R.id.progressBar);
 
-        gunArrryList = new ArrayList<Gun>();
+        gunArrayList = new ArrayList<Gun>();
         gunListView = findViewById(R.id.listViewGun);
-        adapter = new gunAdapter(this, R.layout.gun_row, gunArrryList);
+        adapter = new gunAdapter(this, R.layout.gun_row, gunArrayList);
 
 
         gunListView.setAdapter(adapter);
@@ -389,7 +391,6 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
                         buttonAdd.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                ad2.dismiss();
                                 String modelName = etToyName.getText().toString();
                                 String stPrice = etPrice.getText().toString(); //remember conv to int
                                 String manufacturer = etManufacturer.getText().toString();
@@ -405,6 +406,20 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
 
                                 if (modelName.isEmpty() || stPrice.isEmpty() || manufacturer.isEmpty() || stInStock.isEmpty() || magOptions.isEmpty() || caliber.isEmpty() || stWeight.isEmpty()) {
                                     Toast.makeText(addGun.this, "Please fill all the fields", Toast.LENGTH_SHORT).show();
+                                    if(modelName.isEmpty())
+                                        shake(dialogView, R.id.etGunModel);
+                                    if(stPrice.isEmpty())
+                                        shake(dialogView, R.id.etPrice);
+                                    if(manufacturer.isEmpty())
+                                        shake(dialogView, R.id.etManufacturer);
+                                    if(stInStock.isEmpty())
+                                        shake(dialogView, R.id.etInStock);
+                                    if(magOptions.isEmpty())
+                                        shake(dialogView, R.id.etMagOptions);
+                                    if(caliber.isEmpty())
+                                        shake(dialogView, R.id.etCaliber);
+                                    if(stWeight.isEmpty())
+                                        shake(dialogView, R.id.etWeight);
                                 } else {
                                     int price = Integer.parseInt(stPrice);
                                     int inStock = Integer.parseInt(stInStock);
@@ -420,6 +435,7 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
                                             .addOnCompleteListener(new OnCompleteListener<Void>() {
                                                 @Override
                                                 public void onComplete(@NonNull Task<Void> task) {
+                                                    ad2.dismiss();
                                                     if (task.isSuccessful()) {
                                                         Toast.makeText(addGun.this, "Gun updated!", Toast.LENGTH_SHORT).show();
                                                     } else {
@@ -535,7 +551,7 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
 //                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
 //                        if (task.isSuccessful()) {
 //                            List<DocumentSnapshot> docList = task.getResult().getDocuments();
-//                            gunArrryList.clear();
+//                            gunArrayList.clear();
 //                            for (DocumentSnapshot doc : docList) {
 //                                Gun gun = new Gun(
 //                                        doc.getString("modelName"),
@@ -550,7 +566,7 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
 ////                                        Integer.parseInt(doc.get("barrelLength").toString()),
 ////                                        Integer.parseInt(doc.get("triggerPull").toString())
 //                                );
-//                                gunArrryList.add(gun);
+//                                gunArrayList.add(gun);
 //                            }
 //                            adapter.notifyDataSetChanged();
 //                        } else
@@ -619,6 +635,23 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
 
                             if (modelName.isEmpty() || stPrice.isEmpty() || manufacturer.isEmpty() || /*imgUrl.isEmpty() ||*/ stInStock.isEmpty() || magOptions.isEmpty() || caliber.isEmpty() || stWeight.isEmpty() || imageUri == null) {
                                 Toast.makeText(addGun.this, "Please fill all the fields", Toast.LENGTH_SHORT).show();
+                                if(modelName.isEmpty())
+                                    shake(dialogView, R.id.etGunModel);
+                                if(stPrice.isEmpty())
+                                    shake(dialogView, R.id.etPrice);
+                                if(manufacturer.isEmpty())
+                                    shake(dialogView, R.id.etManufacturer);
+                                if(stInStock.isEmpty())
+                                    shake(dialogView, R.id.etInStock);
+                                if(magOptions.isEmpty())
+                                    shake(dialogView, R.id.etMagOptions);
+                                if(caliber.isEmpty())
+                                    shake(dialogView, R.id.etCaliber);
+                                if(stWeight.isEmpty())
+                                    shake(dialogView, R.id.etWeight);
+                                if(imageUri == null)
+                                    shake(dialogView, R.id.etImageURL);
+
                             } else {
                                 progressBar.setVisibility(View.VISIBLE);
 
@@ -698,6 +731,14 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
         });
     }
 
+    private void shake(View dialogView, int id) {
+        YoYo.with(Techniques.Shake)
+                .duration(700)
+                .repeat(0)
+                .playOn(dialogView.findViewById(id));
+    }
+
+
     private void addPic(String s) {
         storageReference = FirebaseStorage.getInstance().getReference("image/" + s);
         storageReference.putFile(imageUri)
@@ -725,7 +766,7 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
     @Override
     public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
         List<DocumentSnapshot> docList = value.getDocuments();
-        gunArrryList.clear();
+        gunArrayList.clear();
         if (docList.toArray().length != 0)
             for (DocumentSnapshot doc : docList) {
                 Gun gun = new Gun(
@@ -741,7 +782,7 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
                         //                    Integer.parseInt(doc.get("barrelLength").toString()),
                         //                    Integer.parseInt(doc.get("triggerPull").toString())
                 );
-                gunArrryList.add(gun);
+                gunArrayList.add(gun);
             }
         adapter.notifyDataSetChanged();
     }

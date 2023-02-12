@@ -12,6 +12,8 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseException;
@@ -45,11 +47,10 @@ public class Login extends AppCompatActivity {
 
     }
 
-    private void sendverificationcode(String phoneNumber)
-    {
+    private void sendverificationcode(String phoneNumber) {
         PhoneAuthOptions options =
                 PhoneAuthOptions.newBuilder(mAuth)
-                        .setPhoneNumber("+972"+phoneNumber)       // Phone number to verify
+                        .setPhoneNumber("+972" + phoneNumber)       // Phone number to verify
                         .setTimeout(60L, TimeUnit.SECONDS) // Timeout and unit
                         .setActivity(this)                 // Activity (for callback binding)
                         .setCallbacks(mCallbacks)          // OnVerificationStateChangedCallbacks
@@ -62,8 +63,7 @@ public class Login extends AppCompatActivity {
             mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
 
         @Override
-        public void onVerificationCompleted(PhoneAuthCredential credential)
-        {
+        public void onVerificationCompleted(PhoneAuthCredential credential) {
             final String code = credential.getSmsCode();
             if (code != null) {
                 verifycode(code);
@@ -79,8 +79,7 @@ public class Login extends AppCompatActivity {
 
         @Override
         public void onCodeSent(@NonNull String s,
-                               @NonNull PhoneAuthProvider.ForceResendingToken token)
-        {
+                               @NonNull PhoneAuthProvider.ForceResendingToken token) {
             super.onCodeSent(s, token);
             verificationID = s;
             Toast.makeText(Login.this, "Code sent", Toast.LENGTH_SHORT).show();
@@ -100,15 +99,15 @@ public class Login extends AppCompatActivity {
         firebaseAuth.signInWithCredential(credential)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
-                    public void onComplete(@NonNull Task<AuthResult> task)
-                    {
+                    public void onComplete(@NonNull Task<AuthResult> task) {
                         bar.setVisibility(View.INVISIBLE);
                         if (task.isSuccessful()) {
                             Toast.makeText(Login.this, "Login successful", Toast.LENGTH_SHORT).show();
                             startActivity(new Intent(Login.this, MainActivity.class));
-                        }
-                        else
+                        } else {
                             Toast.makeText(Login.this, "Wrong code!", Toast.LENGTH_SHORT).show();
+                            shake(R.id.otp);
+                        }
                     }
                 });
     }
@@ -117,8 +116,7 @@ public class Login extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        if(currentUser!=null)
-        {
+        if (currentUser != null) {
             startActivity(new Intent(Login.this, MainActivity.class));
 //            mAuth.signOut();
         }
@@ -126,26 +124,32 @@ public class Login extends AppCompatActivity {
 
     public void GoLogin(View view) {
 
-        if(login_btn.getText().toString().toLowerCase().equals("gen otp")) {
-            if (TextUtils.isEmpty(phone.getText().toString()) || phone.getText().toString().length()!=10)
+        if (login_btn.getText().toString().toLowerCase().equals("gen otp")) {
+            if (TextUtils.isEmpty(phone.getText().toString()) || phone.getText().toString().length() != 10) {
                 Toast.makeText(Login.this, "enter valid phone nm.", Toast.LENGTH_SHORT).show();
-            else {
+                shake(R.id.phone);
+            } else {
                 String number = phone.getText().toString();
                 bar.setVisibility(View.VISIBLE);
                 sendverificationcode(number);
             }
-            bar.setVisibility(View.VISIBLE);
-        }
-        else
-            {
-                if (TextUtils.isEmpty(otp.getText().toString()))
-                    Toast.makeText(Login.this, "enter valid nm.", Toast.LENGTH_SHORT).show();
-                else {
-                    bar.setVisibility(View.VISIBLE);
-                    verifycode(otp.getText().toString());
-                }
+//            bar.setVisibility(View.VISIBLE);
+        } else {
+            if (TextUtils.isEmpty(otp.getText().toString())) {
+                Toast.makeText(Login.this, "enter valid nm.", Toast.LENGTH_SHORT).show();
+                shake(R.id.otp);
+            } else {
+                bar.setVisibility(View.VISIBLE);
+                verifycode(otp.getText().toString());
             }
+        }
 
     }
 
+    private void shake(int id) {
+        YoYo.with(Techniques.Shake)
+                .duration(700)
+                .repeat(0)
+                .playOn(findViewById(id));
+    }
 }

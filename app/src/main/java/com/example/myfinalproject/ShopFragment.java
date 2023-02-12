@@ -96,7 +96,7 @@ public class ShopFragment extends Fragment implements EventListener<QuerySnapsho
         View tempDialogView = getLayoutInflater().inflate(R.layout.dialog_loading, null, false);
         tempBuilder.setView(tempDialogView);
         tempAd = tempBuilder.create();
-//        tempAd.setCancelable(false);
+        tempAd.setCancelable(false);
 //        tempAd.show();
 
 
