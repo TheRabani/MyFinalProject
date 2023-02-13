@@ -66,7 +66,7 @@ public class ShopFragment extends Fragment implements EventListener<QuerySnapsho
     int howMany = 0;
 
     private ListView gunListView;
-    private gunAdapter adapter;
+    private static gunAdapter adapter;
 
     ImageView tvImage;
 
@@ -87,7 +87,8 @@ public class ShopFragment extends Fragment implements EventListener<QuerySnapsho
 
         gunArrayList = new ArrayList<Gun>();
         gunListView = view.findViewById(R.id.listViewGun);
-        adapter = new gunAdapter(getActivity(), R.layout.gun_row, gunArrayList);
+        if(adapter == null)
+            adapter = new gunAdapter(getActivity(), R.layout.gun_row, gunArrayList);
         gunListView.setAdapter(adapter);
 
 
