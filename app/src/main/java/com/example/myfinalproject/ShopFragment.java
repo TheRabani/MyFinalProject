@@ -377,10 +377,8 @@ public class ShopFragment extends Fragment implements EventListener<QuerySnapsho
             g = g.getNext();
 
         if (g == null || g.getValue() == null) {
-            System.out.println("null");
             return null;
         }
-        System.out.println("" + g.getValue().getName());
         return g.getValue().getBitmap();
     }
 
