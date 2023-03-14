@@ -48,6 +48,10 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         ContentValues cv = new ContentValues();
         cv.put(COLUMN_DATE, date);
         cv.put(COLUMN_TIME, time);
+        if(HomeFragment.book_id != null)
+            cv.put(COLUMN_ID, String.valueOf(HomeFragment.book_id.size() + 1));
+        else
+            cv.put(COLUMN_ID, String.valueOf(1));
         long result = db.insert(TABLE_NAME, null, cv);
         if(result == -1)
             Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show();
@@ -62,5 +66,15 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         if(db != null)
             cursor = db.rawQuery(query, null);
         return cursor;
+    }
+
+    void deleteOneRow(String row_date)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        long result = db.delete(TABLE_NAME, "book_date=?", new String[]{row_date});
+        if(result == -1)
+            Toast.makeText(context, "Error- Can't delete", Toast.LENGTH_SHORT).show();
+        else
+            Toast.makeText(context, "Successfully deleted", Toast.LENGTH_SHORT).show();
     }
 }

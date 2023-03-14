@@ -1,5 +1,9 @@
 package com.example.myfinalproject;
 
+import static com.example.myfinalproject.HomeFragment.book_date;
+import static com.example.myfinalproject.HomeFragment.book_id;
+import static com.example.myfinalproject.HomeFragment.book_time;
+
 import android.database.Cursor;
 import android.os.Bundle;
 
@@ -39,9 +43,7 @@ public class CalendarFragment extends Fragment implements SelectListener {
     private ScheduleAdapter scheduleAdapter;
     private ArrayList<Schedule> scheduleArrayList;
 
-    MyDatabaseHelper myDB;
-    ArrayList<String> book_id, book_date, book_time;
-    CustomAdapterSQLite customAdapterSQLite;
+//    CustomAdapterSQLite customAdapterSQLite;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -54,11 +56,11 @@ public class CalendarFragment extends Fragment implements SelectListener {
         scheduleAdapter = new ScheduleAdapter(getContext(), scheduleArrayList, this);
         normal_rec.setAdapter(scheduleAdapter);
 
-        calendar = (CalendarView) view.findViewById(R.id.calendar);
-        editText = (TextView) view.findViewById(R.id.date_view);
+        calendar = view.findViewById(R.id.calendar);
+        editText = view.findViewById(R.id.date_view);
 
-        storeDataInArrays();
-        customAdapterSQLite = new CustomAdapterSQLite(getActivity(), book_id, book_date, book_time);
+//        storeDataInArrays();
+//        customAdapterSQLite = new CustomAdapterSQLite(getActivity(), book_id, book_date, book_time);
         calendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
@@ -131,8 +133,10 @@ public class CalendarFragment extends Fragment implements SelectListener {
                     @Override
                     public void onClick(View view) {
                         MyDatabaseHelper myDB = new MyDatabaseHelper(getActivity());
-                        myDB.addBook(simpleDate.trim(), schedule.getHour().trim());
-                        storeDataInArrays();
+                        String s = simpleDate.trim(), s2 = schedule.getHour().trim();
+                        myDB.addBook(s, s2);
+                        addTime(s, s2);
+//                        storeDataInArrays();
                         databaseReference.child("" + schedule.getHour()).setValue(schedule.getPeople() - 1);
                         ad.dismiss();
                     }
@@ -145,24 +149,20 @@ public class CalendarFragment extends Fragment implements SelectListener {
             Toast.makeText(getContext(), "אין עוד מקומות פנויים", Toast.LENGTH_SHORT).show();
     }
 
-    void storeDataInArrays() {
-        myDB = new MyDatabaseHelper(getContext());
-        book_time = new ArrayList<>();
-        book_id = new ArrayList<>();
-        book_date = new ArrayList<>();
-        Cursor cursor = myDB.readAllData();
-        if (cursor.getCount() == 0)
-            Toast.makeText(getContext(), "No data", Toast.LENGTH_SHORT).show();
-        else
-            while (cursor.moveToNext()) {
-                book_id.add(cursor.getString(0));
-                book_date.add(cursor.getString(1));
-                book_time.add(cursor.getString(2));
-            }
+    @Override
+    public void onItemClicked(String string) {
+
+    }
+
+    private void addTime(String s, String s2) {
+        Toast.makeText(getContext(), ""+book_id.size(), Toast.LENGTH_SHORT).show();
+        book_id.add(String.valueOf(book_id.size() + 1));
+        book_date.add(s);
+        book_time.add(s2);
     }
 
     public boolean isAvailable() {
-        if (book_date == null || book_date.size() == 0)
+        if (book_date.size() == 0)
             return true;
         String st = simpleDate.substring(simpleDate.indexOf("M") + 1, simpleDate.indexOf("Y"));
         for (String s : book_date) {

@@ -23,18 +23,6 @@
         app:layout_constraintTop_toBottomOf="@+id/logout"
         app:layout_constraintVertical_bias="0.0" />
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="221dp"
-        android:layout_height="196dp"
-
-        android:layout_marginTop="16dp"
-        android:src="@drawable/try_logo"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addGun" />
-
     <Button
         android:id="@+id/logout"
         android:layout_width="wrap_content"
@@ -91,13 +79,35 @@
         android:id="@+id/textView9"
         android:layout_width="319dp"
         android:layout_height="183dp"
-        android:layout_marginTop="16dp"
         android:text="Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures "
         android:textColor="#000000"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.567"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+        app:layout_constraintTop_toBottomOf="@+id/addGun" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="24dp"
+        app:layout_constraintBottom_toTopOf="@+id/textView8"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView9" />
+
+    <ImageView
+        android:id="@+id/imageNoData"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/no_data_found"
+        app:layout_constraintBottom_toTopOf="@+id/textView8"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/recyclerView" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

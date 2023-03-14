@@ -32,21 +32,44 @@
                 android:id="@+id/book_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="24dp"
                 android:text="date1"
                 android:textColor="@color/black"
+                android:textSize="24sp"
+                android:textStyle="bold"
                 app:layout_constraintStart_toEndOf="@+id/book_id"
-                app:layout_constraintTop_toTopOf="@+id/book_id" />
+                app:layout_constraintTop_toTopOf="@+id/book_time_txt" />
 
             <TextView
                 android:id="@+id/book_time_txt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
                 android:text="time1"
                 android:textColor="@color/black"
-                app:layout_constraintStart_toStartOf="@+id/book_date"
-                app:layout_constraintTop_toBottomOf="@+id/book_date" />
+                android:textSize="24sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView16" />
+
+            <TextView
+                android:id="@+id/textView16"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="שעת האימון"
+                android:textColor="#000000"
+                android:textSize="20sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/textView17"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="בתאריך"
+                android:textColor="#000000"
+                android:textSize="20sp"
+                app:layout_constraintEnd_toEndOf="@+id/book_date"
+                app:layout_constraintTop_toTopOf="parent" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
