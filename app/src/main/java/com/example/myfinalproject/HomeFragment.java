@@ -2,6 +2,7 @@ package com.example.myfinalproject;
 
 import android.annotation.SuppressLint;
 import android.content.ActivityNotFoundException;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -19,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -36,6 +38,7 @@ public class HomeFragment extends Fragment implements SelectListener{
     public static ArrayList<String> book_id = new ArrayList<>(), book_date = new ArrayList<>(), book_time = new ArrayList<>();
     MyDatabaseHelper myDB;
     CustomAdapterSQLite customAdapterSQLite;
+    ImageView image;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -43,15 +46,18 @@ public class HomeFragment extends Fragment implements SelectListener{
         fragment = new MapFragment();
         view = inflater.inflate(R.layout.fragment_home, container, false);
 
+        image = view.findViewById(R.id.imageNoData);
+
         recyclerView = view.findViewById(R.id.recyclerView);
         myDB = new MyDatabaseHelper(getContext());
         if (book_date.size() == 0) {
             storeDataInArrays();
         }
+        else
+            image.setVisibility(View.INVISIBLE);
         customAdapterSQLite = new CustomAdapterSQLite(getContext(), book_id, book_date, book_time, this);
         recyclerView.setAdapter(customAdapterSQLite);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
 
         buttonNavigation = view.findViewById(R.id.buttonNavigation);
         buttonNavigation.setOnClickListener(new View.OnClickListener() {
@@ -120,16 +126,15 @@ public class HomeFragment extends Fragment implements SelectListener{
         myDB = new MyDatabaseHelper(getContext());
         Cursor cursor = myDB.readAllData();
         if (cursor.getCount() == 0)
-        {
-            ImageView image = view.findViewById(R.id.imageNoData);
             image.setVisibility(View.VISIBLE);
-        }
-        else
+        else {
+            image.setVisibility(View.INVISIBLE);
             while (cursor.moveToNext()) {
                 book_id.add(cursor.getString(0));
                 book_date.add(cursor.getString(1));
                 book_time.add(cursor.getString(2));
             }
+        }
     }
 
     @Override
@@ -137,38 +142,36 @@ public class HomeFragment extends Fragment implements SelectListener{
     }
 
     @Override
-    public void onItemClicked(String string) {
+    public void onItemClicked(String string, String time) {
 //        Toast.makeText(getContext(), ""+string, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getContext(), ""+book_id, Toast.LENGTH_SHORT).show();
+        int second = string.indexOf('M'), third = string.indexOf('Y');
+        String date = string.substring(1, second) + "-" + string.substring(second + 1, third) + "-" + string.substring(third + 1);
 
-        Toast.makeText(getContext(), ""+book_id, Toast.LENGTH_SHORT).show();
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        View dialogView = getLayoutInflater().inflate(R.layout.dialog_delete_schedule, null, false);
-        builder.setView(dialogView);
-        AlertDialog ad = builder.create();
-
-        Button yes = dialogView.findViewById(R.id.buttonDeleteYes);
-        Button no = dialogView.findViewById(R.id.buttonDeleteNo);
-        yes.setOnClickListener(new View.OnClickListener() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setMessage("Are you sure you want to delete your appointment on " + date + " at " + time);
+        builder.setCancelable(true);
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(DialogInterface dialogInterface, int i) {
                 if (string != null && !string.equals("")) {
-                    myDB.deleteOneRow(string);
-                    ad.dismiss();
+                    myDB.deleteOneRow(string, time);
+                    dialogInterface.dismiss();
                     restoreDataInArrays();
                     deleteFromArrayLists(string);
                 }
             }
         });
-
-        no.setOnClickListener(new View.OnClickListener() {
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                ad.dismiss();
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
             }
         });
 
-        ad.show();
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+
     }
 
     private void deleteFromArrayLists(String date) {
@@ -184,16 +187,15 @@ public class HomeFragment extends Fragment implements SelectListener{
         book_date.clear();
         book_time.clear();
         if (cursor.getCount() == 0)
-        {
-            ImageView image = view.findViewById(R.id.imageNoData);
             image.setVisibility(View.VISIBLE);
-        }
-        else
+        else {
+            image.setVisibility(View.INVISIBLE);
             while (cursor.moveToNext()) {
                 book_id.add(cursor.getString(0));
                 book_date.add(cursor.getString(1));
                 book_time.add(cursor.getString(2));
             }
+        }
         customAdapterSQLite.notifyDataSetChanged();
     }
 }

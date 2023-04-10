@@ -84,7 +84,7 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
 
     private ArrayList<Gun> gunArrayList;
 
-    @SuppressLint("MissingInflatedId")
+//    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

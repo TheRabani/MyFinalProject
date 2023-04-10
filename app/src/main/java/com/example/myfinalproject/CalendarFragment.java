@@ -4,6 +4,7 @@ import static com.example.myfinalproject.HomeFragment.book_date;
 import static com.example.myfinalproject.HomeFragment.book_id;
 import static com.example.myfinalproject.HomeFragment.book_time;
 
+import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 
@@ -22,6 +23,8 @@ import android.widget.CalendarView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -42,6 +45,7 @@ public class CalendarFragment extends Fragment implements SelectListener {
     RecyclerView normal_rec;
     private ScheduleAdapter scheduleAdapter;
     private ArrayList<Schedule> scheduleArrayList;
+    public static Context context;
 
 //    CustomAdapterSQLite customAdapterSQLite;
 
@@ -49,6 +53,8 @@ public class CalendarFragment extends Fragment implements SelectListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_calendar, container, false);
+
+        context = getContext();
 
         normal_rec = view.findViewById(R.id.normal_rec);
         normal_rec.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -150,7 +156,7 @@ public class CalendarFragment extends Fragment implements SelectListener {
     }
 
     @Override
-    public void onItemClicked(String string) {
+    public void onItemClicked(String string, String time) {
 
     }
 
@@ -171,5 +177,23 @@ public class CalendarFragment extends Fragment implements SelectListener {
                 return false;
         }
         return true;
+    }
+
+    public static void addOne(String date, String hour)
+    {
+        DatabaseReference a = FirebaseDatabase.getInstance().getReference("Calendar").child(date);
+        a.child(hour).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if(task.isSuccessful())
+                {
+                    a.child("" + hour).setValue(Integer.parseInt(task.getResult().getValue().toString()) + 1);
+                }
+                else
+                    Toast.makeText(context, "", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
     }
 }

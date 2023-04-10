@@ -68,13 +68,17 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         return cursor;
     }
 
-    void deleteOneRow(String row_date)
+    void deleteOneRow(String row_date, String time)
     {
         SQLiteDatabase db = this.getWritableDatabase();
         long result = db.delete(TABLE_NAME, "book_date=?", new String[]{row_date});
         if(result == -1)
             Toast.makeText(context, "Error- Can't delete", Toast.LENGTH_SHORT).show();
-        else
+        else {
+            int second = row_date.indexOf('M'), third = row_date.indexOf('Y');
+            String date = row_date.substring(1, second) + "-" + row_date.substring(second + 1, third) + "-" + row_date.substring(third + 1);
+            CalendarFragment.addOne(date, time);
             Toast.makeText(context, "Successfully deleted", Toast.LENGTH_SHORT).show();
+        }
     }
 }

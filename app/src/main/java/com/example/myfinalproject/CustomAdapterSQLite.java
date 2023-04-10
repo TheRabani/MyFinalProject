@@ -45,7 +45,8 @@ public class CustomAdapterSQLite extends RecyclerView.Adapter<CustomAdapterSQLit
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                listener.onItemClicked(book_date.get(holder.getAdapterPosition()));
+                int pos = holder.getAdapterPosition();
+                listener.onItemClicked(book_date.get(pos), book_time.get(pos));
             }
         });
     }
