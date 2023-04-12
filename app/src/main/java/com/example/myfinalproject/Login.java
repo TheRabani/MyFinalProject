@@ -33,6 +33,7 @@ public class Login extends AppCompatActivity {
     Button login_btn;
     String verificationID;
     ProgressBar bar;
+    public static boolean isAdmin = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,6 +119,8 @@ public class Login extends AppCompatActivity {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser != null) {
             startActivity(new Intent(Login.this, MainActivity.class));
+            if(currentUser.getUid().equals("qnaTTq2SfmMnPb1KjRPNBxYsZEh1"))
+                isAdmin = true;
 //            mAuth.signOut();
         }
     }

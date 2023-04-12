@@ -32,69 +32,108 @@ public class MainActivity extends AppCompatActivity {
 
 //        bottomNavigationView = findViewById(R.id.bottom_navigation);
         chipNavigationBar = findViewById(R.id.bottom_navigation);
+//        if (!Login.isAdmin) {
+            if(true)
+            {
 //        chipNavigationBar.setBackground(R.drawable.show_gun_background);
-
 //        chipNavigationBar.setBackgroundColor(Color.WHITE);
-
-        chipNavigationBar.setItemSelected(R.id.home, true);
+            chipNavigationBar.setItemSelected(R.id.home, true);
 //        getSupportFragmentManager().beginTransaction().replace(R.id.container, new HomeFragment()).commit(); --------------------------
-
-        transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.container, new HomeFragment()).commit();
-        current = "home";
-
-
+            transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.container, new HomeFragment()).commit();
+            current = "home";
 //        getSupportFragmentManager().beginTransaction().replace(R.id.container, homeFragment).commit();
 //        bottomNavigationView.setSelectedItemId(R.id.home);
-        chipNavigationBar.setOnItemSelectedListener(new ChipNavigationBar.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(int i) {
-                transaction = getSupportFragmentManager().beginTransaction();
-                switch (i) {
-                    case R.id.home:
-                        fragment = new HomeFragment();
-                        if (!current.equals("home")) {
-                            if (current.equals("shop")) {
-                                transaction.setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right);
-                                transaction.replace(R.id.container, fragment);
-                            } else if (current.equals("cal")) {
+            chipNavigationBar.setOnItemSelectedListener(new ChipNavigationBar.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(int i) {
+                    transaction = getSupportFragmentManager().beginTransaction();
+                    switch (i) {
+                        case R.id.home:
+                            fragment = new HomeFragment();
+                            if (!current.equals("home")) {
+                                if (current.equals("shop")) {
+                                    transaction.setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right);
+                                    transaction.replace(R.id.container, fragment);
+                                } else if (current.equals("cal")) {
 //                                transaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right);
+                                    transaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left);
+                                    transaction.replace(R.id.container, fragment);
+                                }
+                                transaction.addToBackStack(null);
+                                transaction.commit();
+                                current = "home";
+                            }
+                            break;
+                        case R.id.shop:
+                            fragment = new ShopFragment();
+                            if (!current.equals("shop") && current.equals("home") || current.equals("cal")) {
                                 transaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left);
                                 transaction.replace(R.id.container, fragment);
+                                transaction.addToBackStack(null);
+                                transaction.commit();
+                                current = "shop";
                             }
-                            transaction.addToBackStack(null);
-                            transaction.commit();
-                            current = "home";
-                        }
-                        break;
-                    case R.id.shop:
-                        fragment = new ShopFragment();
-                        if (!current.equals("shop") && current.equals("home") || current.equals("cal")) {
-                            transaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left);
-                            transaction.replace(R.id.container, fragment);
-                            transaction.addToBackStack(null);
-                            transaction.commit();
-                            current = "shop";
-                        }
-                        break;
-                    case R.id.calendar:
-                        fragment = new CalendarFragment();
-                        if (!current.equals("cal") && current.equals("home") || current.equals("shop")) {
-                            transaction.setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right);
-                            transaction.replace(R.id.container, fragment);
-                            transaction.addToBackStack(null);
-                            transaction.commit();
-                            current = "cal";
-                        }
-                        break;
-
-                }
-
+                            break;
+                        case R.id.calendar:
+                            fragment = new CalendarFragment();
+                            if (!current.equals("cal") && current.equals("home") || current.equals("shop")) {
+                                transaction.setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right);
+                                transaction.replace(R.id.container, fragment);
+                                transaction.addToBackStack(null);
+                                transaction.commit();
+                                current = "cal";
+                            }
+                            break;
+                    }
 //                if (fragment != null) {
 //                    transaction.replace(R.id.container, fragment).commit();
 //                }
-            }
-        });
+                }
+            });
+        }
+        /*else
+        {
+            chipNavigationBar.setMenuResource(R.menu.admin_bottom_nav_menu);
+            chipNavigationBar.setItemSelected(R.id.adminShop, true);
+            transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.container, new admin_fragment_add_gun()).commit();
+            current = "add";
+            chipNavigationBar.setOnItemSelectedListener(new ChipNavigationBar.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(int i) {
+                    transaction = getSupportFragmentManager().beginTransaction();
+                    switch (i)
+                    {
+                        case R.id.adminShop:
+                            fragment = new admin_fragment_add_gun();
+                            if (!current.equals("add")) {
+                                transaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left);
+                                transaction.replace(R.id.container, fragment);
+                                transaction.addToBackStack(null);
+                                transaction.commit();
+                                current = "shop";
+                            }
+                            break;
+                        case R.id.adminCalendar:
+                            fragment = new admin_fragment_schedule();
+                            if (!current.equals("calendar")) {
+                                transaction.setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right);
+                                transaction.replace(R.id.container, fragment);
+                                transaction.addToBackStack(null);
+                                transaction.commit();
+                                current = "calendar";
+                            }
+                    }
+                }
+            });
+        }
+
+*/
+
+
+
+
 
 //        bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
 //            @Override

@@ -101,7 +101,7 @@ public class ShopFragment extends Fragment implements EventListener<QuerySnapsho
                 tempAd.cancel();
             }
         };
-        mHandler.postDelayed(mRunnable, 15 * 1000);//Execute after 10 Seconds
+        mHandler.postDelayed(mRunnable, 15 * 1000);//Execute after 15 Seconds
 
 
         gunListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

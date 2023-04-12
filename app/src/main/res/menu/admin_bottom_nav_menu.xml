@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/adminShop"
+        android:title="Shop"
+        android:icon="@drawable/ic_baseline_shopping_cart_24"
+        app:cnb_backgroundColor="#FFFFFF"
+        app:cnb_iconColor="#000000"
+        app:cnb_textColor="#000000"
+        />
+
+    <item
+        android:id="@+id/adminCalendar"
+        android:title="Calendar"
+        android:icon="@drawable/ic_baseline_calendar_month_24"
+        app:cnb_backgroundColor="#FFFFFF"
+        app:cnb_iconColor="#000000"
+        app:cnb_textColor="#000000"
+        />
+</menu>
