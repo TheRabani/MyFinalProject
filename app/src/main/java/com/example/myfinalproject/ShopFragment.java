@@ -12,6 +12,8 @@ import androidx.core.app.NotificationCompatSideChannelService;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.viewmodel.CreationExtras;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -46,9 +48,11 @@ import java.util.List;
 
 import javax.annotation.meta.When;
 
-public class ShopFragment extends Fragment implements EventListener<QuerySnapshot> {
+public class ShopFragment extends Fragment implements EventListener<QuerySnapshot>, SelectListener {
 
     private FirebaseFirestore firestore;
+
+    RecyclerView normal_rec;
 
     int countBit = 0;
 
@@ -61,7 +65,7 @@ public class ShopFragment extends Fragment implements EventListener<QuerySnapsho
     Bitmap bitmap[];
     int howMany = 0;
 
-    private ListView gunListView;
+    private /*ListView*/RecyclerView gunListView;
     private static gunAdapter adapter;
 
     ImageView tvImage;
@@ -78,10 +82,13 @@ public class ShopFragment extends Fragment implements EventListener<QuerySnapsho
         tvImage = view.findViewById(R.id.gunImage);
 
         gunArrayList = new ArrayList<Gun>();
-        gunListView = view.findViewById(R.id.listViewGun);
+        gunListView = view.findViewById(R.id./*listViewGun*/recyclerView);
         if (adapter == null)
-            adapter = new gunAdapter(getActivity(), R.layout.gun_row, gunArrayList);
+            adapter = new gunAdapter(getActivity()/*, R.layout.gun_row*/, gunArrayList, this);
         gunListView.setAdapter(adapter);
+
+        normal_rec = view.findViewById(R.id.recyclerView);
+        normal_rec.setLayoutManager(new LinearLayoutManager(getContext()));
 
 
 //        -------------------------------------------------------------------------------------------------------------------
@@ -104,8 +111,8 @@ public class ShopFragment extends Fragment implements EventListener<QuerySnapsho
         mHandler.postDelayed(mRunnable, 15 * 1000);//Execute after 15 Seconds
 
 
-        gunListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
+//        gunListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            /*@Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Gun g = adapter.getItem(i);
 
@@ -156,7 +163,7 @@ public class ShopFragment extends Fragment implements EventListener<QuerySnapsho
 //                        .into(imageView);
                 ad.show();
             }
-        });
+        });*/
 
 
         if (nodeGunBitMap == null) {
@@ -278,6 +285,17 @@ public class ShopFragment extends Fragment implements EventListener<QuerySnapsho
         return g.getValue().getBitmap();
     }
 
+    public static Bitmap getBitmapFromName(String name) {
+        Node<GunBitMap> g = nodeGunBitMap;
+        while (g != null && g.getValue() != null && !g.getValue().getName().equals(name))
+            g = g.getNext();
+
+        if (g == null || g.getValue() == null) {
+            return null;
+        }
+        return g.getValue().getBitmap();
+    }
+
     public static Node<GunBitMap> getLastNode(Node<GunBitMap> node) {
         Node<GunBitMap> n = node;
         while (n.getNext() != null)
@@ -285,4 +303,68 @@ public class ShopFragment extends Fragment implements EventListener<QuerySnapsho
         return n;
     }
 
+    @Override
+    public void onItemClicked(Schedule schedule) {
+
+    }
+
+    @Override
+    public void onItemClicked(String string, String time) {
+
+    }
+
+    @Override
+    public void onItemClicked(Gun gun) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_show_gun_details, null, false);
+        builder.setView(dialogView);
+        AlertDialog ad = builder.create();
+
+        ImageView imageView = dialogView.findViewById(R.id.imageGun);
+
+        TextView makeAndModel = dialogView.findViewById(R.id.makeAndModel);
+        TextView unitsInStock = dialogView.findViewById(R.id.unitsInStock);
+        TextView magOptions = dialogView.findViewById(R.id.magOptions);
+        TextView caliber = dialogView.findViewById(R.id.caliber);
+        TextView weight = dialogView.findViewById(R.id.weight);
+        TextView price = dialogView.findViewById(R.id.price);
+        Button request = dialogView.findViewById(R.id.request);
+
+        makeAndModel.setText("" + gun.getManufacturer() + " " + gun.getModelName());
+
+        Bitmap bit = getBitmapFromName("" + gun.getManufacturer() + " " + gun.getModelName(), nodeGunBitMap);
+        if (bit != null)
+            imageView.setImageBitmap(bit);
+        else
+            imageView.setImageBitmap(BitmapFactory.decodeResource(getContext().getResources(), R.drawable.x));
+
+        int num = gun.getInStock();
+        if (num != 0)
+            unitsInStock.setText("" + gun.getInStock());
+        else {
+            unitsInStock.setText("0");
+            request.setVisibility(View.VISIBLE);
+        }
+
+        request.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+        magOptions.setText("" + gun.getOptionsMagCapacity());
+        caliber.setText("" + gun.getCaliber());
+        weight.setText("" + gun.getWeight());
+        price.setText("" + gun.getPrice());
+//                Picasso.get()
+//                        .load("" + g.getImgUrl())
+//                        .into(imageView);
+        ad.show();
+    }
+
+    @Override
+    public void onItemLongClicked(Gun gun) {
+
+    }
 }

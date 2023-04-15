@@ -160,6 +160,16 @@ public class CalendarFragment extends Fragment implements SelectListener {
 
     }
 
+    @Override
+    public void onItemClicked(Gun gun) {
+
+    }
+
+    @Override
+    public void onItemLongClicked(Gun gun) {
+
+    }
+
     private void addTime(String s, String s2) {
         Toast.makeText(getContext(), ""+book_id.size(), Toast.LENGTH_SHORT).show();
         book_id.add(String.valueOf(book_id.size() + 1));

@@ -174,6 +174,16 @@ public class HomeFragment extends Fragment implements SelectListener{
 
     }
 
+    @Override
+    public void onItemClicked(Gun gun) {
+
+    }
+
+    @Override
+    public void onItemLongClicked(Gun gun) {
+
+    }
+
     private void deleteFromArrayLists(String date) {
         book_id.remove(date);
         book_date.remove(date);

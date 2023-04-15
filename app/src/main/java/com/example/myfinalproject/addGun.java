@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -61,7 +62,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class addGun extends AppCompatActivity implements EventListener<QuerySnapshot> {
+public class addGun extends AppCompatActivity implements EventListener<QuerySnapshot>, SelectListener {
     private FirebaseFirestore firestore;
     private FloatingActionButton btnAdd;
 
@@ -77,14 +78,14 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
     StorageReference storageReference;
     public ProgressBar progressBar;
 
-    private ListView gunListView;
+    private /*ListView*/ RecyclerView gunListView;
     private gunAdapter adapter;
 
     public int num;
 
     private ArrayList<Gun> gunArrayList;
 
-//    @SuppressLint("MissingInflatedId")
+    //    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,362 +100,362 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
 
         gunArrayList = new ArrayList<Gun>();
         gunListView = findViewById(R.id.listViewGun);
-        adapter = new gunAdapter(this, R.layout.gun_row, gunArrayList);
+        adapter = new gunAdapter(this/*, R.layout.gun_row*/, gunArrayList, this);
 
 
         gunListView.setAdapter(adapter);
 
-        gunListView.setOnItemClickListener((adapterView, view, i, l) -> {
-            if (!isOn) {
-                Gun g = adapter.getItem(i);
-
-//                progressBar.setVisibility(View.VISIBLE);
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(addGun.this);
-                View dialogView = getLayoutInflater().inflate(R.layout.dialog_show_gun_details, null, false);
-                builder.setView(dialogView);
-                AlertDialog ad = builder.create();
-                ImageView imageView = dialogView.findViewById(R.id.imageGun);
-                TextView makeAndModel = dialogView.findViewById(R.id.makeAndModel);
-                TextView unitsInStock = dialogView.findViewById(R.id.unitsInStock);
-                TextView magOptions = dialogView.findViewById(R.id.magOptions);
-                TextView caliber = dialogView.findViewById(R.id.caliber);
-                TextView weight = dialogView.findViewById(R.id.weight);
-                TextView price = dialogView.findViewById(R.id.price);
-                Button updateBtn = dialogView.findViewById(R.id.update2);
-                Button buttonEditUnits = dialogView.findViewById(R.id.editUnitsInStock);
-//                Button editImage = dialogView.findViewById(R.id.editImage);
-//                editImage.setVisibility(View.VISIBLE);
-                buttonEditUnits.setVisibility(View.VISIBLE);
-                updateBtn.setVisibility(View.VISIBLE);
-
-                unitsInStock.setText("" + g.getInStock());
-                magOptions.setText("" + g.getOptionsMagCapacity());
-                caliber.setText("" + g.getCaliber());
-                weight.setText("" + g.getWeight());
-                price.setText("" + g.getPrice());
-
-
-                makeAndModel.setText("" + g.getManufacturer() + " " + g.getModelName());
-                storageReference = FirebaseStorage.getInstance().getReference().child("image/" + makeAndModel.getText().toString());
-
-                    //                editImage.setOnClickListener(new View.OnClickListener() {
+//        gunListView.setOnItemClickListener((adapterView, view, i, l) -> {
+//            if (!isOn) {
+//                Gun g = adapter.getItem(i);
+//
+////                progressBar.setVisibility(View.VISIBLE);
+//
+//                AlertDialog.Builder builder = new AlertDialog.Builder(addGun.this);
+//                View dialogView = getLayoutInflater().inflate(R.layout.dialog_show_gun_details, null, false);
+//                builder.setView(dialogView);
+//                AlertDialog ad = builder.create();
+//                ImageView imageView = dialogView.findViewById(R.id.imageGun);
+//                TextView makeAndModel = dialogView.findViewById(R.id.makeAndModel);
+//                TextView unitsInStock = dialogView.findViewById(R.id.unitsInStock);
+//                TextView magOptions = dialogView.findViewById(R.id.magOptions);
+//                TextView caliber = dialogView.findViewById(R.id.caliber);
+//                TextView weight = dialogView.findViewById(R.id.weight);
+//                TextView price = dialogView.findViewById(R.id.price);
+//                Button updateBtn = dialogView.findViewById(R.id.update2);
+//                Button buttonEditUnits = dialogView.findViewById(R.id.editUnitsInStock);
+////                Button editImage = dialogView.findViewById(R.id.editImage);
+////                editImage.setVisibility(View.VISIBLE);
+//                buttonEditUnits.setVisibility(View.VISIBLE);
+//                updateBtn.setVisibility(View.VISIBLE);
+//
+//                unitsInStock.setText("" + g.getInStock());
+//                magOptions.setText("" + g.getOptionsMagCapacity());
+//                caliber.setText("" + g.getCaliber());
+//                weight.setText("" + g.getWeight());
+//                price.setText("" + g.getPrice());
+//
+//
+//                makeAndModel.setText("" + g.getManufacturer() + " " + g.getModelName());
+//                storageReference = FirebaseStorage.getInstance().getReference().child("image/" + makeAndModel.getText().toString());
+//
+//                    //                editImage.setOnClickListener(new View.OnClickListener() {
+////                    @Override
+////                    public void onClick(View view) {
+////                        AlertDialog.Builder builder = new AlertDialog.Builder(addGun.this);
+////                        View dialogView = getLayoutInflater().inflate(R.layout.dialog_delete_gun, null, false);
+////                        builder.setView(dialogView);
+////                        AlertDialog ad = builder.create();
+////                        TextView textView = dialogView.findViewById(R.id.textView);
+////                        textView.setText("Are You Sure You Want To Edit This Picture?");
+////                        ad.show();
+////                        ad.setCancelable(false);
+////                        Button buttonYes = dialogView.findViewById(R.id.buttonYes);
+////                        Button buttonNo = dialogView.findViewById(R.id.buttonNo);
+////                        Button buttonConfirm = dialogView.findViewById(R.id.confirmBtn);
+////
+////                        buttonNo.setOnClickListener(new View.OnClickListener() {
+////                            @Override
+////                            public void onClick(View view) {
+////                                isOn = false;
+////                                ad.dismiss();
+////                            }
+////                        });
+////
+////                        buttonYes.setOnClickListener(new View.OnClickListener() {
+////                            @Override
+////                            public void onClick(View view) {
+////                                storageReference.delete()
+////                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+////                                            @Override
+////                                            public void onComplete(@NonNull Task<Void> task) {
+////                                                isOn = false;
+////
+////                                                buttonConfirm.setVisibility(View.VISIBLE);
+////
+////                                                Intent intent = new Intent();
+////                                                intent.setType("image/");
+////                                                intent.setAction(Intent.ACTION_GET_CONTENT);
+////
+////                                                tempManufacturer = g.getManufacturer();
+////                                                tempModelName = g.getModelName();
+////
+////                                                ActivityResultLauncher<Intent> launcher = registerForActivityResult(
+////                                                        new ActivityResultContracts.StartActivityForResult(),
+////                                                        new ActivityResultCallback<ActivityResult>() {
+////                                                            @Override
+////                                                            public void onActivityResult(ActivityResult result) {
+////                                                                Intent data = result.getData();
+////
+////                                                            }
+////                                                        }
+////                                                );
+////
+////                                                startActivityForResult(intent, 100);
+////
+////                                                buttonConfirm.setOnClickListener(new View.OnClickListener() {
+////                                                    @Override
+////                                                    public void onClick(View view) {
+////
+////                                                        storageReference = FirebaseStorage.getInstance().getReference("image/" + tempManufacturer + " " + tempModelName);
+////                                                        storageReference.putFile(imageUri)
+////                                                                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+////                                                                    @Override
+////                                                                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+////                                                                        image.setImageURI(null);
+////                                                                        Toast.makeText(addGun.this, "Image added", Toast.LENGTH_SHORT).show();
+////                                                                        if (progressBar.getVisibility() == View.VISIBLE) {
+////                                                                            progressBar.setVisibility(View.GONE);
+////                                                                        }
+////                                                                    }
+////                                                                }).addOnFailureListener(new OnFailureListener() {
+////                                                                    @Override
+////                                                                    public void onFailure(@NonNull Exception e) {
+////                                                                        if (progressBar.getVisibility() == View.VISIBLE) {
+////                                                                            progressBar.setVisibility(View.GONE);
+////                                                                            Toast.makeText(addGun.this, "Failed image upload", Toast.LENGTH_SHORT).show();
+////                                                                        }
+////
+////                                                                    }
+////                                                                });
+////                                                    }
+////                                                });
+////
+////
+//////                                                ad.dismiss();
+////                                            }
+////                                        });
+////                            }
+////                        });
+////                    }
+////                });
+//
+//
+//                imageView.setImageBitmap(ShopFragment.getBitmapFromName("" + g.getManufacturer() + " " + g.getModelName(), ShopFragment.nodeGunBitMap));
+//                ad.show();
+//
+////                try {
+////
+////                    File localFile = File.createTempFile("" + makeAndModel.getText().toString(), "jpeg");
+////
+////                    storageReference.getFile(localFile)
+////                            .addOnCompleteListener(new OnCompleteListener<FileDownloadTask.TaskSnapshot>() {
+////                                @Override
+////                                public void onComplete(@NonNull Task<FileDownloadTask.TaskSnapshot> task) {
+////                                    if (task.isSuccessful()) {
+////                                        Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+////                                        imageView.setImageBitmap(bitmap);
+////
+////                                        ad.show();
+////                                        progressBar.setVisibility(View.INVISIBLE);
+////                                    } else {
+////                                        Toast.makeText(addGun.this, "Error", Toast.LENGTH_SHORT).show();
+////                                        imageView.setImageResource(R.drawable.x);
+////                                        progressBar.setVisibility(View.INVISIBLE);
+////                                        ad.show();
+////                                    }
+////                                }
+////                            });
+////                } catch (IOException e) {
+////                    Toast.makeText(addGun.this, "Error2", Toast.LENGTH_SHORT).show();
+////                    progressBar.setVisibility(View.INVISIBLE);
+////                    e.printStackTrace();
+////                }
+//
+//
+////                Picasso.get()
+////                        .load("" + g.getImgUrl())
+////                        .into(imageView);
+//
+////                ad.show();
+//
+//                buttonEditUnits.setOnClickListener(new View.OnClickListener() {
 //                    @Override
 //                    public void onClick(View view) {
 //                        AlertDialog.Builder builder = new AlertDialog.Builder(addGun.this);
-//                        View dialogView = getLayoutInflater().inflate(R.layout.dialog_delete_gun, null, false);
+//                        View dialogView = getLayoutInflater().inflate(R.layout.dialolg_add_units, null, false);
 //                        builder.setView(dialogView);
-//                        AlertDialog ad = builder.create();
-//                        TextView textView = dialogView.findViewById(R.id.textView);
-//                        textView.setText("Are You Sure You Want To Edit This Picture?");
-//                        ad.show();
-//                        ad.setCancelable(false);
-//                        Button buttonYes = dialogView.findViewById(R.id.buttonYes);
-//                        Button buttonNo = dialogView.findViewById(R.id.buttonNo);
-//                        Button buttonConfirm = dialogView.findViewById(R.id.confirmBtn);
+//                        AlertDialog ad3 = builder.create();
+//                        EditText number = dialogView.findViewById(R.id.number);
+//                        FloatingActionButton addOne = dialogView.findViewById(R.id.floatingActionButtonAddOne);
+//                        FloatingActionButton subOne = dialogView.findViewById(R.id.floatingActionButtonSubOne);
+//                        Button apply = dialogView.findViewById(R.id.accept);
+//                        Button cancel = dialogView.findViewById(R.id.cancel);
 //
-//                        buttonNo.setOnClickListener(new View.OnClickListener() {
+//                        cancel.setOnClickListener(new View.OnClickListener() {
 //                            @Override
 //                            public void onClick(View view) {
-//                                isOn = false;
-//                                ad.dismiss();
+//                                ad3.dismiss();
 //                            }
 //                        });
 //
-//                        buttonYes.setOnClickListener(new View.OnClickListener() {
+//                        apply.setOnClickListener(new View.OnClickListener() {
 //                            @Override
 //                            public void onClick(View view) {
-//                                storageReference.delete()
+//                                num = Integer.parseInt(number.getText().toString());
+//                                firestore
+//                                        .collection("guns")
+//                                        .document("" + g.getManufacturer() + " " + g.getName())
+//                                        .set(new Gun(g.getName(), g.getManufacturer(), /*g.getImgUrl(),*/ g.getPrice(), num, g.getOptionsMagCapacity(), g.getCaliber(), g.getWeight()))
 //                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
 //                                            @Override
 //                                            public void onComplete(@NonNull Task<Void> task) {
-//                                                isOn = false;
-//
-//                                                buttonConfirm.setVisibility(View.VISIBLE);
-//
-//                                                Intent intent = new Intent();
-//                                                intent.setType("image/");
-//                                                intent.setAction(Intent.ACTION_GET_CONTENT);
-//
-//                                                tempManufacturer = g.getManufacturer();
-//                                                tempModelName = g.getModelName();
-//
-//                                                ActivityResultLauncher<Intent> launcher = registerForActivityResult(
-//                                                        new ActivityResultContracts.StartActivityForResult(),
-//                                                        new ActivityResultCallback<ActivityResult>() {
-//                                                            @Override
-//                                                            public void onActivityResult(ActivityResult result) {
-//                                                                Intent data = result.getData();
-//
-//                                                            }
-//                                                        }
-//                                                );
-//
-//                                                startActivityForResult(intent, 100);
-//
-//                                                buttonConfirm.setOnClickListener(new View.OnClickListener() {
-//                                                    @Override
-//                                                    public void onClick(View view) {
-//
-//                                                        storageReference = FirebaseStorage.getInstance().getReference("image/" + tempManufacturer + " " + tempModelName);
-//                                                        storageReference.putFile(imageUri)
-//                                                                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-//                                                                    @Override
-//                                                                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-//                                                                        image.setImageURI(null);
-//                                                                        Toast.makeText(addGun.this, "Image added", Toast.LENGTH_SHORT).show();
-//                                                                        if (progressBar.getVisibility() == View.VISIBLE) {
-//                                                                            progressBar.setVisibility(View.GONE);
-//                                                                        }
-//                                                                    }
-//                                                                }).addOnFailureListener(new OnFailureListener() {
-//                                                                    @Override
-//                                                                    public void onFailure(@NonNull Exception e) {
-//                                                                        if (progressBar.getVisibility() == View.VISIBLE) {
-//                                                                            progressBar.setVisibility(View.GONE);
-//                                                                            Toast.makeText(addGun.this, "Failed image upload", Toast.LENGTH_SHORT).show();
-//                                                                        }
-//
-//                                                                    }
-//                                                                });
-//                                                    }
-//                                                });
-//
-//
-////                                                ad.dismiss();
+//                                                if (task.isSuccessful()) {
+//                                                    ad3.dismiss();
+//                                                    ad.dismiss();
+//                                                    Toast.makeText(addGun.this, "Updated!", Toast.LENGTH_SHORT).show();
+//                                                } else {
+//                                                    Toast.makeText(addGun.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+//                                                }
 //                                            }
 //                                        });
 //                            }
 //                        });
+//
+//                        number.setText("" + g.getInStock());
+//                        addOne.setOnClickListener(new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View view) {
+//                                number.setText("" + (Integer.parseInt(number.getText().toString()) + 1));
+//                            }
+//                        });
+//                        subOne.setOnClickListener(new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View view) {
+//                                int num = Integer.parseInt(number.getText().toString());
+//                                if (num != 0)
+//                                    number.setText("" + (num - 1));
+//                            }
+//                        });
+//
+//                        ad3.show();
+//                        ad3.setCancelable(false);
+//
 //                    }
 //                });
-
-
-                imageView.setImageBitmap(ShopFragment.getBitmapFromName("" + g.getManufacturer() + " " + g.getModelName(), ShopFragment.nodeGunBitMap));
-                ad.show();
-
-//                try {
 //
-//                    File localFile = File.createTempFile("" + makeAndModel.getText().toString(), "jpeg");
-//
-//                    storageReference.getFile(localFile)
-//                            .addOnCompleteListener(new OnCompleteListener<FileDownloadTask.TaskSnapshot>() {
-//                                @Override
-//                                public void onComplete(@NonNull Task<FileDownloadTask.TaskSnapshot> task) {
-//                                    if (task.isSuccessful()) {
-//                                        Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
-//                                        imageView.setImageBitmap(bitmap);
-//
-//                                        ad.show();
-//                                        progressBar.setVisibility(View.INVISIBLE);
-//                                    } else {
-//                                        Toast.makeText(addGun.this, "Error", Toast.LENGTH_SHORT).show();
-//                                        imageView.setImageResource(R.drawable.x);
-//                                        progressBar.setVisibility(View.INVISIBLE);
-//                                        ad.show();
-//                                    }
-//                                }
-//                            });
-//                } catch (IOException e) {
-//                    Toast.makeText(addGun.this, "Error2", Toast.LENGTH_SHORT).show();
-//                    progressBar.setVisibility(View.INVISIBLE);
-//                    e.printStackTrace();
-//                }
-
-
-//                Picasso.get()
-//                        .load("" + g.getImgUrl())
-//                        .into(imageView);
-
-//                ad.show();
-
-                buttonEditUnits.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(addGun.this);
-                        View dialogView = getLayoutInflater().inflate(R.layout.dialolg_add_units, null, false);
-                        builder.setView(dialogView);
-                        AlertDialog ad3 = builder.create();
-                        EditText number = dialogView.findViewById(R.id.number);
-                        FloatingActionButton addOne = dialogView.findViewById(R.id.floatingActionButtonAddOne);
-                        FloatingActionButton subOne = dialogView.findViewById(R.id.floatingActionButtonSubOne);
-                        Button apply = dialogView.findViewById(R.id.accept);
-                        Button cancel = dialogView.findViewById(R.id.cancel);
-
-                        cancel.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                ad3.dismiss();
-                            }
-                        });
-
-                        apply.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                num = Integer.parseInt(number.getText().toString());
-                                firestore
-                                        .collection("guns")
-                                        .document("" + g.getManufacturer() + " " + g.getName())
-                                        .set(new Gun(g.getName(), g.getManufacturer(), /*g.getImgUrl(),*/ g.getPrice(), num, g.getOptionsMagCapacity(), g.getCaliber(), g.getWeight()))
-                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<Void> task) {
-                                                if (task.isSuccessful()) {
-                                                    ad3.dismiss();
-                                                    ad.dismiss();
-                                                    Toast.makeText(addGun.this, "Updated!", Toast.LENGTH_SHORT).show();
-                                                } else {
-                                                    Toast.makeText(addGun.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                                                }
-                                            }
-                                        });
-                            }
-                        });
-
-                        number.setText("" + g.getInStock());
-                        addOne.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                number.setText("" + (Integer.parseInt(number.getText().toString()) + 1));
-                            }
-                        });
-                        subOne.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                int num = Integer.parseInt(number.getText().toString());
-                                if (num != 0)
-                                    number.setText("" + (num - 1));
-                            }
-                        });
-
-                        ad3.show();
-                        ad3.setCancelable(false);
-
-                    }
-                });
-
-                updateBtn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        ad.dismiss();
-                        AlertDialog.Builder builder = new AlertDialog.Builder(addGun.this);
-                        View dialogView = getLayoutInflater().inflate(R.layout.dialog_add_gun, null, false);
-                        builder.setView(dialogView);
-                        AlertDialog ad2 = builder.create();
-                        Button buttonAdd = dialogView.findViewById(R.id.buttonAdd);
-
-
-                        EditText etPrice = dialogView.findViewById(R.id.etPrice);
-                        EditText etToyName = dialogView.findViewById(R.id.etGunModel);
-                        EditText etManufacturer = dialogView.findViewById(R.id.etManufacturer);
-                        Button etImageURL = dialogView.findViewById(R.id.etImageURL);
-                        etImageURL.setVisibility(View.GONE);
-                        EditText etUnitsInStock = dialogView.findViewById(R.id.etInStock);
-//                    EditText etStandardMagCapacity = dialogView.findViewById(R.id.etStandardMagCapacity);
-                        EditText etMagOptions = dialogView.findViewById(R.id.etMagOptions);
-                        EditText etCaliber = dialogView.findViewById(R.id.etCaliber);
-                        EditText etWeight = dialogView.findViewById(R.id.etWeight);
-//                    EditText etBarrelSize = dialogView.findViewById(R.id.etBarrelSize);
-//                    EditText etTriggerPull = dialogView.findViewById(R.id.etTriggerPull);
-                        buttonAdd.setText("update");
-
-                        etPrice.setText("" + g.getPrice());
-                        etToyName.setText("" + g.getModelName());
-                        etManufacturer.setText("" + g.getManufacturer());
-//                        etImageURL.setText("" + g.getImgUrl());
-                        etUnitsInStock.setText("" + g.getInStock());
-                        etMagOptions.setText("" + g.getOptionsMagCapacity());
-                        etCaliber.setText("" + g.getCaliber());
-                        etWeight.setText("" + g.getWeight());
-
-
-                        etManufacturer.setInputType(InputType.TYPE_NULL);
-                        etManufacturer.setTextColor(Color.GRAY);
-                        etManufacturer.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-
-                            }
-                        });
-
-                        etToyName.setInputType(InputType.TYPE_NULL);
-                        etToyName.setTextColor(Color.GRAY);
-                        etToyName.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-
-                            }
-                        });
-
-                        ad2.show();
-
-                        buttonAdd.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                String modelName = etToyName.getText().toString();
-                                String stPrice = etPrice.getText().toString(); //remember conv to int
-                                String manufacturer = etManufacturer.getText().toString();
-                                String imgUrl = etImageURL.getText().toString();
-                                String stInStock = etUnitsInStock.getText().toString(); //remember conv to int
-//                            String stStandardMagCapacity = etStandardMagCapacity.getText().toString(); //remember conv to int
-                                String magOptions = etMagOptions.getText().toString();
-                                String caliber = etCaliber.getText().toString();
-                                String stWeight = etWeight.getText().toString(); //remember conv to int
-//                            String stBarrelLength = etBarrelSize.getText().toString(); //remember conv to int
-//                            String stTriggerPull = etTriggerPull.getText().toString(); //remember conv to int
-
-
-                                if (modelName.isEmpty() || stPrice.isEmpty() || manufacturer.isEmpty() || stInStock.isEmpty() || magOptions.isEmpty() || caliber.isEmpty() || stWeight.isEmpty()) {
-                                    Toast.makeText(addGun.this, "Please fill all the fields", Toast.LENGTH_SHORT).show();
-                                    if(modelName.isEmpty())
-                                        shake(dialogView, R.id.etGunModel);
-                                    if(stPrice.isEmpty())
-                                        shake(dialogView, R.id.etPrice);
-                                    if(manufacturer.isEmpty())
-                                        shake(dialogView, R.id.etManufacturer);
-                                    if(stInStock.isEmpty())
-                                        shake(dialogView, R.id.etInStock);
-                                    if(magOptions.isEmpty())
-                                        shake(dialogView, R.id.etMagOptions);
-                                    if(caliber.isEmpty())
-                                        shake(dialogView, R.id.etCaliber);
-                                    if(stWeight.isEmpty())
-                                        shake(dialogView, R.id.etWeight);
-                                } else {
-                                    int price = Integer.parseInt(stPrice);
-                                    int inStock = Integer.parseInt(stInStock);
-//                                int standardMagCapacity = Integer.parseInt(stStandardMagCapacity);
-                                    int weight = Integer.parseInt(stWeight);
-//                                int barrelLength = Integer.parseInt(stBarrelLength);
-//                                int triggerPull = Integer.parseInt(stTriggerPull);
-                                    Gun gun = new Gun(modelName, manufacturer, /*imgUrl,*/ price, inStock, magOptions, caliber, weight);
-                                    firestore
-                                            .collection("guns")
-                                            .document("" + manufacturer + " " + modelName)
-                                            .set(gun)
-                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                @Override
-                                                public void onComplete(@NonNull Task<Void> task) {
-                                                    ad2.dismiss();
-                                                    if (task.isSuccessful()) {
-                                                        Toast.makeText(addGun.this, "Gun updated!", Toast.LENGTH_SHORT).show();
-                                                    } else {
-                                                        Toast.makeText(addGun.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                                                    }
-                                                }
-                                            });
-                                }
-                            }
-                        });
-
-
+//                updateBtn.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View view) {
+//                        ad.dismiss();
+//                        AlertDialog.Builder builder = new AlertDialog.Builder(addGun.this);
+//                        View dialogView = getLayoutInflater().inflate(R.layout.dialog_add_gun, null, false);
 //                        builder.setView(dialogView);
-//                        builder.create().show();
-
-                    }
-                });
-            }
-        });
+//                        AlertDialog ad2 = builder.create();
+//                        Button buttonAdd = dialogView.findViewById(R.id.buttonAdd);
+//
+//
+//                        EditText etPrice = dialogView.findViewById(R.id.etPrice);
+//                        EditText etToyName = dialogView.findViewById(R.id.etGunModel);
+//                        EditText etManufacturer = dialogView.findViewById(R.id.etManufacturer);
+//                        Button etImageURL = dialogView.findViewById(R.id.etImageURL);
+//                        etImageURL.setVisibility(View.GONE);
+//                        EditText etUnitsInStock = dialogView.findViewById(R.id.etInStock);
+////                    EditText etStandardMagCapacity = dialogView.findViewById(R.id.etStandardMagCapacity);
+//                        EditText etMagOptions = dialogView.findViewById(R.id.etMagOptions);
+//                        EditText etCaliber = dialogView.findViewById(R.id.etCaliber);
+//                        EditText etWeight = dialogView.findViewById(R.id.etWeight);
+////                    EditText etBarrelSize = dialogView.findViewById(R.id.etBarrelSize);
+////                    EditText etTriggerPull = dialogView.findViewById(R.id.etTriggerPull);
+//                        buttonAdd.setText("update");
+//
+//                        etPrice.setText("" + g.getPrice());
+//                        etToyName.setText("" + g.getModelName());
+//                        etManufacturer.setText("" + g.getManufacturer());
+////                        etImageURL.setText("" + g.getImgUrl());
+//                        etUnitsInStock.setText("" + g.getInStock());
+//                        etMagOptions.setText("" + g.getOptionsMagCapacity());
+//                        etCaliber.setText("" + g.getCaliber());
+//                        etWeight.setText("" + g.getWeight());
+//
+//
+//                        etManufacturer.setInputType(InputType.TYPE_NULL);
+//                        etManufacturer.setTextColor(Color.GRAY);
+//                        etManufacturer.setOnClickListener(new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View view) {
+//
+//                            }
+//                        });
+//
+//                        etToyName.setInputType(InputType.TYPE_NULL);
+//                        etToyName.setTextColor(Color.GRAY);
+//                        etToyName.setOnClickListener(new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View view) {
+//
+//                            }
+//                        });
+//
+//                        ad2.show();
+//
+//                        buttonAdd.setOnClickListener(new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View view) {
+//                                String modelName = etToyName.getText().toString();
+//                                String stPrice = etPrice.getText().toString(); //remember conv to int
+//                                String manufacturer = etManufacturer.getText().toString();
+//                                String imgUrl = etImageURL.getText().toString();
+//                                String stInStock = etUnitsInStock.getText().toString(); //remember conv to int
+////                            String stStandardMagCapacity = etStandardMagCapacity.getText().toString(); //remember conv to int
+//                                String magOptions = etMagOptions.getText().toString();
+//                                String caliber = etCaliber.getText().toString();
+//                                String stWeight = etWeight.getText().toString(); //remember conv to int
+////                            String stBarrelLength = etBarrelSize.getText().toString(); //remember conv to int
+////                            String stTriggerPull = etTriggerPull.getText().toString(); //remember conv to int
+//
+//
+//                                if (modelName.isEmpty() || stPrice.isEmpty() || manufacturer.isEmpty() || stInStock.isEmpty() || magOptions.isEmpty() || caliber.isEmpty() || stWeight.isEmpty()) {
+//                                    Toast.makeText(addGun.this, "Please fill all the fields", Toast.LENGTH_SHORT).show();
+//                                    if(modelName.isEmpty())
+//                                        shake(dialogView, R.id.etGunModel);
+//                                    if(stPrice.isEmpty())
+//                                        shake(dialogView, R.id.etPrice);
+//                                    if(manufacturer.isEmpty())
+//                                        shake(dialogView, R.id.etManufacturer);
+//                                    if(stInStock.isEmpty())
+//                                        shake(dialogView, R.id.etInStock);
+//                                    if(magOptions.isEmpty())
+//                                        shake(dialogView, R.id.etMagOptions);
+//                                    if(caliber.isEmpty())
+//                                        shake(dialogView, R.id.etCaliber);
+//                                    if(stWeight.isEmpty())
+//                                        shake(dialogView, R.id.etWeight);
+//                                } else {
+//                                    int price = Integer.parseInt(stPrice);
+//                                    int inStock = Integer.parseInt(stInStock);
+////                                int standardMagCapacity = Integer.parseInt(stStandardMagCapacity);
+//                                    int weight = Integer.parseInt(stWeight);
+////                                int barrelLength = Integer.parseInt(stBarrelLength);
+////                                int triggerPull = Integer.parseInt(stTriggerPull);
+//                                    Gun gun = new Gun(modelName, manufacturer, /*imgUrl,*/ price, inStock, magOptions, caliber, weight);
+//                                    firestore
+//                                            .collection("guns")
+//                                            .document("" + manufacturer + " " + modelName)
+//                                            .set(gun)
+//                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+//                                                @Override
+//                                                public void onComplete(@NonNull Task<Void> task) {
+//                                                    ad2.dismiss();
+//                                                    if (task.isSuccessful()) {
+//                                                        Toast.makeText(addGun.this, "Gun updated!", Toast.LENGTH_SHORT).show();
+//                                                    } else {
+//                                                        Toast.makeText(addGun.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+//                                                    }
+//                                                }
+//                                            });
+//                                }
+//                            }
+//                        });
+//
+//
+////                        builder.setView(dialogView);
+////                        builder.create().show();
+//
+//                    }
+//                });
+//            }
+//        });
 
 //        gunListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 //            @Override
@@ -487,8 +488,9 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
 //            }
 //        });
 
-        gunListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
+
+//        gunListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            /*@Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
                 isOn = true;
 
@@ -539,7 +541,7 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
                 return false;
             }
 
-        });
+        });*/
 
         firestore
                 .collection("guns")
@@ -635,21 +637,21 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
 
                             if (modelName.isEmpty() || stPrice.isEmpty() || manufacturer.isEmpty() || /*imgUrl.isEmpty() ||*/ stInStock.isEmpty() || magOptions.isEmpty() || caliber.isEmpty() || stWeight.isEmpty() || imageUri == null) {
                                 Toast.makeText(addGun.this, "Please fill all the fields", Toast.LENGTH_SHORT).show();
-                                if(modelName.isEmpty())
+                                if (modelName.isEmpty())
                                     shake(dialogView, R.id.etGunModel);
-                                if(stPrice.isEmpty())
+                                if (stPrice.isEmpty())
                                     shake(dialogView, R.id.etPrice);
-                                if(manufacturer.isEmpty())
+                                if (manufacturer.isEmpty())
                                     shake(dialogView, R.id.etManufacturer);
-                                if(stInStock.isEmpty())
+                                if (stInStock.isEmpty())
                                     shake(dialogView, R.id.etInStock);
-                                if(magOptions.isEmpty())
+                                if (magOptions.isEmpty())
                                     shake(dialogView, R.id.etMagOptions);
-                                if(caliber.isEmpty())
+                                if (caliber.isEmpty())
                                     shake(dialogView, R.id.etCaliber);
-                                if(stWeight.isEmpty())
+                                if (stWeight.isEmpty())
                                     shake(dialogView, R.id.etWeight);
-                                if(imageUri == null)
+                                if (imageUri == null)
                                     shake(dialogView, R.id.etImageURL);
 
                             } else {
@@ -731,7 +733,7 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
         });
     }
 
-    private void shake(View dialogView, int id) {
+    public void shake(View dialogView, int id) {
         YoYo.with(Techniques.Shake)
                 .duration(700)
                 .repeat(0)
@@ -802,5 +804,715 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
 
 
         }
+    }
+
+    @Override
+    public void onItemClicked(Schedule schedule) {
+
+    }
+
+    @Override
+    public void onItemClicked(String string, String time) {
+
+    }
+
+    @Override
+    public void onItemClicked(Gun g) {
+
+//                progressBar.setVisibility(View.VISIBLE);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(addGun.this);
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_show_gun_details, null, false);
+        builder.setView(dialogView);
+        AlertDialog ad = builder.create();
+        ImageView imageView = dialogView.findViewById(R.id.imageGun);
+        TextView makeAndModel = dialogView.findViewById(R.id.makeAndModel);
+        TextView unitsInStock = dialogView.findViewById(R.id.unitsInStock);
+        TextView magOptions = dialogView.findViewById(R.id.magOptions);
+        TextView caliber = dialogView.findViewById(R.id.caliber);
+        TextView weight = dialogView.findViewById(R.id.weight);
+        TextView price = dialogView.findViewById(R.id.price);
+        Button updateBtn = dialogView.findViewById(R.id.update2);
+        Button buttonEditUnits = dialogView.findViewById(R.id.editUnitsInStock);
+//                Button editImage = dialogView.findViewById(R.id.editImage);
+//                editImage.setVisibility(View.VISIBLE);
+        buttonEditUnits.setVisibility(View.VISIBLE);
+        updateBtn.setVisibility(View.VISIBLE);
+
+        unitsInStock.setText("" + g.getInStock());
+        magOptions.setText("" + g.getOptionsMagCapacity());
+        caliber.setText("" + g.getCaliber());
+        weight.setText("" + g.getWeight());
+        price.setText("" + g.getPrice());
+
+
+        makeAndModel.setText("" + g.getManufacturer() + " " + g.getModelName());
+        storageReference = FirebaseStorage.getInstance().getReference().child("image/" + makeAndModel.getText().toString());
+
+        //                editImage.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View view) {
+//                        AlertDialog.Builder builder = new AlertDialog.Builder(addGun.this);
+//                        View dialogView = getLayoutInflater().inflate(R.layout.dialog_delete_gun, null, false);
+//                        builder.setView(dialogView);
+//                        AlertDialog ad = builder.create();
+//                        TextView textView = dialogView.findViewById(R.id.textView);
+//                        textView.setText("Are You Sure You Want To Edit This Picture?");
+//                        ad.show();
+//                        ad.setCancelable(false);
+//                        Button buttonYes = dialogView.findViewById(R.id.buttonYes);
+//                        Button buttonNo = dialogView.findViewById(R.id.buttonNo);
+//                        Button buttonConfirm = dialogView.findViewById(R.id.confirmBtn);
+//
+//                        buttonNo.setOnClickListener(new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View view) {
+//                                isOn = false;
+//                                ad.dismiss();
+//                            }
+//                        });
+//
+//                        buttonYes.setOnClickListener(new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View view) {
+//                                storageReference.delete()
+//                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+//                                            @Override
+//                                            public void onComplete(@NonNull Task<Void> task) {
+//                                                isOn = false;
+//
+//                                                buttonConfirm.setVisibility(View.VISIBLE);
+//
+//                                                Intent intent = new Intent();
+//                                                intent.setType("image/");
+//                                                intent.setAction(Intent.ACTION_GET_CONTENT);
+//
+//                                                tempManufacturer = g.getManufacturer();
+//                                                tempModelName = g.getModelName();
+//
+//                                                ActivityResultLauncher<Intent> launcher = registerForActivityResult(
+//                                                        new ActivityResultContracts.StartActivityForResult(),
+//                                                        new ActivityResultCallback<ActivityResult>() {
+//                                                            @Override
+//                                                            public void onActivityResult(ActivityResult result) {
+//                                                                Intent data = result.getData();
+//
+//                                                            }
+//                                                        }
+//                                                );
+//
+//                                                startActivityForResult(intent, 100);
+//
+//                                                buttonConfirm.setOnClickListener(new View.OnClickListener() {
+//                                                    @Override
+//                                                    public void onClick(View view) {
+//
+//                                                        storageReference = FirebaseStorage.getInstance().getReference("image/" + tempManufacturer + " " + tempModelName);
+//                                                        storageReference.putFile(imageUri)
+//                                                                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+//                                                                    @Override
+//                                                                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+//                                                                        image.setImageURI(null);
+//                                                                        Toast.makeText(addGun.this, "Image added", Toast.LENGTH_SHORT).show();
+//                                                                        if (progressBar.getVisibility() == View.VISIBLE) {
+//                                                                            progressBar.setVisibility(View.GONE);
+//                                                                        }
+//                                                                    }
+//                                                                }).addOnFailureListener(new OnFailureListener() {
+//                                                                    @Override
+//                                                                    public void onFailure(@NonNull Exception e) {
+//                                                                        if (progressBar.getVisibility() == View.VISIBLE) {
+//                                                                            progressBar.setVisibility(View.GONE);
+//                                                                            Toast.makeText(addGun.this, "Failed image upload", Toast.LENGTH_SHORT).show();
+//                                                                        }
+//
+//                                                                    }
+//                                                                });
+//                                                    }
+//                                                });
+//
+//
+////                                                ad.dismiss();
+//                                            }
+//                                        });
+//                            }
+//                        });
+//                    }
+//                });
+
+
+        imageView.setImageBitmap(ShopFragment.getBitmapFromName("" + g.getManufacturer() + " " + g.getModelName(), ShopFragment.nodeGunBitMap));
+        ad.show();
+
+//                try {
+//
+//                    File localFile = File.createTempFile("" + makeAndModel.getText().toString(), "jpeg");
+//
+//                    storageReference.getFile(localFile)
+//                            .addOnCompleteListener(new OnCompleteListener<FileDownloadTask.TaskSnapshot>() {
+//                                @Override
+//                                public void onComplete(@NonNull Task<FileDownloadTask.TaskSnapshot> task) {
+//                                    if (task.isSuccessful()) {
+//                                        Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+//                                        imageView.setImageBitmap(bitmap);
+//
+//                                        ad.show();
+//                                        progressBar.setVisibility(View.INVISIBLE);
+//                                    } else {
+//                                        Toast.makeText(addGun.this, "Error", Toast.LENGTH_SHORT).show();
+//                                        imageView.setImageResource(R.drawable.x);
+//                                        progressBar.setVisibility(View.INVISIBLE);
+//                                        ad.show();
+//                                    }
+//                                }
+//                            });
+//                } catch (IOException e) {
+//                    Toast.makeText(addGun.this, "Error2", Toast.LENGTH_SHORT).show();
+//                    progressBar.setVisibility(View.INVISIBLE);
+//                    e.printStackTrace();
+//                }
+
+
+//                Picasso.get()
+//                        .load("" + g.getImgUrl())
+//                        .into(imageView);
+
+//                ad.show();
+
+        buttonEditUnits.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(addGun.this);
+                View dialogView = getLayoutInflater().inflate(R.layout.dialolg_add_units, null, false);
+                builder.setView(dialogView);
+                AlertDialog ad3 = builder.create();
+                EditText number = dialogView.findViewById(R.id.number);
+                FloatingActionButton addOne = dialogView.findViewById(R.id.floatingActionButtonAddOne);
+                FloatingActionButton subOne = dialogView.findViewById(R.id.floatingActionButtonSubOne);
+                Button apply = dialogView.findViewById(R.id.accept);
+                Button cancel = dialogView.findViewById(R.id.cancel);
+
+                cancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        ad3.dismiss();
+                    }
+                });
+
+                apply.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        num = Integer.parseInt(number.getText().toString());
+                        firestore
+                                .collection("guns")
+                                .document("" + g.getManufacturer() + " " + g.getName())
+                                .set(new Gun(g.getName(), g.getManufacturer(), /*g.getImgUrl(),*/ g.getPrice(), num, g.getOptionsMagCapacity(), g.getCaliber(), g.getWeight()))
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isSuccessful()) {
+                                            ad3.dismiss();
+                                            ad.dismiss();
+                                            Toast.makeText(addGun.this, "Updated!", Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            Toast.makeText(addGun.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                });
+                    }
+                });
+
+                number.setText("" + g.getInStock());
+                addOne.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        number.setText("" + (Integer.parseInt(number.getText().toString()) + 1));
+                    }
+                });
+                subOne.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        int num = Integer.parseInt(number.getText().toString());
+                        if (num != 0)
+                            number.setText("" + (num - 1));
+                    }
+                });
+
+                ad3.show();
+                ad3.setCancelable(false);
+
+            }
+        });
+
+        updateBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ad.dismiss();
+                AlertDialog.Builder builder = new AlertDialog.Builder(addGun.this);
+                View dialogView = getLayoutInflater().inflate(R.layout.dialog_add_gun, null, false);
+                builder.setView(dialogView);
+                AlertDialog ad2 = builder.create();
+                Button buttonAdd = dialogView.findViewById(R.id.buttonAdd);
+
+
+                EditText etPrice = dialogView.findViewById(R.id.etPrice);
+                EditText etToyName = dialogView.findViewById(R.id.etGunModel);
+                EditText etManufacturer = dialogView.findViewById(R.id.etManufacturer);
+                Button etImageURL = dialogView.findViewById(R.id.etImageURL);
+                etImageURL.setVisibility(View.GONE);
+                EditText etUnitsInStock = dialogView.findViewById(R.id.etInStock);
+//                    EditText etStandardMagCapacity = dialogView.findViewById(R.id.etStandardMagCapacity);
+                EditText etMagOptions = dialogView.findViewById(R.id.etMagOptions);
+                EditText etCaliber = dialogView.findViewById(R.id.etCaliber);
+                EditText etWeight = dialogView.findViewById(R.id.etWeight);
+//                    EditText etBarrelSize = dialogView.findViewById(R.id.etBarrelSize);
+//                    EditText etTriggerPull = dialogView.findViewById(R.id.etTriggerPull);
+                buttonAdd.setText("update");
+
+                etPrice.setText("" + g.getPrice());
+                etToyName.setText("" + g.getModelName());
+                etManufacturer.setText("" + g.getManufacturer());
+//                        etImageURL.setText("" + g.getImgUrl());
+                etUnitsInStock.setText("" + g.getInStock());
+                etMagOptions.setText("" + g.getOptionsMagCapacity());
+                etCaliber.setText("" + g.getCaliber());
+                etWeight.setText("" + g.getWeight());
+
+
+                etManufacturer.setInputType(InputType.TYPE_NULL);
+                etManufacturer.setTextColor(Color.GRAY);
+                etManufacturer.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                    }
+                });
+
+                etToyName.setInputType(InputType.TYPE_NULL);
+                etToyName.setTextColor(Color.GRAY);
+                etToyName.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                    }
+                });
+
+                ad2.show();
+
+                buttonAdd.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        String modelName = etToyName.getText().toString();
+                        String stPrice = etPrice.getText().toString(); //remember conv to int
+                        String manufacturer = etManufacturer.getText().toString();
+                        String imgUrl = etImageURL.getText().toString();
+                        String stInStock = etUnitsInStock.getText().toString(); //remember conv to int
+//                            String stStandardMagCapacity = etStandardMagCapacity.getText().toString(); //remember conv to int
+                        String magOptions = etMagOptions.getText().toString();
+                        String caliber = etCaliber.getText().toString();
+                        String stWeight = etWeight.getText().toString(); //remember conv to int
+//                            String stBarrelLength = etBarrelSize.getText().toString(); //remember conv to int
+//                            String stTriggerPull = etTriggerPull.getText().toString(); //remember conv to int
+
+
+                        if (modelName.isEmpty() || stPrice.isEmpty() || manufacturer.isEmpty() || stInStock.isEmpty() || magOptions.isEmpty() || caliber.isEmpty() || stWeight.isEmpty()) {
+                            Toast.makeText(addGun.this, "Please fill all the fields", Toast.LENGTH_SHORT).show();
+                            if (modelName.isEmpty())
+                                shake(dialogView, R.id.etGunModel);
+                            if (stPrice.isEmpty())
+                                shake(dialogView, R.id.etPrice);
+                            if (manufacturer.isEmpty())
+                                shake(dialogView, R.id.etManufacturer);
+                            if (stInStock.isEmpty())
+                                shake(dialogView, R.id.etInStock);
+                            if (magOptions.isEmpty())
+                                shake(dialogView, R.id.etMagOptions);
+                            if (caliber.isEmpty())
+                                shake(dialogView, R.id.etCaliber);
+                            if (stWeight.isEmpty())
+                                shake(dialogView, R.id.etWeight);
+                        } else {
+                            int price = Integer.parseInt(stPrice);
+                            int inStock = Integer.parseInt(stInStock);
+//                                int standardMagCapacity = Integer.parseInt(stStandardMagCapacity);
+                            int weight = Integer.parseInt(stWeight);
+//                                int barrelLength = Integer.parseInt(stBarrelLength);
+//                                int triggerPull = Integer.parseInt(stTriggerPull);
+                            Gun gun = new Gun(modelName, manufacturer, /*imgUrl,*/ price, inStock, magOptions, caliber, weight);
+                            firestore
+                                    .collection("guns")
+                                    .document("" + manufacturer + " " + modelName)
+                                    .set(gun)
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            ad2.dismiss();
+                                            if (task.isSuccessful()) {
+                                                Toast.makeText(addGun.this, "Gun updated!", Toast.LENGTH_SHORT).show();
+                                            } else {
+                                                Toast.makeText(addGun.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+                                    });
+                        }
+                    }
+                });
+
+
+//                        builder.setView(dialogView);
+//                        builder.create().show();
+
+            }
+        });
+    }
+
+    @Override
+    public void onItemLongClicked(Gun g) {
+
+//                progressBar.setVisibility(View.VISIBLE);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(addGun.this);
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_show_gun_details, null, false);
+        builder.setView(dialogView);
+        AlertDialog ad = builder.create();
+        ImageView imageView = dialogView.findViewById(R.id.imageGun);
+        TextView makeAndModel = dialogView.findViewById(R.id.makeAndModel);
+        TextView unitsInStock = dialogView.findViewById(R.id.unitsInStock);
+        TextView magOptions = dialogView.findViewById(R.id.magOptions);
+        TextView caliber = dialogView.findViewById(R.id.caliber);
+        TextView weight = dialogView.findViewById(R.id.weight);
+        TextView price = dialogView.findViewById(R.id.price);
+        Button updateBtn = dialogView.findViewById(R.id.update2);
+        Button buttonEditUnits = dialogView.findViewById(R.id.editUnitsInStock);
+//                Button editImage = dialogView.findViewById(R.id.editImage);
+//                editImage.setVisibility(View.VISIBLE);
+        buttonEditUnits.setVisibility(View.VISIBLE);
+        updateBtn.setVisibility(View.VISIBLE);
+
+        unitsInStock.setText("" + g.getInStock());
+        magOptions.setText("" + g.getOptionsMagCapacity());
+        caliber.setText("" + g.getCaliber());
+        weight.setText("" + g.getWeight());
+        price.setText("" + g.getPrice());
+
+
+        makeAndModel.setText("" + g.getManufacturer() + " " + g.getModelName());
+        storageReference = FirebaseStorage.getInstance().getReference().child("image/" + makeAndModel.getText().toString());
+
+        //                editImage.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View view) {
+//                        AlertDialog.Builder builder = new AlertDialog.Builder(addGun.this);
+//                        View dialogView = getLayoutInflater().inflate(R.layout.dialog_delete_gun, null, false);
+//                        builder.setView(dialogView);
+//                        AlertDialog ad = builder.create();
+//                        TextView textView = dialogView.findViewById(R.id.textView);
+//                        textView.setText("Are You Sure You Want To Edit This Picture?");
+//                        ad.show();
+//                        ad.setCancelable(false);
+//                        Button buttonYes = dialogView.findViewById(R.id.buttonYes);
+//                        Button buttonNo = dialogView.findViewById(R.id.buttonNo);
+//                        Button buttonConfirm = dialogView.findViewById(R.id.confirmBtn);
+//
+//                        buttonNo.setOnClickListener(new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View view) {
+//                                isOn = false;
+//                                ad.dismiss();
+//                            }
+//                        });
+//
+//                        buttonYes.setOnClickListener(new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View view) {
+//                                storageReference.delete()
+//                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+//                                            @Override
+//                                            public void onComplete(@NonNull Task<Void> task) {
+//                                                isOn = false;
+//
+//                                                buttonConfirm.setVisibility(View.VISIBLE);
+//
+//                                                Intent intent = new Intent();
+//                                                intent.setType("image/");
+//                                                intent.setAction(Intent.ACTION_GET_CONTENT);
+//
+//                                                tempManufacturer = g.getManufacturer();
+//                                                tempModelName = g.getModelName();
+//
+//                                                ActivityResultLauncher<Intent> launcher = registerForActivityResult(
+//                                                        new ActivityResultContracts.StartActivityForResult(),
+//                                                        new ActivityResultCallback<ActivityResult>() {
+//                                                            @Override
+//                                                            public void onActivityResult(ActivityResult result) {
+//                                                                Intent data = result.getData();
+//
+//                                                            }
+//                                                        }
+//                                                );
+//
+//                                                startActivityForResult(intent, 100);
+//
+//                                                buttonConfirm.setOnClickListener(new View.OnClickListener() {
+//                                                    @Override
+//                                                    public void onClick(View view) {
+//
+//                                                        storageReference = FirebaseStorage.getInstance().getReference("image/" + tempManufacturer + " " + tempModelName);
+//                                                        storageReference.putFile(imageUri)
+//                                                                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+//                                                                    @Override
+//                                                                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+//                                                                        image.setImageURI(null);
+//                                                                        Toast.makeText(addGun.this, "Image added", Toast.LENGTH_SHORT).show();
+//                                                                        if (progressBar.getVisibility() == View.VISIBLE) {
+//                                                                            progressBar.setVisibility(View.GONE);
+//                                                                        }
+//                                                                    }
+//                                                                }).addOnFailureListener(new OnFailureListener() {
+//                                                                    @Override
+//                                                                    public void onFailure(@NonNull Exception e) {
+//                                                                        if (progressBar.getVisibility() == View.VISIBLE) {
+//                                                                            progressBar.setVisibility(View.GONE);
+//                                                                            Toast.makeText(addGun.this, "Failed image upload", Toast.LENGTH_SHORT).show();
+//                                                                        }
+//
+//                                                                    }
+//                                                                });
+//                                                    }
+//                                                });
+//
+//
+////                                                ad.dismiss();
+//                                            }
+//                                        });
+//                            }
+//                        });
+//                    }
+//                });
+
+
+        imageView.setImageBitmap(ShopFragment.getBitmapFromName("" + g.getManufacturer() + " " + g.getModelName(), ShopFragment.nodeGunBitMap));
+        ad.show();
+
+//                try {
+//
+//                    File localFile = File.createTempFile("" + makeAndModel.getText().toString(), "jpeg");
+//
+//                    storageReference.getFile(localFile)
+//                            .addOnCompleteListener(new OnCompleteListener<FileDownloadTask.TaskSnapshot>() {
+//                                @Override
+//                                public void onComplete(@NonNull Task<FileDownloadTask.TaskSnapshot> task) {
+//                                    if (task.isSuccessful()) {
+//                                        Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+//                                        imageView.setImageBitmap(bitmap);
+//
+//                                        ad.show();
+//                                        progressBar.setVisibility(View.INVISIBLE);
+//                                    } else {
+//                                        Toast.makeText(addGun.this, "Error", Toast.LENGTH_SHORT).show();
+//                                        imageView.setImageResource(R.drawable.x);
+//                                        progressBar.setVisibility(View.INVISIBLE);
+//                                        ad.show();
+//                                    }
+//                                }
+//                            });
+//                } catch (IOException e) {
+//                    Toast.makeText(addGun.this, "Error2", Toast.LENGTH_SHORT).show();
+//                    progressBar.setVisibility(View.INVISIBLE);
+//                    e.printStackTrace();
+//                }
+
+
+//                Picasso.get()
+//                        .load("" + g.getImgUrl())
+//                        .into(imageView);
+
+//                ad.show();
+
+        buttonEditUnits.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(addGun.this);
+                View dialogView = getLayoutInflater().inflate(R.layout.dialolg_add_units, null, false);
+                builder.setView(dialogView);
+                AlertDialog ad3 = builder.create();
+                EditText number = dialogView.findViewById(R.id.number);
+                FloatingActionButton addOne = dialogView.findViewById(R.id.floatingActionButtonAddOne);
+                FloatingActionButton subOne = dialogView.findViewById(R.id.floatingActionButtonSubOne);
+                Button apply = dialogView.findViewById(R.id.accept);
+                Button cancel = dialogView.findViewById(R.id.cancel);
+
+                cancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        ad3.dismiss();
+                    }
+                });
+
+                apply.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        num = Integer.parseInt(number.getText().toString());
+                        firestore
+                                .collection("guns")
+                                .document("" + g.getManufacturer() + " " + g.getName())
+                                .set(new Gun(g.getName(), g.getManufacturer(), /*g.getImgUrl(),*/ g.getPrice(), num, g.getOptionsMagCapacity(), g.getCaliber(), g.getWeight()))
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isSuccessful()) {
+                                            ad3.dismiss();
+                                            ad.dismiss();
+                                            Toast.makeText(addGun.this, "Updated!", Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            Toast.makeText(addGun.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                });
+                    }
+                });
+
+                number.setText("" + g.getInStock());
+                addOne.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        number.setText("" + (Integer.parseInt(number.getText().toString()) + 1));
+                    }
+                });
+                subOne.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        int num = Integer.parseInt(number.getText().toString());
+                        if (num != 0)
+                            number.setText("" + (num - 1));
+                    }
+                });
+
+                ad3.show();
+                ad3.setCancelable(false);
+
+            }
+        });
+
+        updateBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ad.dismiss();
+                AlertDialog.Builder builder = new AlertDialog.Builder(addGun.this);
+                View dialogView = getLayoutInflater().inflate(R.layout.dialog_add_gun, null, false);
+                builder.setView(dialogView);
+                AlertDialog ad2 = builder.create();
+                Button buttonAdd = dialogView.findViewById(R.id.buttonAdd);
+
+
+                EditText etPrice = dialogView.findViewById(R.id.etPrice);
+                EditText etToyName = dialogView.findViewById(R.id.etGunModel);
+                EditText etManufacturer = dialogView.findViewById(R.id.etManufacturer);
+                Button etImageURL = dialogView.findViewById(R.id.etImageURL);
+                etImageURL.setVisibility(View.GONE);
+                EditText etUnitsInStock = dialogView.findViewById(R.id.etInStock);
+//                    EditText etStandardMagCapacity = dialogView.findViewById(R.id.etStandardMagCapacity);
+                EditText etMagOptions = dialogView.findViewById(R.id.etMagOptions);
+                EditText etCaliber = dialogView.findViewById(R.id.etCaliber);
+                EditText etWeight = dialogView.findViewById(R.id.etWeight);
+//                    EditText etBarrelSize = dialogView.findViewById(R.id.etBarrelSize);
+//                    EditText etTriggerPull = dialogView.findViewById(R.id.etTriggerPull);
+                buttonAdd.setText("update");
+
+                etPrice.setText("" + g.getPrice());
+                etToyName.setText("" + g.getModelName());
+                etManufacturer.setText("" + g.getManufacturer());
+//                        etImageURL.setText("" + g.getImgUrl());
+                etUnitsInStock.setText("" + g.getInStock());
+                etMagOptions.setText("" + g.getOptionsMagCapacity());
+                etCaliber.setText("" + g.getCaliber());
+                etWeight.setText("" + g.getWeight());
+
+
+                etManufacturer.setInputType(InputType.TYPE_NULL);
+                etManufacturer.setTextColor(Color.GRAY);
+                etManufacturer.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                    }
+                });
+
+                etToyName.setInputType(InputType.TYPE_NULL);
+                etToyName.setTextColor(Color.GRAY);
+                etToyName.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                    }
+                });
+
+                ad2.show();
+
+                buttonAdd.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        String modelName = etToyName.getText().toString();
+                        String stPrice = etPrice.getText().toString(); //remember conv to int
+                        String manufacturer = etManufacturer.getText().toString();
+                        String imgUrl = etImageURL.getText().toString();
+                        String stInStock = etUnitsInStock.getText().toString(); //remember conv to int
+//                            String stStandardMagCapacity = etStandardMagCapacity.getText().toString(); //remember conv to int
+                        String magOptions = etMagOptions.getText().toString();
+                        String caliber = etCaliber.getText().toString();
+                        String stWeight = etWeight.getText().toString(); //remember conv to int
+//                            String stBarrelLength = etBarrelSize.getText().toString(); //remember conv to int
+//                            String stTriggerPull = etTriggerPull.getText().toString(); //remember conv to int
+
+
+                        if (modelName.isEmpty() || stPrice.isEmpty() || manufacturer.isEmpty() || stInStock.isEmpty() || magOptions.isEmpty() || caliber.isEmpty() || stWeight.isEmpty()) {
+                            Toast.makeText(addGun.this, "Please fill all the fields", Toast.LENGTH_SHORT).show();
+                            if (modelName.isEmpty())
+                                shake(dialogView, R.id.etGunModel);
+                            if (stPrice.isEmpty())
+                                shake(dialogView, R.id.etPrice);
+                            if (manufacturer.isEmpty())
+                                shake(dialogView, R.id.etManufacturer);
+                            if (stInStock.isEmpty())
+                                shake(dialogView, R.id.etInStock);
+                            if (magOptions.isEmpty())
+                                shake(dialogView, R.id.etMagOptions);
+                            if (caliber.isEmpty())
+                                shake(dialogView, R.id.etCaliber);
+                            if (stWeight.isEmpty())
+                                shake(dialogView, R.id.etWeight);
+                        } else {
+                            int price = Integer.parseInt(stPrice);
+                            int inStock = Integer.parseInt(stInStock);
+//                                int standardMagCapacity = Integer.parseInt(stStandardMagCapacity);
+                            int weight = Integer.parseInt(stWeight);
+//                                int barrelLength = Integer.parseInt(stBarrelLength);
+//                                int triggerPull = Integer.parseInt(stTriggerPull);
+                            Gun gun = new Gun(modelName, manufacturer, /*imgUrl,*/ price, inStock, magOptions, caliber, weight);
+                            firestore
+                                    .collection("guns")
+                                    .document("" + manufacturer + " " + modelName)
+                                    .set(gun)
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            ad2.dismiss();
+                                            if (task.isSuccessful()) {
+                                                Toast.makeText(addGun.this, "Gun updated!", Toast.LENGTH_SHORT).show();
+                                            } else {
+                                                Toast.makeText(addGun.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+                                    });
+                        }
+                    }
+                });
+
+
+//                        builder.setView(dialogView);
+//                        builder.create().show();
+
+            }
+        });
     }
 }
