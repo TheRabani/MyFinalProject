@@ -62,7 +62,7 @@ public class ShopFragment extends Fragment implements EventListener<QuerySnapsho
     public static Node<GunBitMap> nodeGunBitMap;
 
     public int count = 0;
-    Bitmap bitmap[];
+    Bitmap[] bitmap;
     int howMany = 0;
 
     private /*ListView*/RecyclerView gunListView;
@@ -87,8 +87,8 @@ public class ShopFragment extends Fragment implements EventListener<QuerySnapsho
             adapter = new gunAdapter(getActivity()/*, R.layout.gun_row*/, gunArrayList, this);
         gunListView.setAdapter(adapter);
 
-        normal_rec = view.findViewById(R.id.recyclerView);
-        normal_rec.setLayoutManager(new LinearLayoutManager(getContext()));
+//        normal_rec = view.findViewById(R.id.recyclerView);
+//        normal_rec.setLayoutManager(new LinearLayoutManager(getContext()));               fgewquhvfbjhwbvfjhnwdsvhjgsdfjhfv
 
 
 //        -------------------------------------------------------------------------------------------------------------------
@@ -365,6 +365,6 @@ public class ShopFragment extends Fragment implements EventListener<QuerySnapsho
 
     @Override
     public void onItemLongClicked(Gun gun) {
-
+        Toast.makeText(getActivity(), "long", Toast.LENGTH_SHORT).show();
     }
 }

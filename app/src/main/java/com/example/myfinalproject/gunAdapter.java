@@ -63,7 +63,7 @@ public class gunAdapter extends RecyclerView.Adapter<gunAdapter.gunHolder> {
     public void onBindViewHolder(@NonNull gunAdapter.gunHolder holder, int position) {
         Gun gun = gunArrayList.get(position);
         holder.setDetails(gun);
-        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+//        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
@@ -102,8 +102,13 @@ public class gunAdapter extends RecyclerView.Adapter<gunAdapter.gunHolder> {
             Bitmap bitmap = ShopFragment.getBitmapFromName(st);
             if (bitmap != null)
                 imageView.setImageBitmap(bitmap);
-            else
-                imageView.setImageBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.x));
+            else {
+                bitmap = admin_fragment_add_gun.getBitmapFromName(st);
+                if (bitmap == null)
+                    imageView.setImageBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.x));
+                else
+                    imageView.setImageBitmap(bitmap);
+            }
         }
     }
     

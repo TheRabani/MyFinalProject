@@ -101,8 +101,6 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
         gunArrayList = new ArrayList<Gun>();
         gunListView = findViewById(R.id.listViewGun);
         adapter = new gunAdapter(this/*, R.layout.gun_row*/, gunArrayList, this);
-
-
         gunListView.setAdapter(adapter);
 
 //        gunListView.setOnItemClickListener((adapterView, view, i, l) -> {
@@ -576,7 +574,6 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
 //                    }
 //                });
 
-
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -769,7 +766,8 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
     public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
         List<DocumentSnapshot> docList = value.getDocuments();
         gunArrayList.clear();
-        if (docList.toArray().length != 0)
+        if (docList.toArray().length != 0) {
+            Toast.makeText(this, "kfdw", Toast.LENGTH_SHORT).show();
             for (DocumentSnapshot doc : docList) {
                 Gun gun = new Gun(
                         doc.getString("modelName"),
@@ -786,6 +784,10 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
                 );
                 gunArrayList.add(gun);
             }
+        } else {
+
+        }
+
         adapter.notifyDataSetChanged();
     }
 

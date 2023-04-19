@@ -33,9 +33,8 @@ public class MainActivity extends AppCompatActivity {
 
 //        bottomNavigationView = findViewById(R.id.bottom_navigation);
         chipNavigationBar = findViewById(R.id.bottom_navigation);
-//        if (!Login.isAdmin) {
-            if(true)
-            {
+        if (!Login.isAdmin) {
+//            if(true){
 //        chipNavigationBar.setBackground(R.drawable.show_gun_background);
 //        chipNavigationBar.setBackgroundColor(Color.WHITE);
             chipNavigationBar.setItemSelected(R.id.home, true);
@@ -93,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
-        /*else
+        else
         {
             chipNavigationBar.setMenuResource(R.menu.admin_bottom_nav_menu);
             chipNavigationBar.setItemSelected(R.id.adminShop, true);
@@ -130,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
             });
         }
 
-*/
+
 
 
 
