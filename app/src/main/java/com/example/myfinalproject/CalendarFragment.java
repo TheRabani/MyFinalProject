@@ -110,15 +110,10 @@ public class CalendarFragment extends Fragment implements SelectListener {
                 } else {
                     if (!isSaturday) {
                         databaseReference.child("10:00").child("0").setValue("null");
-                        ;
                         databaseReference.child("12:00").child("0").setValue("null");
-                        ;
                         databaseReference.child("08:00").child("0").setValue("null");
-                        ;
                         databaseReference.child("14:30").child("0").setValue("null");
-                        ;
                         databaseReference.child("16:30").child("0").setValue("null");
-                        ;
                     } else
                         Toast.makeText(getContext(), "המטווח אינו פעיל בשבת", Toast.LENGTH_SHORT).show();
                 }
@@ -133,7 +128,7 @@ public class CalendarFragment extends Fragment implements SelectListener {
     }
 
     @Override
-    public void onItemClicked(Schedule schedule) {
+    public void onItemLongClicked(Schedule schedule) {
         if (schedule.getPeople() != 0) {
             if (isAvailable()) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
@@ -171,12 +166,17 @@ public class CalendarFragment extends Fragment implements SelectListener {
     }
 
     @Override
-    public void onItemClicked(String string, String time) {
+    public void onItemLongClicked(String string, String time) {
 
     }
 
     @Override
     public void onItemClicked(Gun gun) {
+
+    }
+
+    @Override
+    public void onItemLongClicked(MansInfo mansInfo) {
 
     }
 

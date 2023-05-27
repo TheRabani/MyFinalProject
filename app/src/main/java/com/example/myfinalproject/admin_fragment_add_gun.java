@@ -383,12 +383,12 @@ public class admin_fragment_add_gun extends Fragment implements EventListener<Qu
     }
 
     @Override
-    public void onItemClicked(Schedule schedule) {
+    public void onItemLongClicked(Schedule schedule) {
 
     }
 
     @Override
-    public void onItemClicked(String string, String time) {
+    public void onItemLongClicked(String string, String time) {
 
     }
 
@@ -598,6 +598,11 @@ public class admin_fragment_add_gun extends Fragment implements EventListener<Qu
 
             }
         });
+
+    }
+
+    @Override
+    public void onItemLongClicked(MansInfo mansInfo) {
 
     }
 

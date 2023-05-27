@@ -304,12 +304,12 @@ public class ShopFragment extends Fragment implements EventListener<QuerySnapsho
     }
 
     @Override
-    public void onItemClicked(Schedule schedule) {
+    public void onItemLongClicked(Schedule schedule) {
 
     }
 
     @Override
-    public void onItemClicked(String string, String time) {
+    public void onItemLongClicked(String string, String time) {
 
     }
 
@@ -361,6 +361,11 @@ public class ShopFragment extends Fragment implements EventListener<QuerySnapsho
 //                        .load("" + g.getImgUrl())
 //                        .into(imageView);
         ad.show();
+    }
+
+    @Override
+    public void onItemLongClicked(MansInfo mansInfo) {
+
     }
 
     @Override

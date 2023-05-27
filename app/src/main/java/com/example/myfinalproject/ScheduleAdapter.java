@@ -38,7 +38,7 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.Schedu
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                listener.onItemClicked(schedules.get(holder.getAdapterPosition()));
+                listener.onItemLongClicked(schedules.get(holder.getAdapterPosition()));
             }
         });
     }

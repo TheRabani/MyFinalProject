@@ -138,11 +138,11 @@ public class HomeFragment extends Fragment implements SelectListener{
     }
 
     @Override
-    public void onItemClicked(Schedule schedule) {
+    public void onItemLongClicked(Schedule schedule) {
     }
 
     @Override
-    public void onItemClicked(String string, String time) {
+    public void onItemLongClicked(String string, String time) {
 //        Toast.makeText(getContext(), ""+string, Toast.LENGTH_SHORT).show();
 //        Toast.makeText(getContext(), ""+book_id, Toast.LENGTH_SHORT).show();
         int second = string.indexOf('M'), third = string.indexOf('Y');
@@ -176,6 +176,11 @@ public class HomeFragment extends Fragment implements SelectListener{
 
     @Override
     public void onItemClicked(Gun gun) {
+
+    }
+
+    @Override
+    public void onItemLongClicked(MansInfo mansInfo) {
 
     }
 

@@ -809,12 +809,12 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
     }
 
     @Override
-    public void onItemClicked(Schedule schedule) {
+    public void onItemLongClicked(Schedule schedule) {
 
     }
 
     @Override
-    public void onItemClicked(String string, String time) {
+    public void onItemLongClicked(String string, String time) {
 
     }
 
@@ -1166,6 +1166,11 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
 
             }
         });
+    }
+
+    @Override
+    public void onItemLongClicked(MansInfo mansInfo) {
+
     }
 
     @Override
