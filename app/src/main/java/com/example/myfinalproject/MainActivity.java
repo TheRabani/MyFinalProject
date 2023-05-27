@@ -24,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
     private Fragment fragment = null;
     private String current;
     FragmentTransaction transaction;
+    public Fragment currentFragment = new HomeFragment();
 
 
     @Override
@@ -33,8 +34,8 @@ public class MainActivity extends AppCompatActivity {
 
 //        bottomNavigationView = findViewById(R.id.bottom_navigation);
         chipNavigationBar = findViewById(R.id.bottom_navigation);
-        if (!Login.isAdmin) {
-//            if(true){
+//        if (!Login.isAdmin) {
+        if (true) {
 //        chipNavigationBar.setBackground(R.drawable.show_gun_background);
 //        chipNavigationBar.setBackgroundColor(Color.WHITE);
             chipNavigationBar.setItemSelected(R.id.home, true);
@@ -63,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
                                 transaction.addToBackStack(null);
                                 transaction.commit();
                                 current = "home";
+                                currentFragment = fragment;
                             }
                             break;
                         case R.id.shop:
@@ -73,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
                                 transaction.addToBackStack(null);
                                 transaction.commit();
                                 current = "shop";
+                                currentFragment = fragment;
                             }
                             break;
                         case R.id.calendar:
@@ -83,6 +86,7 @@ public class MainActivity extends AppCompatActivity {
                                 transaction.addToBackStack(null);
                                 transaction.commit();
                                 current = "cal";
+                                currentFragment = fragment;
                             }
                             break;
                     }
@@ -91,9 +95,7 @@ public class MainActivity extends AppCompatActivity {
 //                }
                 }
             });
-        }
-        else
-        {
+        } else {
             chipNavigationBar.setMenuResource(R.menu.admin_bottom_nav_menu);
             chipNavigationBar.setItemSelected(R.id.adminShop, true);
             transaction = getSupportFragmentManager().beginTransaction();
@@ -103,8 +105,7 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onItemSelected(int i) {
                     transaction = getSupportFragmentManager().beginTransaction();
-                    switch (i)
-                    {
+                    switch (i) {
                         case R.id.adminShop:
                             fragment = new admin_fragment_add_gun();
                             if (!current.equals("add")) {
@@ -128,11 +129,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
-
-
-
-
-
 
 
 //        bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {

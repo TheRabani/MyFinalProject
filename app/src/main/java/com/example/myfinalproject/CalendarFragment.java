@@ -25,6 +25,8 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -96,18 +98,27 @@ public class CalendarFragment extends Fragment implements SelectListener {
                 if (snapshot.getValue() != null) {
 
                     for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                        Schedule schedule = new Schedule(dataSnapshot.getKey(), Integer.parseInt(dataSnapshot.getValue().toString()));
-                        scheduleArrayList.add(schedule);
+//                        Schedule schedule = new Schedule(dataSnapshot.getKey(), Integer.parseInt(dataSnapshot.getValue().toString()));
+//                        scheduleArrayList.add(schedule);
 
+                        Schedule schedule = new Schedule(dataSnapshot.getKey(), (int) (12 - dataSnapshot.getChildrenCount()));
+                        if (dataSnapshot.getChildrenCount() == 1 && dataSnapshot.child("0").getValue() != null)
+                            schedule.setPeople(12);
+                        scheduleArrayList.add(schedule);
                     }
 
                 } else {
                     if (!isSaturday) {
-                        databaseReference.child("10:00").setValue(12);
-                        databaseReference.child("12:00").setValue(12);
-                        databaseReference.child("08:00").setValue(12);
-                        databaseReference.child("14:30").setValue(12);
-                        databaseReference.child("16:30").setValue(12);
+                        databaseReference.child("10:00").child("0").setValue("null");
+                        ;
+                        databaseReference.child("12:00").child("0").setValue("null");
+                        ;
+                        databaseReference.child("08:00").child("0").setValue("null");
+                        ;
+                        databaseReference.child("14:30").child("0").setValue("null");
+                        ;
+                        databaseReference.child("16:30").child("0").setValue("null");
+                        ;
                     } else
                         Toast.makeText(getContext(), "המטווח אינו פעיל בשבת", Toast.LENGTH_SHORT).show();
                 }
@@ -143,7 +154,11 @@ public class CalendarFragment extends Fragment implements SelectListener {
                         myDB.addBook(s, s2);
                         addTime(s, s2);
 //                        storeDataInArrays();
-                        databaseReference.child("" + schedule.getHour()).setValue(schedule.getPeople() - 1);
+//                        databaseReference.child("" + schedule.getHour()).setValue(schedule.getPeople() - 1);
+                        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+                        databaseReference.child("" + schedule.getHour()).child("" + (12 - schedule.getPeople() + 1)).setValue("" + currentUser.getPhoneNumber());
+                        if (schedule.getPeople() == 12)
+                            databaseReference.child("" + schedule.getHour()).child("0").removeValue();
                         ad.dismiss();
                     }
                 });
@@ -171,7 +186,7 @@ public class CalendarFragment extends Fragment implements SelectListener {
     }
 
     private void addTime(String s, String s2) {
-        Toast.makeText(getContext(), ""+book_id.size(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), "" + book_id.size(), Toast.LENGTH_SHORT).show();
         book_id.add(String.valueOf(book_id.size() + 1));
         book_date.add(s);
         book_time.add(s2);
@@ -189,20 +204,42 @@ public class CalendarFragment extends Fragment implements SelectListener {
         return true;
     }
 
-    public static void addOne(String date, String hour)
-    {
+    public static void addOne(String date, String hour) {
         DatabaseReference a = FirebaseDatabase.getInstance().getReference("Calendar").child(date);
-        a.child(hour).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        a.child(hour).addValueEventListener(new ValueEventListener() {
             @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if(task.isSuccessful())
-                {
-                    a.child("" + hour).setValue(Integer.parseInt(task.getResult().getValue().toString()) + 1);
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.getValue() != null) {
+                    if (snapshot.getChildrenCount() != 1) {
+                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                            if(dataSnapshot.getValue().toString().equals(currentUser.getPhoneNumber()))
+                                a.child(hour).child(dataSnapshot.getKey()).removeValue();
+                        }
+                    }
+                    else{
+                        a.child(hour).child("0").setValue("null");
+                        a.child(hour).child("1").removeValue();
+                    }
                 }
-                else
-                    Toast.makeText(context, "", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(context.getApplicationContext(), "error- canceled. try again", Toast.LENGTH_SHORT).show();
             }
         });
+//        a.child(hour).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<DataSnapshot> task) {
+//                if(task.isSuccessful())
+//                {
+//                    a.child("" + hour).setValue(Integer.parseInt(task.getResult().getValue().toString()) + 1);
+//                }
+//                else
+//                    Toast.makeText(context, "", Toast.LENGTH_SHORT).show();
+//            }
+//        });
 
 
     }
