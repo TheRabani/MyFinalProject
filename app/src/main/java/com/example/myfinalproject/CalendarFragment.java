@@ -4,7 +4,9 @@ import static com.example.myfinalproject.HomeFragment.book_date;
 import static com.example.myfinalproject.HomeFragment.book_id;
 import static com.example.myfinalproject.HomeFragment.book_time;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 
@@ -57,6 +59,15 @@ public class CalendarFragment extends Fragment implements SelectListener {
         View view = inflater.inflate(R.layout.fragment_calendar, container, false);
 
         context = getContext();
+
+        view.findViewById(R.id.logout2).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getContext(), "ds", Toast.LENGTH_SHORT).show();
+//                FirebaseAuth.getInstance().signOut();
+//                startActivity(new Intent(getActivity(), Login.class));
+            }
+        });
 
         normal_rec = view.findViewById(R.id.normal_rec);
         normal_rec.setLayoutManager(new LinearLayoutManager(getContext()));

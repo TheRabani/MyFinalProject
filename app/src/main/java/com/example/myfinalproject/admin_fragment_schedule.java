@@ -47,6 +47,7 @@ public class admin_fragment_schedule extends Fragment implements SelectListener 
     private ScheduleAdapter scheduleAdapter;
     private ArrayList<Schedule> scheduleArrayList;
     Schedule temp;
+    int count = 0;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -85,11 +86,9 @@ public class admin_fragment_schedule extends Fragment implements SelectListener 
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 scheduleArrayList.clear();
                 if (snapshot.getValue() != null) {
-
                     for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
 //                        Schedule schedule = new Schedule(dataSnapshot.getKey(), Integer.parseInt(dataSnapshot.getValue().toString()));
 //                        scheduleArrayList.add(schedule);
-
                         Schedule schedule = new Schedule(dataSnapshot.getKey(), (int) (12 - dataSnapshot.getChildrenCount()));
                         if (dataSnapshot.getChildrenCount() == 1 && dataSnapshot.child("0").getValue() != null)
                             schedule.setPeople(12);
@@ -238,12 +237,39 @@ public class admin_fragment_schedule extends Fragment implements SelectListener 
     public void onItemLongClicked(MansInfo mansInfo) {
         Toast.makeText(getContext(), "fde", Toast.LENGTH_SHORT).show();
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setMessage("רוצה למחוק את" + " " + mansInfo.getPhone() + " " + "מהאימון"+"?");
+        builder.setMessage("רוצה למחוק את" + " " + mansInfo.getPhone() + " " + "מהאימון" + "?");
         builder.setCancelable(true);
         builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                databaseReference.child(temp.getHour()).child(""+mansInfo.getNum()).removeValue();
+                int j = mansInfo.getNum();
+                DatabaseReference data = databaseReference.child(temp.getHour());
+                data.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        int place = 0;
+                        count = (int) (snapshot.getChildrenCount());
+                        if (count == 1) {
+                            data.child("0").setValue("null");
+                            data.child("" + j).removeValue();
+                        } else {
+                            data.child(""+j).removeValue();
+                            for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                if(Integer.parseInt(dataSnapshot.getKey())>j) {
+                                    place = Integer.parseInt(dataSnapshot.getKey());
+                                    data.child("" + (place - 1)).setValue(dataSnapshot.getValue());
+                                }
+                            }
+                            data.child(""+place).removeValue();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                    }
+                });
+
+                databaseReference.child(temp.getHour()).child("" + mansInfo.getNum()).removeValue();
             }
         });
         builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
