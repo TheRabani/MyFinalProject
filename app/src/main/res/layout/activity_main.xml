@@ -1,18 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/container"
-            android:layout_above="@+id/bottom_navigation"
-            />
+    <Button
+        android:id="@+id/logoutButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/container"
+        android:layout_alignEnd="@+id/container"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:backgroundTint="#F44336"
+        android:layoutDirection="ltr"
+        android:onClick="logout"
+        android:text="log out"
+        android:textAllCaps="false"
+        android:textColor="#000000" />
+
+    <Button
+        android:id="@+id/sett"
+        android:layout_width="50dp"
+        android:layout_height="30dp"
+        android:layout_alignStart="@+id/container"
+        android:layout_alignTop="@+id/container"
+        android:layout_alignBottom="@+id/logoutButton"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:backgroundTint="#00FFFFFF"
+        android:drawableLeft="@drawable/ic_baseline_settings_new_24"
+        android:layoutDirection="ltr"
+        android:onClick="doit"
+        android:outlineAmbientShadowColor="#00FFFFFF"
+        android:shadowColor="#00FFFFFF"
+        android:outlineSpotShadowColor="#00FFFFFF"
+        android:shadowRadius="0" />
+
+    <FrameLayout
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/bottom_navigation"
+        android:layout_marginBottom="2dp" />
 
     <com.ismaeldivita.chipnavigation.ChipNavigationBar
         android:id="@+id/bottom_navigation"
@@ -22,18 +54,18 @@
         android:layout_alignParentBottom="true"
         android:background="#8FDCFA"
 
-        app:cnb_menuResource="@menu/bottom_nav_menu"/>
+        app:cnb_menuResource="@menu/bottom_nav_menu" />
 
     <!-- android:layout_marginBottom="0dp" -->
 
-<!--    app:menu="@menu/bottom_nav_menu"-->
+    <!--    app:menu="@menu/bottom_nav_menu"-->
 
-<!--        android:id="@+id/bottom_navigation"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
+    <!--        android:id="@+id/bottom_navigation"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
 
-<!--        android:layout_alignParentBottom="true"-->
-<!--        app:menu="@menu/bottom_nav_menu"-->
-        />
+    <!--        android:layout_alignParentBottom="true"-->
+    <!--        app:menu="@menu/bottom_nav_menu"-->
+    />
 
 </RelativeLayout>

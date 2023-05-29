@@ -1,10 +1,21 @@
 package com.example.myfinalproject;
 
 import android.content.ContentResolver;
+import android.content.Intent;
 import android.graphics.Color;
+import android.media.AudioManager;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.SeekBar;
+import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -25,12 +36,19 @@ public class MainActivity extends AppCompatActivity {
     private String current;
     FragmentTransaction transaction;
     public Fragment currentFragment = new HomeFragment();
-
+    private Intent serviceIntent;
+    AudioManager audioManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        serviceIntent = new Intent(getApplicationContext(), MyService.class);
+//        startService(serviceIntent);
+        audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
+        int maxVol = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+        int currentVol = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+
 
 //        bottomNavigationView = findViewById(R.id.bottom_navigation);
         chipNavigationBar = findViewById(R.id.bottom_navigation);
@@ -149,6 +167,68 @@ public class MainActivity extends AppCompatActivity {
 //                return false;
 //            }
 //        });
+        findViewById(R.id.sett).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder tempBuilder = new AlertDialog.Builder(MainActivity.this);
+                View tempDialogView = getLayoutInflater().inflate(R.layout.volume_bar, null, false);
+                tempBuilder.setView(tempDialogView);
+                AlertDialog tempAd = tempBuilder.create();
+                tempAd.setCancelable(true);
+                Window window = tempAd.getWindow();
+                WindowManager.LayoutParams wlp = window.getAttributes();
+                wlp.gravity = Gravity.TOP | Gravity.END;
+                wlp.flags &= ~WindowManager.LayoutParams.FLAG_DIM_BEHIND;
+                window.setAttributes(wlp);
+                tempAd.show();
+                tempAd.getWindow().setLayout(600, 165);
+                SeekBar seekBar = tempAd.findViewById(R.id.seekBar);
+                if(seekBar == null)
+                    Toast.makeText(MainActivity.this, "null", Toast.LENGTH_SHORT).show();
+                seekBar.setMax(maxVol);
+                seekBar.setProgress(currentVol);
+
+                seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                    @Override
+                    public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                        audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, i, 0);
+                    }
+                    @Override
+                    public void onStartTrackingTouch(SeekBar seekBar) {
+
+                    }
+                    @Override
+                    public void onStopTrackingTouch(SeekBar seekBar) {
+
+                    }
+                });
+
+
+            }
+        });
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (!isFinishing()) {
+            stopService(serviceIntent);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        startService(serviceIntent);
 
     }
+
+    public void logout(View view) {
+        Toast.makeText(this, "nfewj", Toast.LENGTH_SHORT).show();
+    }
+
+    public void doit(View view) {
+        Toast.makeText(this, "fewds", Toast.LENGTH_SHORT).show();
+    }
+
 }

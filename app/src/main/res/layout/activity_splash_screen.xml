@@ -1,30 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@color/black"
+    android:orientation="vertical"
     tools:context=".SplashScreen">
 
-    <pl.droidsonroids.gif.GifImageView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:adjustViewBounds="false"
-        android:src="@drawable/the_best_target"
-        />
-
     <TextView
+        android:id="@+id/kravTXT"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Rabani guns"
-        android:textSize="30dp"
-        android:textStyle="bold"
+        android:layout_marginTop="80dp"
+        android:text="מטווח קרב"
         android:textColor="#FFFFFF"
-        android:layout_centerHorizontal="false"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="20dp"
-        />
-</RelativeLayout>
+        android:textSize="48sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/kravTXT2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="בע&quot;מ"
+        android:textColor="#FFFFFF"
+        android:textSize="34sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/kravTXT"
+        app:layout_constraintHorizontal_bias="0.428"
+        app:layout_constraintStart_toStartOf="@+id/kravTXT"
+        app:layout_constraintTop_toBottomOf="@+id/kravTXT" />
+</androidx.constraintlayout.widget.ConstraintLayout>

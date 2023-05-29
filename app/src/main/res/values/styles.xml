@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="animations">
+        <item name="android:windowEnterAnimation">@anim/krav_enter</item>
+<!--        <item name="android:windowExitAnimation">@anim/krav_exit</item>-->
+    </style>
+
+    <style name="dialogstyle" parent="android:Theme.Holo.Light.Panel">
+        <item name="android:windowAnimationStyle">@style/animations</item>
+        <item name="android:backgroundDimEnabled">false</item>
+    </style>
+</resources>
