@@ -32,6 +32,7 @@
         android:layout_marginTop="8dp"
         android:backgroundTint="#F44336"
         android:text="log out"
+        android:visibility="invisible"
         android:textAllCaps="false"
         android:textColor="#000000"
         app:layout_constraintStart_toStartOf="parent"

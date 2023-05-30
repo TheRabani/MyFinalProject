@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -178,14 +179,21 @@ public class admin_fragment_add_gun extends Fragment implements EventListener<Qu
                                         public void onComplete(@NonNull Task<Void> task) {
                                             if (task.isSuccessful()) {
                                                 Toast.makeText(getContext(), "Gun added!", Toast.LENGTH_SHORT).show();
-
                                                 storageReference = FirebaseStorage.getInstance().getReference("image/" + manufacturer + " " + modelName);
                                                 storageReference.putFile(imageUri)
                                                         .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                                                             @Override
                                                             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                                                                 image.setImageURI(null);
+                                                                image.setImageURI(imageUri);
                                                                 Toast.makeText(getContext(), "Image added", Toast.LENGTH_SHORT).show();
+                                                                getLastNode(AdminNodeGunBitMap).setNext(new Node<GunBitMap>(new GunBitMap("" + manufacturer + " " + modelName, ((BitmapDrawable)image.getDrawable()).getBitmap())));
+                                                                image.setImageURI(null);
+                                                                getFragmentManager()
+                                                                        .beginTransaction()
+                                                                        .detach(admin_fragment_add_gun.this)
+                                                                        .attach(admin_fragment_add_gun.this)
+                                                                        .commit();
                                                                 if (adminProgressBar.getVisibility() == View.VISIBLE) {
                                                                     adminProgressBar.setVisibility(View.GONE);
                                                                 }
@@ -594,7 +602,6 @@ public class admin_fragment_add_gun extends Fragment implements EventListener<Qu
                         }
                     }
                 });
-
 
             }
         });

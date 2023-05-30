@@ -660,6 +660,7 @@ public class addGun extends AppCompatActivity implements EventListener<QuerySnap
                                 int weight = Integer.parseInt(stWeight);
 //                                int barrelLength = Integer.parseInt(stBarrelLength);
 //                                int triggerPull = Integer.parseInt(stTriggerPull);
+
                                 Gun gun = new Gun(modelName, manufacturer, /*imgUrl,*/ price, inStock, magOptions, caliber, weight);
                                 firestore
                                         .collection("guns")
