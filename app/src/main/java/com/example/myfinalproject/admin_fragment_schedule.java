@@ -23,6 +23,7 @@ import android.widget.Toast;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.google.android.gms.common.util.NumberUtils;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -35,6 +36,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 
 public class admin_fragment_schedule extends Fragment implements SelectListener {
 
@@ -63,6 +65,45 @@ public class admin_fragment_schedule extends Fragment implements SelectListener 
 
         calendar = view.findViewById(R.id.calendar3);
         editText = view.findViewById(R.id.date_view3);
+        Button search = view.findViewById(R.id.search);
+        search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                View dialogView = getLayoutInflater().inflate(R.layout.dialog_add_phone, null, false);
+                builder.setView(dialogView);
+                AlertDialog ad4 = builder.create();
+                ad4.show();
+                Button y = ad4.findViewById(R.id.buttonYes2);
+                EditText editText = ad4.findViewById(R.id.theNum);
+                y.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        String s = editText.getText().toString();
+                        FirebaseDatabase.getInstance().getReference("Calendar").get().addOnSuccessListener(new OnSuccessListener<DataSnapshot>() {
+                            @Override
+                            public void onSuccess(DataSnapshot dataSnapshot) {
+                                boolean b = false;
+                                if (s.charAt(0) == '+')
+                                    b = true;
+                                for (DataSnapshot child : dataSnapshot.getChildren()) {
+                                    for (DataSnapshot c : child.getChildren()) {
+                                        String temp = c.getValue().toString();
+                                        if (b) {
+                                            if (temp.contains(s) || temp.contains("+972" + s.substring(1)))
+                                                Toast.makeText(getActivity(), "" + child.getKey() + " " + c.getKey(), Toast.LENGTH_LONG).show();
+                                        } else {
+                                            if (temp.contains(s) || temp.contains("0" + s.substring(4)))
+                                                Toast.makeText(getActivity(), "" + child.getKey() + " " + c.getKey(), Toast.LENGTH_LONG).show();
+                                        }
+                                    }
+                                }
+                            }
+                        });
+                    }
+                });
+            }
+        });
 
 //        storeDataInArrays();
 //        customAdapterSQLite = new CustomAdapterSQLite(getActivity(), book_id, book_date, book_time);
@@ -253,14 +294,14 @@ public class admin_fragment_schedule extends Fragment implements SelectListener 
                             data.child("0").setValue("null");
                             data.child("" + j).removeValue();
                         } else {
-                            data.child(""+j).removeValue();
+                            data.child("" + j).removeValue();
                             for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                                if(Integer.parseInt(dataSnapshot.getKey())>j) {
+                                if (Integer.parseInt(dataSnapshot.getKey()) > j) {
                                     place = Integer.parseInt(dataSnapshot.getKey());
                                     data.child("" + (place - 1)).setValue(dataSnapshot.getValue());
                                 }
                             }
-                            data.child(""+place).removeValue();
+                            data.child("" + place).removeValue();
                         }
                     }
 
@@ -287,6 +328,27 @@ public class admin_fragment_schedule extends Fragment implements SelectListener 
     }
 
     private void shake(View dialogView, int id) {
+        String s = "0528510125";
+        FirebaseDatabase.getInstance().getReference("Calendar").get().addOnSuccessListener(new OnSuccessListener<DataSnapshot>() {
+            @Override
+            public void onSuccess(DataSnapshot dataSnapshot) {
+                boolean b = false;
+                if (s.charAt(0) == '+')
+                    b = true;
+                for (DataSnapshot child : dataSnapshot.getChildren()) {
+                    for (DataSnapshot c : child.getChildren()) {
+                        String temp = c.getValue().toString();
+                        if (b) {
+                            if (temp.contains(s) || temp.contains("+972" + s.substring(1)))
+                                Toast.makeText(getActivity(), "" + child.getKey() + " " + c.getKey(), Toast.LENGTH_SHORT).show();
+                        } else {
+                            if (temp.contains(s) || temp.contains("0" + s.substring(4)))
+                                Toast.makeText(getActivity(), "" + child.getKey() + " " + c.getKey(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+            }
+        });
         YoYo.with(Techniques.Shake)
                 .duration(700)
                 .repeat(0)

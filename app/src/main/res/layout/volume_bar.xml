@@ -1,18 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layoutDirection="rtl">
+    android:layoutDirection="rtl"
+
+    android:layout_height="wrap_content">
+
+    <Switch
+        android:id="@+id/volSwitch"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:checked="true"
+        />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:contentDescription="Volume Down"
+        android:src="@drawable/ic_baseline_volume_down_24" />
 
     <SeekBar
         android:id="@+id/seekBar"
         android:layout_width="204dp"
         android:layout_height="32dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:contentDescription="Volume Up"
+        android:src="@drawable/ic_baseline_volume_up_24" />
+
+
+</LinearLayout>

@@ -11,8 +11,10 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
@@ -39,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
     public Fragment currentFragment = new HomeFragment();
     private Intent serviceIntent;
     AudioManager audioManager;
+    public Switch aSwitch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +52,6 @@ public class MainActivity extends AppCompatActivity {
         audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
         int maxVol = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
         int currentVol = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-
 
 //        bottomNavigationView = findViewById(R.id.bottom_navigation);
         chipNavigationBar = findViewById(R.id.bottom_navigation);
@@ -182,12 +184,23 @@ public class MainActivity extends AppCompatActivity {
                 wlp.flags &= ~WindowManager.LayoutParams.FLAG_DIM_BEHIND;
                 window.setAttributes(wlp);
                 tempAd.show();
-                tempAd.getWindow().setLayout(600, 165);
+                tempAd.getWindow().setLayout(850, 165);
                 SeekBar seekBar = tempAd.findViewById(R.id.seekBar);
                 if(seekBar == null)
                     Toast.makeText(MainActivity.this, "null", Toast.LENGTH_SHORT).show();
                 seekBar.setMax(maxVol);
                 seekBar.setProgress(currentVol);
+
+                aSwitch = tempAd.findViewById(R.id.volSwitch);
+                aSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                        if(!isChecked)
+                            stopService(serviceIntent);
+                        else
+                            startService(serviceIntent);
+                    }
+                });
 
                 seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                     @Override
