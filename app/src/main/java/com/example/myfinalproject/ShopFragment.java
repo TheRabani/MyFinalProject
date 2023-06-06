@@ -111,59 +111,6 @@ public class ShopFragment extends Fragment implements EventListener<QuerySnapsho
         mHandler.postDelayed(mRunnable, 15 * 1000);//Execute after 15 Seconds
 
 
-//        gunListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            /*@Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Gun g = adapter.getItem(i);
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                View dialogView = getLayoutInflater().inflate(R.layout.dialog_show_gun_details, null, false);
-                builder.setView(dialogView);
-                AlertDialog ad = builder.create();
-
-                ImageView imageView = dialogView.findViewById(R.id.imageGun);
-
-                TextView makeAndModel = dialogView.findViewById(R.id.makeAndModel);
-                TextView unitsInStock = dialogView.findViewById(R.id.unitsInStock);
-                TextView magOptions = dialogView.findViewById(R.id.magOptions);
-                TextView caliber = dialogView.findViewById(R.id.caliber);
-                TextView weight = dialogView.findViewById(R.id.weight);
-                TextView price = dialogView.findViewById(R.id.price);
-                Button request = dialogView.findViewById(R.id.request);
-
-                makeAndModel.setText("" + g.getManufacturer() + " " + g.getModelName());
-
-                Bitmap bit = getBitmapFromName("" + g.getManufacturer() + " " + g.getModelName(), nodeGunBitMap);
-                if (bit != null)
-                    imageView.setImageBitmap(bit);
-                else
-                    imageView.setImageBitmap(BitmapFactory.decodeResource(getContext().getResources(), R.drawable.x));
-
-                int num = g.getInStock();
-                if (num != 0)
-                    unitsInStock.setText("" + g.getInStock());
-                else {
-                    unitsInStock.setText("0");
-                    request.setVisibility(View.VISIBLE);
-                }
-
-                request.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-
-                    }
-                });
-
-                magOptions.setText("" + g.getOptionsMagCapacity());
-                caliber.setText("" + g.getCaliber());
-                weight.setText("" + g.getWeight());
-                price.setText("" + g.getPrice());
-//                Picasso.get()
-//                        .load("" + g.getImgUrl())
-//                        .into(imageView);
-                ad.show();
-            }
-        });*/
 
 
         if (nodeGunBitMap == null) {

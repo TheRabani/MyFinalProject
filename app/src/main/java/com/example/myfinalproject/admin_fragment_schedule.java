@@ -80,20 +80,19 @@ public class admin_fragment_schedule extends Fragment implements SelectListener 
                     @Override
                     public void onClick(View view) {
                         String s = editText.getText().toString();
+                        Toast.makeText(getContext(), ""+s, Toast.LENGTH_SHORT).show();
                         FirebaseDatabase.getInstance().getReference("Calendar").get().addOnSuccessListener(new OnSuccessListener<DataSnapshot>() {
                             @Override
                             public void onSuccess(DataSnapshot dataSnapshot) {
-                                boolean b = false;
-                                if (s.charAt(0) == '+')
-                                    b = true;
+                                boolean b = s.charAt(0) == '+';
                                 for (DataSnapshot child : dataSnapshot.getChildren()) {
                                     for (DataSnapshot c : child.getChildren()) {
                                         String temp = c.getValue().toString();
                                         if (b) {
-                                            if (temp.contains(s) || temp.contains("+972" + s.substring(1)))
+                                            if (temp.contains(s) || temp.contains("0" + s.substring(4)))
                                                 Toast.makeText(getActivity(), "" + child.getKey() + " " + c.getKey(), Toast.LENGTH_LONG).show();
                                         } else {
-                                            if (temp.contains(s) || temp.contains("0" + s.substring(4)))
+                                            if (temp.contains(s) || temp.contains("+972" + s.substring(1)))
                                                 Toast.makeText(getActivity(), "" + child.getKey() + " " + c.getKey(), Toast.LENGTH_LONG).show();
                                         }
                                     }

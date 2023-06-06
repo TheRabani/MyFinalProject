@@ -1,0 +1,421 @@
+@startuml
+class com.example.myfinalproject.admin_fragment_add_gun {
+- FirebaseFirestore firestore
+~ ProgressBar adminProgressBar
+~ RecyclerView normal_rec
+~ int countBit
+~ AlertDialog tempAd
++ {static} Node<GunBitMap> AdminNodeGunBitMap
++ int count
+~ Bitmap[] bitmap
+~ int howMany
+- RecyclerView gunListView
+- {static} gunAdapter adapter
+~ ImageView tvImage
+- ArrayList<Gun> gunArrayList
+~ Uri imageUri
+~ ImageView image
+~ StorageReference storageReference
+~ View view
++ View onCreateView(LayoutInflater,ViewGroup,Bundle)
+- void shake(View,int)
++ CreationExtras getDefaultViewModelCreationExtras()
++ void onEvent(QuerySnapshot,FirebaseFirestoreException)
++ {static} Bitmap getBitmapFromName(String,Node<GunBitMap>)
++ {static} Bitmap getBitmapFromName(String)
++ {static} Node<GunBitMap> getLastNode(Node<GunBitMap>)
++ void onItemLongClicked(Schedule)
++ void onItemLongClicked(String,String)
++ void onItemClicked(Gun)
++ void onItemLongClicked(MansInfo)
++ void onActivityResult(int,int,Intent)
++ void onItemLongClicked(Gun)
+}
+class com.example.myfinalproject.Request {
+- String id
+- int count
++ <<Create>> Request(String)
++ String getId()
++ void setId(String)
++ int getCount()
++ void setCount(int)
+}
+class com.example.myfinalproject.Schedule {
+- String hour
+- int people
++ <<Create>> Schedule(String,int)
++ String getHour()
++ void setHour(String)
++ int getPeople()
++ void setPeople(int)
++ String toString()
+}
+interface com.example.myfinalproject.SelectListener {
+~ void onItemLongClicked(Schedule)
+~ void onItemLongClicked(String,String)
+~ void onItemClicked(Gun)
+~ void onItemLongClicked(MansInfo)
+~ void onItemLongClicked(Gun)
+}
+class com.example.myfinalproject.addGun {
+- FirebaseFirestore firestore
+- FloatingActionButton btnAdd
++ DocumentSnapshot doc2
++ String st
+~ boolean isOn
+~ String tempManufacturer
+~ ImageView image
+~ Uri imageUri
+~ StorageReference storageReference
++ ProgressBar progressBar
+- RecyclerView gunListView
+- gunAdapter adapter
++ int num
+- ArrayList<Gun> gunArrayList
+# void onCreate(Bundle)
++ void shake(View,int)
+- void addPic(String)
++ void onEvent(QuerySnapshot,FirebaseFirestoreException)
+# void onActivityResult(int,int,Intent)
++ void onItemLongClicked(Schedule)
++ void onItemLongClicked(String,String)
++ void onItemClicked(Gun)
++ void onItemLongClicked(MansInfo)
++ void onItemLongClicked(Gun)
+}
+class com.example.myfinalproject.MansInfo {
+- String phone
+- Integer num
++ <<Create>> MansInfo(String,Integer)
++ String getPhone()
++ void setPhone(String)
++ Integer getNum()
++ void setNum(Integer)
+}
+class com.example.myfinalproject.CalendarViewHolder {
++ TextView dayOfMonth
+- CalendarAdapter.OnItemListener onItemListener
++ View schedule
++ <<Create>> CalendarViewHolder(View,CalendarAdapter.OnItemListener)
++ void onClick(View)
+}
+class com.example.myfinalproject.ShopFragment {
+- FirebaseFirestore firestore
+~ RecyclerView normal_rec
+~ int countBit
+~ AlertDialog tempAd
++ {static} Node<GunBitMap> nodeGunBitMap
++ int count
+~ Bitmap[] bitmap
+~ int howMany
+- RecyclerView gunListView
+- {static} gunAdapter adapter
+~ ImageView tvImage
+- ArrayList<Gun> gunArrayList
+~ View view
++ View onCreateView(LayoutInflater,ViewGroup,Bundle)
++ void onEvent(QuerySnapshot,FirebaseFirestoreException)
++ CreationExtras getDefaultViewModelCreationExtras()
++ {static} Bitmap getBitmapFromName(String,Node<GunBitMap>)
++ {static} Bitmap getBitmapFromName(String)
++ {static} Node<GunBitMap> getLastNode(Node<GunBitMap>)
++ void onItemLongClicked(Schedule)
++ void onItemLongClicked(String,String)
++ void onItemClicked(Gun)
++ void onItemLongClicked(MansInfo)
++ void onItemLongClicked(Gun)
+}
+class com.example.myfinalproject.MapFragment {
+~ AlertDialog ad
+~ View dialogView
++ View onCreateView(LayoutInflater,ViewGroup,Bundle)
+}
+class com.example.myfinalproject.SplashScreen {
+# void onCreate(Bundle)
+}
+class com.example.myfinalproject.MyService {
+- MediaPlayer mMediaPlayer
++ IBinder onBind(Intent)
++ void onCreate()
++ void onStart(Intent,int)
++ void onDestroy()
+}
+class com.example.myfinalproject.CalendarAdapter {
+- ArrayList<String> daysOfMonth
+- OnItemListener onItemListener
++ <<Create>> CalendarAdapter(ArrayList<String>,OnItemListener)
++ CalendarViewHolder onCreateViewHolder(ViewGroup,int)
++ void onBindViewHolder(CalendarViewHolder,int)
++ int getItemCount()
+}
+interface com.example.myfinalproject.CalendarAdapter$OnItemListener {
+~ void onItemClick(int,String)
+}
+class com.example.myfinalproject.Gun {
+- String modelName
+- String manufacturer
+- int price
+- int inStock
+- String optionsMagCapacity
+- String caliber
+- int weight
++ <<Create>> Gun(String,String,int,int,String,String,int)
++ <<Create>> Gun()
++ String getModelName()
++ void setModelName(String)
++ String getManufacturer()
++ void setManufacturer(String)
++ String getOptionsMagCapacity()
++ void setOptionsMagCapacity(String)
++ String getCaliber()
++ void setCaliber(String)
++ int getWeight()
++ void setWeight(int)
++ int getInStock()
++ void setInStock(int)
++ String getName()
++ void setName(String)
++ int getPrice()
++ void setPrice(int)
+}
+class com.example.myfinalproject.GunBitMap {
+- String name
+- Bitmap bitmap
++ <<Create>> GunBitMap(String,Bitmap)
++ String getName()
++ void setName(String)
++ Bitmap getBitmap()
++ void setBitmap(Bitmap)
+}
+class com.example.myfinalproject.Login {
+~ FirebaseAuth mAuth
+~ EditText phone
+~ Button login_btn
+~ String verificationID
+~ ProgressBar bar
++ {static} boolean isAdmin
+- PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks
+# void onCreate(Bundle)
+- void sendverificationcode(String)
+- void verifycode(String)
+- void signinbycredentials(PhoneAuthCredential)
+# void onStart()
++ void GoLogin(View)
+- void shake(int)
+}
+class com.example.myfinalproject.admin_fragment_schedule {
+~ CalendarView calendar
+~ TextView editText
+~ DatabaseReference databaseReference
+~ String date
+~ String simpleDate
+~ RecyclerView normal_rec
+- ScheduleAdapter scheduleAdapter
+- ArrayList<Schedule> scheduleArrayList
+~ Schedule temp
+~ int count
++ View onCreateView(LayoutInflater,ViewGroup,Bundle)
+- void calendarClicked(boolean)
+- boolean isSaturday(int,int,int)
++ void onItemLongClicked(Schedule)
++ void onItemLongClicked(String,String)
++ void onItemClicked(Gun)
++ void onItemLongClicked(MansInfo)
++ void onItemLongClicked(Gun)
+- void shake(View,int)
+}
+class com.example.myfinalproject.HomeFragment {
+~ FirebaseAuth mAuth
+~ Button logout
+~ Button buttonGoTo
+~ View view
+~ Fragment fragment
+~ RecyclerView recyclerView
++ {static} ArrayList<String> book_id
+~ MyDatabaseHelper myDB
+~ CustomAdapterSQLite customAdapterSQLite
+~ ImageView image
++ View onCreateView(LayoutInflater,ViewGroup,Bundle)
+~ void storeDataInArrays()
++ void onItemLongClicked(Schedule)
++ void onItemLongClicked(String,String)
++ void onItemClicked(Gun)
++ void onItemLongClicked(MansInfo)
++ void onItemLongClicked(Gun)
+- void deleteFromArrayLists(String)
+~ void restoreDataInArrays()
+}
+class com.example.myfinalproject.Node {
+- T info
+- Node<T> next
++ <<Create>> Node(T)
++ <<Create>> Node(T,Node<T>)
++ T getValue()
++ T getInfo()
++ void setInfo(T)
++ void setValue(T)
++ Node<T> getNext()
++ void setNext(Node<T>)
++ boolean hasNext()
++ String toString()
+}
+class com.example.myfinalproject.CustomAdapterSQLite {
+- Context context
+- ArrayList<String> book_id
+- SelectListener listener
+~ <<Create>> CustomAdapterSQLite(Context,ArrayList<String>,ArrayList<String>,ArrayList<String>,SelectListener)
++ MyViewHolder onCreateViewHolder(ViewGroup,int)
++ void onBindViewHolder(MyViewHolder,int)
++ int getItemCount()
+}
+class com.example.myfinalproject.CustomAdapterSQLite$MyViewHolder {
+~ TextView book_id
++ <<Create>> MyViewHolder(View)
+}
+class com.example.myfinalproject.ScheduleAdapter {
+- Context context
+- ArrayList<Schedule> schedules
+- SelectListener listener
++ <<Create>> ScheduleAdapter(Context,ArrayList<Schedule>,SelectListener)
++ ScheduleHolder onCreateViewHolder(ViewGroup,int)
++ void onBindViewHolder(ScheduleHolder,int)
++ int getItemCount()
+}
+class com.example.myfinalproject.ScheduleAdapter$ScheduleHolder {
+- TextView hour
++ <<Create>> ScheduleHolder(View)
+~ void SetDetails(Schedule)
+}
+class com.example.myfinalproject.PeopleAdapter {
+- Context context
+- ArrayList<MansInfo> info
+- SelectListener listener
++ <<Create>> PeopleAdapter(Context,ArrayList<MansInfo>,SelectListener)
++ PeopleHolder onCreateViewHolder(ViewGroup,int)
++ void onBindViewHolder(PeopleHolder,int)
++ int getItemCount()
+}
+class com.example.myfinalproject.PeopleAdapter$PeopleHolder {
+- TextView phone
++ <<Create>> PeopleHolder(View)
+~ void SetDetails(MansInfo)
+}
+class com.example.myfinalproject.gunAdapter {
+- Context context
+- ArrayList<Gun> gunArrayList
+- SelectListener listener
++ <<Create>> gunAdapter(Context,ArrayList<Gun>,SelectListener)
++ gunAdapter.gunHolder onCreateViewHolder(ViewGroup,int)
++ void onBindViewHolder(gunAdapter.gunHolder,int)
++ int getItemCount()
++ void shake(View,int)
+}
+class com.example.myfinalproject.gunAdapter$gunHolder {
+- TextView gunName
+- ImageView imageView
++ <<Create>> gunHolder(View)
+~ void setDetails(Gun)
+}
+class com.example.myfinalproject.MyDatabaseHelper {
+- Context context
+- {static} String DATABASE_NAME
+- {static} int DATABASE_VERSION
+- {static} String TABLE_NAME
+- {static} String COLUMN_ID
+- {static} String COLUMN_DATE
+- {static} String COLUMN_TIME
++ <<Create>> MyDatabaseHelper(Context)
++ void onCreate(SQLiteDatabase)
++ void onUpgrade(SQLiteDatabase,int,int)
+~ void addBook(String,String)
+~ Cursor readAllData()
+~ void deleteOneRow(String,String)
+}
+class com.example.myfinalproject.CalendarFragment {
+~ CalendarView calendar
+~ TextView editText
+~ DatabaseReference databaseReference
+~ String date
+~ String simpleDate
+~ RecyclerView normal_rec
+- ScheduleAdapter scheduleAdapter
+- ArrayList<Schedule> scheduleArrayList
++ {static} Context context
++ View onCreateView(LayoutInflater,ViewGroup,Bundle)
+- boolean isSaturday(int,int,int)
+- void calendarClicked(boolean)
++ void onItemLongClicked(Schedule)
++ void onItemLongClicked(String,String)
++ void onItemClicked(Gun)
++ void onItemLongClicked(MansInfo)
++ void onItemLongClicked(Gun)
+- void addTime(String,String)
++ boolean isAvailable()
++ {static} void addOne(String,String)
+}
+class com.example.myfinalproject.SignUp {
+- FirebaseAuth mAuth
+# void onCreate(Bundle)
++ void SignUp(View)
++ void GoToSignIn(View)
+}
+class com.example.myfinalproject.MainActivity {
+~ BottomNavigationView bottomNavigationView
+~ HomeFragment homeFragment
+~ ShopFragment shopFragment
+~ CalendarFragment calendarFragment
+- ChipNavigationBar chipNavigationBar
+- Fragment fragment
+- String current
+~ FragmentTransaction transaction
++ Fragment currentFragment
+- Intent serviceIntent
+~ AudioManager audioManager
++ Switch aSwitch
+# void onCreate(Bundle)
++ void onPause()
+# void onResume()
++ void logout(View)
++ void doit(View)
+}
+
+
+com.google.firebase.firestore.EventListener <|.. com.example.myfinalproject.admin_fragment_add_gun
+com.example.myfinalproject.SelectListener <|.. com.example.myfinalproject.admin_fragment_add_gun
+androidx.fragment.app.Fragment <|-- com.example.myfinalproject.admin_fragment_add_gun
+com.google.firebase.firestore.EventListener <|.. com.example.myfinalproject.addGun
+com.example.myfinalproject.SelectListener <|.. com.example.myfinalproject.addGun
+androidx.appcompat.app.AppCompatActivity <|-- com.example.myfinalproject.addGun
+com.example.myfinalproject.OnClickListener <|.. com.example.myfinalproject.CalendarViewHolder
+com.example.myfinalproject.ViewHolder <|-- com.example.myfinalproject.CalendarViewHolder
+com.google.firebase.firestore.EventListener <|.. com.example.myfinalproject.ShopFragment
+com.example.myfinalproject.SelectListener <|.. com.example.myfinalproject.ShopFragment
+androidx.fragment.app.Fragment <|-- com.example.myfinalproject.ShopFragment
+androidx.fragment.app.Fragment <|-- com.example.myfinalproject.MapFragment
+androidx.appcompat.app.AppCompatActivity <|-- com.example.myfinalproject.SplashScreen
+android.app.Service <|-- com.example.myfinalproject.MyService
+com.example.myfinalproject.Adapter <|-- com.example.myfinalproject.CalendarAdapter
+com.example.myfinalproject.CalendarAdapter +.. com.example.myfinalproject.CalendarAdapter$OnItemListener
+androidx.appcompat.app.AppCompatActivity <|-- com.example.myfinalproject.Login
+com.example.myfinalproject.SelectListener <|.. com.example.myfinalproject.admin_fragment_schedule
+androidx.fragment.app.Fragment <|-- com.example.myfinalproject.admin_fragment_schedule
+com.example.myfinalproject.SelectListener <|.. com.example.myfinalproject.HomeFragment
+androidx.fragment.app.Fragment <|-- com.example.myfinalproject.HomeFragment
+com.example.myfinalproject.Adapter <|-- com.example.myfinalproject.CustomAdapterSQLite
+com.example.myfinalproject.CustomAdapterSQLite +.. com.example.myfinalproject.CustomAdapterSQLite$MyViewHolder
+com.example.myfinalproject.ViewHolder <|-- com.example.myfinalproject.CustomAdapterSQLite$MyViewHolder
+com.example.myfinalproject.Adapter <|-- com.example.myfinalproject.ScheduleAdapter
+com.example.myfinalproject.ScheduleAdapter +.. com.example.myfinalproject.ScheduleAdapter$ScheduleHolder
+com.example.myfinalproject.ViewHolder <|-- com.example.myfinalproject.ScheduleAdapter$ScheduleHolder
+com.example.myfinalproject.Adapter <|-- com.example.myfinalproject.PeopleAdapter
+com.example.myfinalproject.PeopleAdapter +.. com.example.myfinalproject.PeopleAdapter$PeopleHolder
+com.example.myfinalproject.ViewHolder <|-- com.example.myfinalproject.PeopleAdapter$PeopleHolder
+com.example.myfinalproject.Adapter <|-- com.example.myfinalproject.gunAdapter
+com.example.myfinalproject.gunAdapter +.. com.example.myfinalproject.gunAdapter$gunHolder
+com.example.myfinalproject.ViewHolder <|-- com.example.myfinalproject.gunAdapter$gunHolder
+android.database.sqlite.SQLiteOpenHelper <|-- com.example.myfinalproject.MyDatabaseHelper
+com.example.myfinalproject.SelectListener <|.. com.example.myfinalproject.CalendarFragment
+androidx.fragment.app.Fragment <|-- com.example.myfinalproject.CalendarFragment
+androidx.appcompat.app.AppCompatActivity <|-- com.example.myfinalproject.SignUp
+androidx.appcompat.app.AppCompatActivity <|-- com.example.myfinalproject.MainActivity
+@enduml

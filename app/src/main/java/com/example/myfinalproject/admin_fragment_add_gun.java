@@ -68,7 +68,7 @@ public class admin_fragment_add_gun extends Fragment implements EventListener<Qu
     Bitmap[] bitmap;
     int howMany = 0;
 
-    private /*ListView*/ RecyclerView gunListView;
+    private RecyclerView gunListView;
     private static gunAdapter adapter;
 
     ImageView tvImage;
@@ -120,7 +120,6 @@ public class admin_fragment_add_gun extends Fragment implements EventListener<Qu
                     }
                 });
 
-
                 buttonAdd.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -165,7 +164,6 @@ public class admin_fragment_add_gun extends Fragment implements EventListener<Qu
 
                         } else {
                             adminProgressBar.setVisibility(View.VISIBLE);
-
                             int price = Integer.parseInt(stPrice);
                             int inStock = Integer.parseInt(stInStock);
                             int weight = Integer.parseInt(stWeight);

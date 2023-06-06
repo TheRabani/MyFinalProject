@@ -110,14 +110,14 @@ public class HomeFragment extends Fragment implements SelectListener{
         });
 
 
-        addGun = (Button) view.findViewById(R.id.addGun);
+//        addGun = (Button) view.findViewById(R.id.addGun);
 
-        addGun.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(getActivity(), addGun.class));
-            }
-        });
+//        addGun.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                startActivity(new Intent(getActivity(), addGun.class));
+//            }
+//        });
 
         return view;
     }
