@@ -1,16 +1,22 @@
 package com.example.myfinalproject;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.telephony.SmsManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,7 +61,6 @@ public class admin_fragment_schedule extends Fragment implements SelectListener 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_admin_schedule, container, false);
-
 
         normal_rec = view.findViewById(R.id.normal_rec);
         normal_rec.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -354,5 +359,6 @@ public class admin_fragment_schedule extends Fragment implements SelectListener 
                 .playOn(dialogView.findViewById(id));
         Toast.makeText(getContext(), "מספר טלפון שגוי", Toast.LENGTH_SHORT).show();
     }
+
 
 }

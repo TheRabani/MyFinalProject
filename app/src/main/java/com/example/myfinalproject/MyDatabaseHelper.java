@@ -1,11 +1,21 @@
 package com.example.myfinalproject;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.telephony.SmsManager;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
+import com.google.firebase.auth.FirebaseAuth;
 
 public class MyDatabaseHelper extends SQLiteOpenHelper {
 
@@ -17,7 +27,8 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_ID = "_id";
     private static final String COLUMN_DATE = "book_date";
     private static final String COLUMN_TIME = "book_time";
-
+    public static String realDate;
+    public static String realTime;
 
 
     public MyDatabaseHelper(Context context) {
@@ -55,9 +66,15 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         long result = db.insert(TABLE_NAME, null, cv);
         if(result == -1)
             Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show();
-        else
+        else {
             Toast.makeText(context, "Success- added", Toast.LENGTH_SHORT).show();
+            realDate = date;
+            realTime = time;
+            HomeFragment.a(date, time);
+
+        }
     }
+
 
     Cursor readAllData(){
         String query = "SELECT * FROM "+ TABLE_NAME;

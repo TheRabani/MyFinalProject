@@ -1,20 +1,27 @@
 package com.example.myfinalproject;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.telephony.SmsManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,13 +46,14 @@ public class HomeFragment extends Fragment implements SelectListener{
     MyDatabaseHelper myDB;
     CustomAdapterSQLite customAdapterSQLite;
     ImageView image;
+    static Activity activity;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         fragment = new MapFragment();
         view = inflater.inflate(R.layout.fragment_home, container, false);
-
+        activity = getActivity();
         image = view.findViewById(R.id.imageNoData);
 
         recyclerView = view.findViewById(R.id.recyclerView);
@@ -172,6 +180,26 @@ public class HomeFragment extends Fragment implements SelectListener{
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
 
+    }
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 100 && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) // בודק האם ניתן אישור לשליחה
+            a(MyDatabaseHelper.realDate, MyDatabaseHelper.realTime);
+        else
+            Toast.makeText(getContext(),"permission denied",Toast.LENGTH_LONG).show(); // מודיע שלא ניתן אישור
+    }
+
+    public static void a(String date, String time) {
+        ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.SEND_SMS}, 100);
+        if (ContextCompat.checkSelfPermission(activity, Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_GRANTED) {
+            String phone = FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber();
+            int second = date.indexOf('M'), third = date.indexOf('Y');
+            String real = date.substring(1, second) + "-" + date.substring(second + 1, third) + "-" + date.substring(third + 1);
+            SmsManager smsManager = SmsManager.getDefault();
+            smsManager.sendTextMessage(phone, null, "נרשמת בהצלחה לאימון בתאריך" + " " + real + " " + "בשעה" + " " + time, null, null);
+        } else{
+            ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.SEND_SMS}, 100);
+        }
     }
 
     @Override
