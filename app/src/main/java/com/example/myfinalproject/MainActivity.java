@@ -1,9 +1,12 @@
 package com.example.myfinalproject;
 
 import android.content.ContentResolver;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -29,13 +32,8 @@ import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.ismaeldivita.chipnavigation.ChipNavigationBar;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ShakeDetector.OnShakeListener{
 
-    BottomNavigationView bottomNavigationView;
-
-    HomeFragment homeFragment = new HomeFragment();
-    ShopFragment shopFragment = new ShopFragment();
-    CalendarFragment calendarFragment = new CalendarFragment();
     private ChipNavigationBar chipNavigationBar;
     private Fragment fragment = null;
     private String current;
@@ -44,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     private Intent serviceIntent;
     AudioManager audioManager;
     public Switch aSwitch;
+    ShakeDetector shakeDetector;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,14 +50,20 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         serviceIntent = new Intent(getApplicationContext(), MyService.class);
 //        startService(serviceIntent);
+
+        shakeDetector = new ShakeDetector(this);
+        SensorManager sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        Sensor acc = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        sensorManager.registerListener(shakeDetector, acc, SensorManager.SENSOR_DELAY_NORMAL);
+
         audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
         int maxVol = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
         int currentVol = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
 
 //        bottomNavigationView = findViewById(R.id.bottom_navigation);
         chipNavigationBar = findViewById(R.id.bottom_navigation);
-        if (!Login.isAdmin) {
-//        if (true) {
+//        if (!Login.isAdmin) {
+        if (true) {
 //        chipNavigationBar.setBackground(R.drawable.show_gun_background);
 //        chipNavigationBar.setBackgroundColor(Color.WHITE);
             chipNavigationBar.setItemSelected(R.id.home, true);
@@ -153,25 +158,6 @@ public class MainActivity extends AppCompatActivity {
             });
         }
 
-
-//        bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
-//            @Override
-//            public boolean onNavigationItemSelected(MenuItem item) {
-//                switch (item.getItemId())
-//                {
-//                    case R.id.home:
-//                        getSupportFragmentManager().beginTransaction().replace(R.id.container, homeFragment).commit();
-//                        return true;
-//                    case R.id.shop:
-//                        getSupportFragmentManager().beginTransaction().replace(R.id.container, shopFragment).commit();
-//                        return true;
-//                    case R.id.calendar:
-//                        getSupportFragmentManager().beginTransaction().replace(R.id.container, calendarFragment).commit();
-//                        return true;
-//                }
-//                return false;
-//            }
-//        });
         findViewById(R.id.sett).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -238,15 +224,53 @@ public class MainActivity extends AppCompatActivity {
         startService(serviceIntent);
     }
 
-
-
     public void logout(View view) {
-        FirebaseAuth.getInstance().signOut();
-        startActivity(new Intent(MainActivity.this, Login.class));
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Are you sure you want to log out");
+        builder.setCancelable(true);
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                FirebaseAuth.getInstance().signOut();
+                startActivity(new Intent(MainActivity.this, Login.class));
+            }
+        });
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 
     public void doit(View view) {
         Toast.makeText(this, "fewds", Toast.LENGTH_SHORT).show();
     }
 
+    @Override
+    public void onShakeDetected() {
+//        Toast.makeText(this, "shake", Toast.LENGTH_SHORT).show();
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Are you sure you want to log out");
+        builder.setCancelable(true);
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                FirebaseAuth.getInstance().signOut();
+                startActivity(new Intent(MainActivity.this, Login.class));
+            }
+        });
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
 }
