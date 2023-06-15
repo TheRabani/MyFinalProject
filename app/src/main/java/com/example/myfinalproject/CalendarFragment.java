@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,9 +36,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.sql.Time;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 public class CalendarFragment extends Fragment implements SelectListener {
 
@@ -50,6 +56,7 @@ public class CalendarFragment extends Fragment implements SelectListener {
     private ScheduleAdapter scheduleAdapter;
     private ArrayList<Schedule> scheduleArrayList;
     public static Context context;
+    public static long timeInMilliseconds = 100000000;
 
 //    CustomAdapterSQLite customAdapterSQLite;
 
@@ -157,6 +164,11 @@ public class CalendarFragment extends Fragment implements SelectListener {
                     public void onClick(View view) {
                         MyDatabaseHelper myDB = new MyDatabaseHelper(getActivity());
                         String s = simpleDate.trim(), s2 = schedule.getHour().trim();
+
+                        String month = s.substring(s.indexOf("M") + 1, s.indexOf("Y"));
+                        String day = s.substring(s.indexOf("D") + 1, s.indexOf("M"));
+                        String year = s.substring(s.indexOf("Y") + 1);
+
                         myDB.addBook(s, s2);
                         addTime(s, s2);
 //                        storeDataInArrays();
@@ -166,14 +178,68 @@ public class CalendarFragment extends Fragment implements SelectListener {
                         if (schedule.getPeople() == 12)
                             databaseReference.child("" + schedule.getHour()).child("0").removeValue();
                         ad.dismiss();
+
+                        //all version of android
+                        Intent i = new Intent();
+
+                        // mimeType will popup the chooser any  for any implementing application (e.g. the built in calendar or applications such as "Business calendar"
+                        i.setType("vnd.android.cursor.item/event");
+                        Calendar calendar = Calendar.getInstance();
+                        calendar.set(Calendar.YEAR, Integer.parseInt(""+year)); // Set the year
+                        calendar.set(Calendar.MONTH, getMonth(Integer.parseInt(""+month))); // Set the month (Note: January is 0)
+                        calendar.set(Calendar.DAY_OF_MONTH, Integer.parseInt(""+day)); // Set the day of the month
+                        calendar.set(Calendar.HOUR_OF_DAY, Integer.parseInt(s2.substring(0, 2))); // Set the hour (in 24-hour format)
+                        calendar.set(Calendar.MINUTE, Integer.parseInt(s2.substring(3))); // Set the minute
+
+                        // the time the event should start in millis. This example uses now as the start time and ends in 1 hour
+                        i.putExtra("beginTime", calendar.getTimeInMillis());
+                        i.putExtra("endTime", calendar.getTimeInMillis() + DateUtils.HOUR_IN_MILLIS);
+                        String eventTitle = "אימון במטווח קרב";
+                        String eventLocation = "תלפיות יד חרוצים 13";
+                        i.putExtra("title", eventTitle);
+                        i.putExtra("eventLocation", eventLocation);
+
+                        // the action
+                        i.setAction(Intent.ACTION_EDIT);
+
+                        startActivity(i);
                     }
                 });
                 btnNo.setOnClickListener(view -> ad.dismiss());
                 ad.show();
             } else
-                Toast.makeText(getContext(), "כבר קבעת אימון לחודש הזה", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "כבר קבעת אימון ליום הזה", Toast.LENGTH_SHORT).show();
         } else
             Toast.makeText(getContext(), "אין עוד מקומות פנויים", Toast.LENGTH_SHORT).show();
+    }
+
+    private int getMonth(int i) {
+        switch (i) {
+            case 1:
+                return Calendar.JANUARY;
+            case 2:
+                return Calendar.FEBRUARY;
+            case 3:
+                return Calendar.MARCH;
+            case 4:
+                return Calendar.APRIL;
+            case 5:
+                return Calendar.MAY;
+            case 6:
+                return Calendar.JUNE;
+            case 7:
+                return Calendar.JULY;
+            case 8:
+                return Calendar.AUGUST;
+            case 9:
+                return Calendar.SEPTEMBER;
+            case 10:
+                return Calendar.OCTOBER;
+            case 11:
+                return Calendar.NOVEMBER;
+            default:
+                return Calendar.DECEMBER;
+        }
     }
 
     @Override
@@ -207,9 +273,15 @@ public class CalendarFragment extends Fragment implements SelectListener {
         if (book_date.size() == 0)
             return true;
         String st = simpleDate.substring(simpleDate.indexOf("M") + 1, simpleDate.indexOf("Y"));
+        String st2 = simpleDate.substring(simpleDate.indexOf("D") + 1, simpleDate.indexOf("M"));
+        String st3 = simpleDate.substring(simpleDate.indexOf("Y") + 1);
+
         for (String s : book_date) {
             String temp = s.substring(s.indexOf("M") + 1, s.indexOf("Y"));
-            if (temp.equals(st))
+            String temp2 = s.substring(s.indexOf("D") + 1, s.indexOf("M"));
+            String temp3 = s.substring(s.indexOf("Y") + 1);
+
+            if (temp.equals(st) && temp2.equals(st2) && temp3.equals(st3))
                 return false;
         }
         return true;
@@ -224,11 +296,10 @@ public class CalendarFragment extends Fragment implements SelectListener {
                 if (snapshot.getValue() != null) {
                     if (snapshot.getChildrenCount() != 1) {
                         for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                            if(dataSnapshot.getValue().toString().equals(currentUser.getPhoneNumber()))
+                            if (dataSnapshot.getValue().toString().equals(currentUser.getPhoneNumber()))
                                 a.child(hour).child(dataSnapshot.getKey()).removeValue();
                         }
-                    }
-                    else{
+                    } else {
                         a.child(hour).child("0").setValue("null");
                         a.child(hour).child("1").removeValue();
                     }

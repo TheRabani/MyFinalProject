@@ -79,31 +79,59 @@ public class admin_fragment_schedule extends Fragment implements SelectListener 
                 builder.setView(dialogView);
                 AlertDialog ad4 = builder.create();
                 ad4.show();
+                ArrayList<String> arrayList = new ArrayList<>();
+
                 Button y = ad4.findViewById(R.id.buttonYes2);
+                Button n = ad4.findViewById(R.id.buttonNo2);
                 EditText editText = ad4.findViewById(R.id.theNum);
+                n.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        ad4.dismiss();
+                    }
+                });
                 y.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+
+                        AlertDialog.Builder tempBuilder = new AlertDialog.Builder(getActivity());
+                        View tempDialogView = getLayoutInflater().inflate(R.layout.simple_list, null, false);
+                        tempBuilder.setView(tempDialogView);
+                        AlertDialog tempAd = tempBuilder.create();
+                        tempAd.show();
+
+                        RecyclerView recyclerView = tempAd.findViewById(R.id.recyclerView5);
+                        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                        MyAdapter adapter = new MyAdapter(arrayList);
+                        recyclerView.setAdapter(adapter);
+
+
                         String s = editText.getText().toString();
                         Toast.makeText(getContext(), ""+s, Toast.LENGTH_SHORT).show();
                         FirebaseDatabase.getInstance().getReference("Calendar").get().addOnSuccessListener(new OnSuccessListener<DataSnapshot>() {
                             @Override
                             public void onSuccess(DataSnapshot dataSnapshot) {
                                 boolean b = s.charAt(0) == '+';
+                                int count=0;
                                 for (DataSnapshot child : dataSnapshot.getChildren()) {
+                                    count++;
                                     for (DataSnapshot c : child.getChildren()) {
                                         String temp = c.getValue().toString();
                                         if (b) {
                                             if (temp.contains(s) || temp.contains("0" + s.substring(4)))
-                                                Toast.makeText(getActivity(), "" + child.getKey() + " " + c.getKey(), Toast.LENGTH_LONG).show();
-                                        } else {
+                                                arrayList.add("" + child.getKey() + " - " + c.getKey());
+                                        } else
                                             if (temp.contains(s) || temp.contains("+972" + s.substring(1)))
-                                                Toast.makeText(getActivity(), "" + child.getKey() + " " + c.getKey(), Toast.LENGTH_LONG).show();
-                                        }
+                                                arrayList.add("" + child.getKey() + " - " + c.getKey());
                                     }
+                                    if(count>=dataSnapshot.getChildrenCount())
+                                        adapter.notifyDataSetChanged();
                                 }
                             }
                         });
+
+
+
                     }
                 });
             }

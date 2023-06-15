@@ -1,5 +1,6 @@
 package com.example.myfinalproject;
 
+import android.Manifest;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -7,6 +8,9 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -24,13 +28,22 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.ismaeldivita.chipnavigation.ChipNavigationBar;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements ShakeDetector.OnShakeListener{
 
@@ -43,6 +56,9 @@ public class MainActivity extends AppCompatActivity implements ShakeDetector.OnS
     AudioManager audioManager;
     public Switch aSwitch;
     ShakeDetector shakeDetector;
+    private final static int REQUEST_CODE=100;
+    FusedLocationProviderClient fusedLocationProviderClient;
+    public static List<Address> addresses;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +75,11 @@ public class MainActivity extends AppCompatActivity implements ShakeDetector.OnS
         audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
         int maxVol = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
         int currentVol = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+
+        fusedLocationProviderClient= LocationServices.getFusedLocationProviderClient(MainActivity.this);
+        getLastLocation();
+
+
 
 //        bottomNavigationView = findViewById(R.id.bottom_navigation);
         chipNavigationBar = findViewById(R.id.bottom_navigation);
@@ -272,5 +293,48 @@ public class MainActivity extends AppCompatActivity implements ShakeDetector.OnS
 
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
+    }
+
+    private void getLastLocation()
+    {
+        if(ContextCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION)==PackageManager.PERMISSION_GRANTED){
+            fusedLocationProviderClient.getLastLocation()
+                    .addOnSuccessListener(new OnSuccessListener<Location>() {
+                        @Override
+                        public void onSuccess(Location location) {
+                            if(location != null)
+                            {
+                                Geocoder geocoder=new Geocoder(MainActivity.this, Locale.getDefault());
+
+                                try {
+                                    addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+                                    Toast.makeText(MainActivity.this, ""+addresses.get(0).getAddressLine(0), Toast.LENGTH_SHORT).show();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+                    });
+        }
+        else
+            askPermission();
+    }
+    private void askPermission()
+    {
+        ActivityCompat.requestPermissions(MainActivity.this, new String[]
+                {Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if(requestCode==REQUEST_CODE)
+        {
+            if(grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                getLastLocation();
+            else
+                Toast.makeText(MainActivity.this, "Required Permission", Toast.LENGTH_SHORT).show();
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 }

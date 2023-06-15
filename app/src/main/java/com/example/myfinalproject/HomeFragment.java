@@ -8,6 +8,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -18,40 +20,53 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
 import android.telephony.SmsManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import com.google.android.gms.maps.SupportMapFragment;
+
 import java.util.ArrayList;
 
-public class HomeFragment extends Fragment implements SelectListener{
+public class HomeFragment extends Fragment implements SelectListener, OnMapReadyCallback {
     FirebaseAuth mAuth;
     Button logout, addGun;
     Button buttonGoTo, buttonNavigation;
     View view;
-    Fragment fragment;
     RecyclerView recyclerView;
     public static ArrayList<String> book_id = new ArrayList<>(), book_date = new ArrayList<>(), book_time = new ArrayList<>();
     MyDatabaseHelper myDB;
     CustomAdapterSQLite customAdapterSQLite;
     ImageView image;
     static Activity activity;
+    public static Fragment fragment;
+    public static SupportMapFragment mapFragment;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        fragment = new MapFragment();
         view = inflater.inflate(R.layout.fragment_home, container, false);
         activity = getActivity();
         image = view.findViewById(R.id.imageNoData);
@@ -60,22 +75,34 @@ public class HomeFragment extends Fragment implements SelectListener{
         myDB = new MyDatabaseHelper(getContext());
         if (book_date.size() == 0) {
             storeDataInArrays();
-        }
-        else
+        } else
             image.setVisibility(View.INVISIBLE);
         customAdapterSQLite = new CustomAdapterSQLite(getContext(), book_id, book_date, book_time, this);
         recyclerView.setAdapter(customAdapterSQLite);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         buttonNavigation = view.findViewById(R.id.buttonNavigation);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        View dialogView = getLayoutInflater().inflate(R.layout.activity_notification, null, false);
+        builder.setView(dialogView);
+        AlertDialog ad = builder.create();
+        mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.frame_layout2);
+        Runnable mRunnable;
+        Handler mHandler = new Handler();
+        mRunnable = new Runnable() {
+            @Override
+            public void run() {
+                mapFragment.getMapAsync(HomeFragment.this);
+            }
+        };
+        mHandler.postDelayed(mRunnable, 1 * 1000);//Execute after 15 Seconds
         buttonNavigation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                View dialogView = getLayoutInflater().inflate(R.layout.dialog_navigation, null, false);
-                builder.setView(dialogView);
-                AlertDialog ad = builder.create();
+
                 ad.show();
+
+
 
                 dialogView.findViewById(R.id.btnWaze).setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -181,12 +208,13 @@ public class HomeFragment extends Fragment implements SelectListener{
         alertDialog.show();
 
     }
+
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == 100 && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) // בודק האם ניתן אישור לשליחה
             a(MyDatabaseHelper.realDate, MyDatabaseHelper.realTime);
         else
-            Toast.makeText(getContext(),"permission denied",Toast.LENGTH_LONG).show(); // מודיע שלא ניתן אישור
+            Toast.makeText(getContext(), "permission denied", Toast.LENGTH_LONG).show(); // מודיע שלא ניתן אישור
     }
 
     public static void a(String date, String time) {
@@ -197,7 +225,7 @@ public class HomeFragment extends Fragment implements SelectListener{
             String real = date.substring(1, second) + "-" + date.substring(second + 1, third) + "-" + date.substring(third + 1);
             SmsManager smsManager = SmsManager.getDefault();
             smsManager.sendTextMessage(phone, null, "נרשמת בהצלחה לאימון בתאריך" + " " + real + " " + "בשעה" + " " + time, null, null);
-        } else{
+        } else {
             ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.SEND_SMS}, 100);
         }
     }
@@ -240,5 +268,46 @@ public class HomeFragment extends Fragment implements SelectListener{
             }
         }
         customAdapterSQLite.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onMapReady(@NonNull GoogleMap googleMap) {
+        Toast.makeText(activity, "ready", Toast.LENGTH_SHORT).show();
+        MarkerOptions markerOptions = new MarkerOptions();
+        LatLng kravLatLng = new LatLng(31.752167930459038, 35.21662087865303);
+        markerOptions.position(kravLatLng);
+        markerOptions.title("מטווח קרב-" + " " + "תלפיות יד חרוצים 13");
+        markerOptions.draggable(false);
+        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons("Krav", 150, 100)));
+
+        MarkerOptions markerOptions2 = new MarkerOptions();
+        LatLng kravLatLng2 = new LatLng(MainActivity.addresses.get(0).getLatitude(), MainActivity.addresses.get(0).getLongitude());
+        markerOptions2.position(kravLatLng2);
+        markerOptions2.title("המיקום שלך");
+        markerOptions2.visible(true);
+        markerOptions2.draggable(false);
+        markerOptions2.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+
+
+        googleMap.clear();
+        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(kravLatLng, 8));
+        googleMap.addMarker(markerOptions);
+//        marker.showInfoWindow();
+        Marker marker1 = googleMap.addMarker(markerOptions2);
+        marker1.showInfoWindow();
+
+        googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(@NonNull Marker marker) {
+                //alert dialog with picture
+                return false;
+            }
+        });
+    }
+
+    public Bitmap resizeMapIcons(String iconName,int width, int height){
+        Bitmap imageBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.red_flag);
+        Bitmap resizedBitmap = Bitmap.createScaledBitmap(imageBitmap, width, height, false);
+        return resizedBitmap;
     }
 }

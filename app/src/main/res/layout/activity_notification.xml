@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    >
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/frame_layout2"
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        app:layout_constraintTop_toTopOf="parent">
+
+    </androidx.fragment.app.FragmentContainerView>
+
+    <Button
+        android:id="@+id/btnWaze"
+        android:layout_width="195dp"
+        android:layout_height="wrap_content"
+        android:text="Open in waze"
+        app:cornerRadius="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/frame_layout2" />
+
+
+    <!--        app:layout_constraintTop_toBottomOf="@+id/frame_layout" -->
+    <Button
+        android:id="@+id/btnGoogle"
+        android:layout_width="198dp"
+        android:layout_height="wrap_content"
+        android:text="Open In Google"
+        app:cornerRadius="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/btnWaze" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
