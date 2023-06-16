@@ -47,6 +47,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import com.google.android.gms.maps.SupportMapFragment;
+import com.smarteist.autoimageslider.IndicatorView.animation.type.IndicatorAnimationType;
+import com.smarteist.autoimageslider.SliderAnimations;
+import com.smarteist.autoimageslider.SliderView;
 
 import java.util.ArrayList;
 
@@ -63,6 +66,11 @@ public class HomeFragment extends Fragment implements SelectListener, OnMapReady
     static Activity activity;
     public static Fragment fragment;
     public static SupportMapFragment mapFragment;
+    SliderView sliderView;
+    int[] images = {R.drawable.krav1,
+            R.drawable.krav2,
+            R.drawable.krav3,
+            R.drawable.krav4};
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -70,6 +78,15 @@ public class HomeFragment extends Fragment implements SelectListener, OnMapReady
         view = inflater.inflate(R.layout.fragment_home, container, false);
         activity = getActivity();
         image = view.findViewById(R.id.imageNoData);
+
+        sliderView = view.findViewById(R.id.image_slider);
+
+        SliderAdapter sliderAdapter = new SliderAdapter(images);
+
+        sliderView.setSliderAdapter(sliderAdapter);
+        sliderView.setIndicatorAnimation(IndicatorAnimationType.WORM);
+        sliderView.setSliderTransformAnimation(SliderAnimations.VERTICALFLIPTRANSFORMATION);
+        sliderView.startAutoCycle();
 
         recyclerView = view.findViewById(R.id.recyclerView);
         myDB = new MyDatabaseHelper(getContext());
@@ -101,8 +118,6 @@ public class HomeFragment extends Fragment implements SelectListener, OnMapReady
             public void onClick(View view) {
 
                 ad.show();
-
-
 
                 dialogView.findViewById(R.id.btnWaze).setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -245,7 +260,7 @@ public class HomeFragment extends Fragment implements SelectListener, OnMapReady
 
     }
 
-    private void deleteFromArrayLists(String date) {
+    public static void deleteFromArrayLists(String date) {
         book_id.remove(date);
         book_date.remove(date);
         book_time.remove(date);

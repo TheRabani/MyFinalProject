@@ -381,11 +381,11 @@ public class admin_fragment_schedule extends Fragment implements SelectListener 
                 }
             }
         });
-        YoYo.with(Techniques.Shake)
-                .duration(700)
-                .repeat(0)
-                .playOn(dialogView.findViewById(id));
-        Toast.makeText(getContext(), "מספר טלפון שגוי", Toast.LENGTH_SHORT).show();
+//        YoYo.with(Techniques.Shake)
+//                .duration(700)
+//                .repeat(0)
+//                .playOn(dialogView.findViewById(id));
+//        Toast.makeText(getContext(), "מספר טלפון שגוי", Toast.LENGTH_SHORT).show();
     }
 
 

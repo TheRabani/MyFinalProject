@@ -63,17 +63,28 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <TextView
-        android:id="@+id/textView9"
+    <com.smarteist.autoimageslider.SliderView
+        android:id="@+id/image_slider"
         android:layout_width="319dp"
         android:layout_height="183dp"
         android:layout_marginTop="40dp"
-        android:text="Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures Pictures "
-        android:textColor="#000000"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.567"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textwelcome" />
+        app:layout_constraintTop_toBottomOf="@+id/textwelcome"
+        app:sliderAnimationDuration="600"
+        app:sliderAutoCycleDirection="back_and_forth"
+        app:sliderAutoCycleEnabled="true"
+        app:sliderIndicatorAnimationDuration="600"
+        app:sliderIndicatorGravity="center_horizontal|bottom"
+        app:sliderIndicatorMargin="15dp"
+        app:sliderIndicatorOrientation="horizontal"
+        app:sliderIndicatorPadding="3dp"
+        app:sliderIndicatorRadius="2dp"
+        app:sliderIndicatorSelectedColor="#5A5A5A"
+        app:sliderIndicatorUnselectedColor="#FFF"
+        app:sliderScrollTimeInSec="2"
+        app:sliderStartAutoCycle="true"
+        />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
@@ -86,7 +97,7 @@
         app:layout_constraintBottom_toTopOf="@+id/textView8"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView9" />
+        app:layout_constraintTop_toBottomOf="@+id/image_slider" />
 
     <ImageView
         android:id="@+id/imageNoData"

@@ -42,13 +42,23 @@ public class CustomAdapterSQLite extends RecyclerView.Adapter<CustomAdapterSQLit
         String realDate = date.substring(1, date.indexOf('M')) + "/" + date.substring(date.indexOf('M') + 1, date.indexOf('Y')) + "/" + date.substring(date.indexOf('Y') + 1);
         holder.book_date.setText(realDate);
         holder.book_time.setText(String.valueOf(book_time.get(position)));
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
+
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            public void onClick(View view) {
+            public boolean onLongClick(View view) {
                 int pos = holder.getAdapterPosition();
                 listener.onItemLongClicked(book_date.get(pos), book_time.get(pos));
+                return true;
             }
         });
+
+//        holder.itemView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                int pos = holder.getAdapterPosition();
+//                listener.onItemLongClicked(book_date.get(pos), book_time.get(pos));
+//            }
+//        });
     }
 
     @Override

@@ -39,9 +39,18 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.ismaeldivita.chipnavigation.ChipNavigationBar;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -78,6 +87,29 @@ public class MainActivity extends AppCompatActivity implements ShakeDetector.OnS
 
         fusedLocationProviderClient= LocationServices.getFusedLocationProviderClient(MainActivity.this);
         getLastLocation();
+
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Calendar");
+
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot s : snapshot.getChildren())
+                {
+                    String key = ""+s.getKey();
+                    if(HomeFragment.book_date.contains(""+key))
+                        HomeFragment.deleteFromArrayLists(""+key);
+                    if(!isDateAfter(""+key))
+                        databaseReference.child(""+key).removeValue();
+                }
+            }
+
+
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
+
 
 
 
@@ -336,5 +368,31 @@ public class MainActivity extends AppCompatActivity implements ShakeDetector.OnS
                 Toast.makeText(MainActivity.this, "Required Permission", Toast.LENGTH_SHORT).show();
         }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+    public static boolean isDateAfter(String dateString) {
+        try {
+            // Get today's date
+            Calendar today = Calendar.getInstance();
+
+            // Parse the given date string
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
+            Date date = dateFormat.parse(dateString);
+
+            // Set the parsed date to 00:00:00 time
+            Calendar givenDate = Calendar.getInstance();
+            givenDate.setTime(date);
+            givenDate.set(Calendar.HOUR_OF_DAY, 0);
+            givenDate.set(Calendar.MINUTE, 0);
+            givenDate.set(Calendar.SECOND, 0);
+            givenDate.set(Calendar.MILLISECOND, 0);
+
+            // Compare the given date with today's date
+            return givenDate.after(today);
+        } catch (ParseException e) {
+            // Handle parsing errors
+            e.printStackTrace();
+            return false;
+        }
     }
 }

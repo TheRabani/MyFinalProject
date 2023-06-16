@@ -13,15 +13,13 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:name="com.google.android.gms.maps.SupportMapFragment"
-        app:layout_constraintTop_toTopOf="parent">
-
-    </androidx.fragment.app.FragmentContainerView>
-
+        app:layout_constraintTop_toTopOf="parent"/>
     <Button
         android:id="@+id/btnWaze"
         android:layout_width="195dp"
         android:layout_height="wrap_content"
         android:text="Open in waze"
+        android:visibility="gone"
         app:cornerRadius="0dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/frame_layout2" />
@@ -30,9 +28,10 @@
     <!--        app:layout_constraintTop_toBottomOf="@+id/frame_layout" -->
     <Button
         android:id="@+id/btnGoogle"
-        android:layout_width="198dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Open In Google"
+        android:text="פתח באפליקציית הניווט"
+        android:textSize="20sp"
         app:cornerRadius="0dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/btnWaze" />

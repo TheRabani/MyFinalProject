@@ -3,8 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:background="@drawable/bg2"
     android:layout_height="wrap_content"
-    android:background="#5AB8B8"
+
     android:backgroundTint="#42AFE1"
     android:orientation="horizontal"
     android:padding="5dp"
@@ -26,4 +27,4 @@
         tools:srcCompat="@tools:sample/avatars"
         android:contentDescription="TODO" />
 </LinearLayout>
-<!--    android:layout_weight="1"-->
+<!--    android:layout_weight="1" android:background="#5AB8B8"-->

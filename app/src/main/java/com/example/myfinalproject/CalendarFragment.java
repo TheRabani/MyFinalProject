@@ -56,7 +56,7 @@ public class CalendarFragment extends Fragment implements SelectListener {
     private ScheduleAdapter scheduleAdapter;
     private ArrayList<Schedule> scheduleArrayList;
     public static Context context;
-    public static long timeInMilliseconds = 100000000;
+    public static long timeInMilliseconds = 0;
 
 //    CustomAdapterSQLite customAdapterSQLite;
 
@@ -98,7 +98,7 @@ public class CalendarFragment extends Fragment implements SelectListener {
                 calendarClicked(isSaturday(dayOfMonth, month, year));
             }
         });
-        calendar.setMinDate(System.currentTimeMillis());
+//        calendar.setMinDate(System.currentTimeMillis());
         return view;
     }
 
