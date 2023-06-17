@@ -115,8 +115,8 @@ public class MainActivity extends AppCompatActivity implements ShakeDetector.OnS
 
 //        bottomNavigationView = findViewById(R.id.bottom_navigation);
         chipNavigationBar = findViewById(R.id.bottom_navigation);
-//        if (!Login.isAdmin) {
-        if (true) {
+        if (!Login.isAdmin) {
+//        if (true) {
 //        chipNavigationBar.setBackground(R.drawable.show_gun_background);
 //        chipNavigationBar.setBackgroundColor(Color.WHITE);
             chipNavigationBar.setItemSelected(R.id.home, true);

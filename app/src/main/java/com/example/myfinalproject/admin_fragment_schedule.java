@@ -39,8 +39,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -56,6 +60,8 @@ public class admin_fragment_schedule extends Fragment implements SelectListener 
     private ArrayList<Schedule> scheduleArrayList;
     Schedule temp;
     int count = 0;
+    public static ArrayList<String> arrayList = new ArrayList<>();
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -79,7 +85,6 @@ public class admin_fragment_schedule extends Fragment implements SelectListener 
                 builder.setView(dialogView);
                 AlertDialog ad4 = builder.create();
                 ad4.show();
-                ArrayList<String> arrayList = new ArrayList<>();
 
                 Button y = ad4.findViewById(R.id.buttonYes2);
                 Button n = ad4.findViewById(R.id.buttonNo2);
@@ -102,34 +107,38 @@ public class admin_fragment_schedule extends Fragment implements SelectListener 
 
                         RecyclerView recyclerView = tempAd.findViewById(R.id.recyclerView5);
                         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-                        MyAdapter adapter = new MyAdapter(arrayList);
-                        recyclerView.setAdapter(adapter);
-
+                        arrayList.clear();
 
                         String s = editText.getText().toString();
-                        Toast.makeText(getContext(), ""+s, Toast.LENGTH_SHORT).show();
-                        FirebaseDatabase.getInstance().getReference("Calendar").get().addOnSuccessListener(new OnSuccessListener<DataSnapshot>() {
-                            @Override
-                            public void onSuccess(DataSnapshot dataSnapshot) {
-                                boolean b = s.charAt(0) == '+';
-                                int count=0;
-                                for (DataSnapshot child : dataSnapshot.getChildren()) {
-                                    count++;
-                                    for (DataSnapshot c : child.getChildren()) {
-                                        String temp = c.getValue().toString();
-                                        if (b) {
-                                            if (temp.contains(s) || temp.contains("0" + s.substring(4)))
+                        if(s.length() >= 10)
+                        {
+                            FirebaseDatabase.getInstance().getReference("Calendar").get().addOnSuccessListener(new OnSuccessListener<DataSnapshot>() {
+                                @Override
+                                public void onSuccess(DataSnapshot dataSnapshot) {
+                                    boolean b = s.charAt(0) == '+';
+                                    int count = 0;
+                                    for (DataSnapshot child : dataSnapshot.getChildren()) {
+                                        count++;
+                                        for (DataSnapshot c : child.getChildren()) {
+                                            String temp = c.getValue().toString();
+                                            if (b) {
+                                                if (temp.contains(s) || temp.contains("0" + s.substring(4)))
+                                                    arrayList.add("" + child.getKey() + " - " + c.getKey());
+                                            } else if (temp.contains(s) || temp.contains("+972" + s.substring(1)))
                                                 arrayList.add("" + child.getKey() + " - " + c.getKey());
-                                        } else
-                                            if (temp.contains(s) || temp.contains("+972" + s.substring(1)))
-                                                arrayList.add("" + child.getKey() + " - " + c.getKey());
+                                        }
+//                                    if(count>=dataSnapshot.getChildrenCount())
+//                                        adapter.notifyDataSetChanged();
                                     }
-                                    if(count>=dataSnapshot.getChildrenCount())
-                                        adapter.notifyDataSetChanged();
+                                    arrayList = sortDateTime(arrayList);
+                                    MyAdapter adapter = new MyAdapter(arrayList);
+                                    recyclerView.setAdapter(adapter);
+                                    adapter.notifyDataSetChanged();
                                 }
-                            }
-                        });
-
+                            });
+                        }
+                        else
+                            Toast.makeText(getContext(), "wrong number", Toast.LENGTH_SHORT).show();
 
 
                     }
@@ -360,33 +369,42 @@ public class admin_fragment_schedule extends Fragment implements SelectListener 
     }
 
     private void shake(View dialogView, int id) {
-        String s = "0528510125";
-        FirebaseDatabase.getInstance().getReference("Calendar").get().addOnSuccessListener(new OnSuccessListener<DataSnapshot>() {
-            @Override
-            public void onSuccess(DataSnapshot dataSnapshot) {
-                boolean b = false;
-                if (s.charAt(0) == '+')
-                    b = true;
-                for (DataSnapshot child : dataSnapshot.getChildren()) {
-                    for (DataSnapshot c : child.getChildren()) {
-                        String temp = c.getValue().toString();
-                        if (b) {
-                            if (temp.contains(s) || temp.contains("+972" + s.substring(1)))
-                                Toast.makeText(getActivity(), "" + child.getKey() + " " + c.getKey(), Toast.LENGTH_SHORT).show();
-                        } else {
-                            if (temp.contains(s) || temp.contains("0" + s.substring(4)))
-                                Toast.makeText(getActivity(), "" + child.getKey() + " " + c.getKey(), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                }
-            }
-        });
-//        YoYo.with(Techniques.Shake)
-//                .duration(700)
-//                .repeat(0)
-//                .playOn(dialogView.findViewById(id));
-//        Toast.makeText(getContext(), "מספר טלפון שגוי", Toast.LENGTH_SHORT).show();
+        YoYo.with(Techniques.Shake)
+                .duration(700)
+                .repeat(0)
+                .playOn(dialogView.findViewById(id));
+        Toast.makeText(getContext(), "מספר טלפון שגוי", Toast.LENGTH_SHORT).show();
     }
 
+    public ArrayList<String> sortDateTime(ArrayList<String> dateTimeList) {
+        // Create a date-time format pattern
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy - HH:mm");
+
+        // Define a custom comparator to sort the list
+        Comparator<String> dateTimeComparator = new Comparator<String>() {
+            @Override
+            public int compare(String dateTime1, String dateTime2) {
+                try {
+                    // Parse the date-time strings to Date objects
+                    Date date1 = dateFormat.parse(dateTime1);
+                    Date date2 = dateFormat.parse(dateTime2);
+
+                    // Compare the parsed dates
+                    return date1.compareTo(date2);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+                // Return 0 if there's an error parsing the dates
+                return 0;
+            }
+        };
+
+        // Sort the list using the custom comparator
+        Collections.sort(dateTimeList, dateTimeComparator);
+
+        // Return the sorted list
+        return dateTimeList;
+    }
 
 }
