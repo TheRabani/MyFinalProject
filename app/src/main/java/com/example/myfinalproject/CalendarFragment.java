@@ -67,15 +67,6 @@ public class CalendarFragment extends Fragment implements SelectListener {
 
         context = getContext();
 
-        view.findViewById(R.id.logout2).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(getContext(), "ds", Toast.LENGTH_SHORT).show();
-//                FirebaseAuth.getInstance().signOut();
-//                startActivity(new Intent(getActivity(), Login.class));
-            }
-        });
-
         normal_rec = view.findViewById(R.id.normal_rec);
         normal_rec.setLayoutManager(new LinearLayoutManager(getContext()));
         scheduleArrayList = new ArrayList<>();

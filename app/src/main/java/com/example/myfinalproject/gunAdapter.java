@@ -111,11 +111,5 @@ public class gunAdapter extends RecyclerView.Adapter<gunAdapter.gunHolder> {
             }
         }
     }
-    
-    public void shake(View dialogView, int id) {
-        YoYo.with(Techniques.Shake)
-                .duration(700)
-                .repeat(0)
-                .playOn(dialogView.findViewById(id));
-    }
+
 }
