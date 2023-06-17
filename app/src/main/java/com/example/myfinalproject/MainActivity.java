@@ -340,7 +340,6 @@ public class MainActivity extends AppCompatActivity implements ShakeDetector.OnS
 
                                 try {
                                     addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
-                                    Toast.makeText(MainActivity.this, ""+addresses.get(0).getAddressLine(0), Toast.LENGTH_SHORT).show();
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                 }

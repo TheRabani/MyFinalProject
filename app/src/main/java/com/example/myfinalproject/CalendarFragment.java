@@ -254,7 +254,6 @@ public class CalendarFragment extends Fragment implements SelectListener {
     }
 
     private void addTime(String s, String s2) {
-        Toast.makeText(getContext(), "" + book_id.size(), Toast.LENGTH_SHORT).show();
         book_id.add(String.valueOf(book_id.size() + 1));
         book_date.add(s);
         book_time.add(s2);

@@ -67,10 +67,7 @@ public class HomeFragment extends Fragment implements SelectListener, OnMapReady
     public static Fragment fragment;
     public static SupportMapFragment mapFragment;
     SliderView sliderView;
-    int[] images = {R.drawable.krav1,
-            R.drawable.krav2,
-            R.drawable.krav3,
-            R.drawable.krav4};
+    int[] images = {R.drawable.krav1, R.drawable.krav2,R.drawable.krav3, R.drawable.krav4};
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -287,7 +284,6 @@ public class HomeFragment extends Fragment implements SelectListener, OnMapReady
 
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
-        Toast.makeText(activity, "ready", Toast.LENGTH_SHORT).show();
         MarkerOptions markerOptions = new MarkerOptions();
         LatLng kravLatLng = new LatLng(31.752167930459038, 35.21662087865303);
         markerOptions.position(kravLatLng);
